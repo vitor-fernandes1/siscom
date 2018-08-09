@@ -6,10 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-use App\Models\Motivo;
-use App\Models\Pena;
 
-class Apenado extends Model
+class Manutencao extends Model
 {
 
     
@@ -19,7 +17,7 @@ class Apenado extends Model
     /**
      * <b>table</b> Informa qual é a tabela que o modelo irá utilizar
      */
-    public $table = "sigmp_apenado";
+    public $table = "siscom_manutencao";
 
 
     /**
@@ -27,51 +25,33 @@ class Apenado extends Model
      *  
      */
     protected $fillable = [
-                'nm_apenado', 
+                'descricao',
+                'data_manutencao',
+                'valor',
                 'fk_pk_tipo_documento',
-                'nm_mae_apenado',
-                'nm_pai_apenado',
-                'ds_tipo_documento_apenado',
-                'ds_documento_apenado',
     ];
 
     /**
      * <b>CREATED_AT</b> Renomeia o campo padrão created_at criado por padrão quando utilizamos o metodo timestamps() na migration
      */
 
-    const CREATED_AT = 'dt_cadastro_apenado';
+    const CREATED_AT = 'dt_cadastro_manutencao';
     /**
      * <b>UPDATED_AT</b>  Renomeia o campo padrão updated_at criado por padrão quando utilizamos o metodo timestamps() na migration
      */
 
-    const UPDATED_AT = 'dt_atualizacao_apenado';
+    const UPDATED_AT = 'dt_atualizacao_manutencao';
     
     /**
      * <b>DELETED_AT</b> Renomeia o campo padrão deleted_at criado por padrão quando utilizamos a Trait SoftDeletes na model
      * OBS: Essa trait habilita a exclusão logica de registros nativa do Laravel
      */
-    const DELETED_AT = 'dt_exclusao_apenado';
-
-    /**
-     * <b>tipoDocumento</b> Atributo estatico que contem o espelhamento dos tipos de documentos cadastrados 
-     * OBS: Esse espelhamento deve ser igual aos valores contidos na tabela de parametro de tipo de documento.
-     * TODO: Pegar dinamicamente (o ideal é pegar diretamente do BD para evitar dados desincronizados)
-     */
-    protected static $tipoDocumento = [
-        '1' => 'CPF',
-        '2' => 'RG',
-        '3' => 'CNH',
-        '4' => 'Título Eleitoral',
-        '5' => 'Registro Profissional',
-        '6' => 'Carteira Funcional',
-        '7' => 'Passaporte',
-        '8' => 'Estrangeiro'
-    ];
+    const DELETED_AT = 'dt_exclusao_manutencao';
 
     /**
      * <b>primaryKey</b> Informa qual a é a chave primaria da tabela
      */
-    protected $primaryKey = "pk_apenado";
+    protected $primaryKey = "pk_manutencao";
 
     /**
      * <b>dates</b> Serve para tratar todos os campos de data para serem também um objeto do tipo Carbon(biblioteca de datas)
@@ -85,31 +65,18 @@ class Apenado extends Model
     */
 
     public $rules = [
-        'nm_apenado'               => 'bail|required|min:5|max:150',
-        'fk_pk_tipo_documento'     => 'bail|required|numeric|min:1|max:8',
-        'nm_mae_apenado'           => 'bail|nullable|min:5|max:150',
-        'nm_pai_apenado'           => 'bail|nullable|min:5|max:150',
-        'ds_tipo_documento_apenado'=> 'bail|nullable|min:3',
-        'ds_documento_apenado'     => 'bail|required|min:3',
-        'dt_cadastro_apenado'      => 'bail|date',
-        'dt_atualizacao_apenado'   => 'bail|date',
-        'dt_exclusao_apenado'      => 'bail|date',
+        'descricao'               => 'bail|max:100',
+        'data_manutencao'         => 'bail|required|date',
+        'valor'                   => 'bail|required|numeric|',
     ];
 
     /**
      * <b>messages</b>  Atributo responsável em definir mensagem de validação de acordo com as regras especificadas no atributo $rules
     */
     public $messages = [
-        'ds_documento_apenado.required' => 'O campo documento é obrigatorio',
-        'ds_documento_apenado.min'      => 'O campo nome deve conter o minino de 5 caracteres',
-        'nm_apenado.required'           => 'O campo nome é obrigatório ',
-        'nm_apenado.min'                => 'O campo nome tem o minino de 5 caracteres',
-        'nm_apenado.max'                => 'O campo nome tem o maximo de 150 caracteres',
-        'fk_pk_tipo_documento.required' => 'O campo tipoDocumento é obrigatório',
-        'fk_pk_tipo_documento.numeric'  => 'O campo tipoDocumento deve ser numérico',
-        'ds_tipo_documento_apenado.min' => 'O campo descricaoDocumento tem o minino de 3 caracteres',
-        'nm_mae_apenado.min'            => 'O campo Nome da mãe tem o minino de 5 caracteres',
-        'nm_mae_apenado.max'            => 'O campo Nome da mãe tem o maximo de 150 caracteres',
+        'descricao.max'                 => 'O campo descrição tem no maximo 100 carateres',
+        'data_manutencao.required'      => 'O campo data da manutenção é obrigatorio',
+        'valor.required'                => 'O campo valor é obrigatório ',
     ];
 
     /**
@@ -124,29 +91,22 @@ class Apenado extends Model
      * OBS: Responsável em retornar uma coleção com os alias(apelido) atribuidos para cada coluna. 
      * Mais informações em https://laravel.com/docs/5.5/eloquent-resources
     */
-    public $collection = "\App\Http\Resources\ApenadoResource::collection";
+    public $collection = "\App\Http\Resources\ManutencaoResource::collection";
 
     /**
      * <b>resource</b>
      */
-    public $resource = "\App\Http\Resources\ApenadoResource";
+    public $resource = "\App\Http\Resources\ManutencaoResource";
 
     /**
      * <b>map</b> Atributo responsável em atribuir um alias(Apelido), para a colunas do banco de dados
      * OBS: este atributo é utilizado no Metodo store e update da ApiControllerTrait
      */
     public $map = [
-        'id'                 => 'pk_apenado',
-        'nome'               => 'nm_apenado',
-        'documento'          => 'ds_documento_apenado',
+        'id'                 => 'pk_manutencao',
+        'data'               => 'data_manutencao',
+        'valor'              => 'valor_manutenção',
         'tipoDocumento'      => 'fk_pk_tipo_documento',
-        'descricaoDocumento' => 'ds_tipo_documento_apenado',
-        'nomeMae'            => 'nm_mae_apenado',
-        'nomePai'            => 'nm_pai_apenado',
-        'data_cadatro'       => 'dt_cadastro_apenado',
-        'data_atualizacao'   => 'dt_atualizacao_apenado',
-        'data_exclusao'      => 'dt_exclusao_apenado',
-        
     ];
 
 
