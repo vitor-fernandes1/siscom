@@ -15,7 +15,7 @@ class SiscomSituacaoTable extends Migration
     {
         Schema::create('siscom_situacao', function (Blueprint $table) {
             $table->increments('pk_situacao');
-            $table->char('ds_tipo_situacao', 30);
+            $table->char('ds_situacao', 50);
             $table->timestamp('dt_cadastro_situacao')->useCurrent();
             $table->timestamp('dt_atualizacao_situacao')->nullable();
             $table->timestamp('dt_exclusao_situacao')->nullable();

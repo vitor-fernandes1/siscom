@@ -28,7 +28,12 @@ class Manutencao extends Model
                 'descricao',
                 'data_manutencao',
                 'valor',
-                'fk_pk_tipo_documento',
+                'fk_pk_tipo_manutencao',
+                'fk_pk_prioridade',
+                'fk_pk_situacao',
+                'fk_pk_avaliacao',
+                'fk_pk_empresa',
+                'fk_pk_equipamento',
     ];
 
     /**
@@ -57,7 +62,7 @@ class Manutencao extends Model
      * <b>dates</b> Serve para tratar todos os campos de data para serem também um objeto do tipo Carbon(biblioteca de datas)
      */
 
-    protected $dates = ['dt_cadastro_apenado', 'dt_atualizacao_apenado', 'dt_exclusao_apenado'];
+    protected $dates = ['dt_cadastro_manutencao', 'dt_atualizacao_manutencao', 'dt_exclusao_manutencao'];
 
     /**
      * <b>rules</b> Atributo responsável em definir regras de validação dos dados submetidos pelo formulário
@@ -67,7 +72,13 @@ class Manutencao extends Model
     public $rules = [
         'descricao'               => 'bail|max:100',
         'data_manutencao'         => 'bail|required|date',
-        'valor'                   => 'bail|required|numeric|',
+        'valor'                   => 'bail|required|numeric',
+        'fk_pk_tipo_manutencao'   => 'bail|required|', 
+        'fk_pk_prioridade'        => 'bail|required|numeric|min:1|max:3',
+        'fk_pk_situacao'          => 'bail|required|numeric|min:1|max:3',
+        'fk_pk_avaliacao'         => 'bail|min:1|max:3',
+        'fk_pk_empresa'           => 'bail|required|numeric|min:1',
+        'fk_pk_equipamento'       => 'bail|required|numeric|min:1',
     ];
 
     /**
@@ -77,6 +88,32 @@ class Manutencao extends Model
         'descricao.max'                 => 'O campo descrição tem no maximo 100 carateres',
         'data_manutencao.required'      => 'O campo data da manutenção é obrigatorio',
         'valor.required'                => 'O campo valor é obrigatório ',
+
+        'fk_pk_tipo_manutencao.required'      => 'O campo tipo é obrigatorio',
+        
+        'fk_pk_prioridade.required'      => 'O campo prioridade é obrigatorio',
+        'fk_pk_prioridade.min'           => 'O campo prioridade deve estar entre 1 e 3 !',
+        'fk_pk_prioridade.max'           => 'O campo prioridade deve estar entre 1 e 3 !',
+        'fk_pk_prioridade.numeric'       => 'O campo prioridade deve ser numerico !',
+
+        'fk_pk_situacao.required'      => 'O campo situacao é obrigatorio',
+        'fk_pk_situacao.min'           => 'O campo situacao deve estar entre 1 e 3 !',
+        'fk_pk_situacao.max'           => 'O campo situacao deve estar entre 1 e 3 !',
+        'fk_pk_situacao.numeric'       => 'O campo situacao deve ser numerico !',
+
+        'fk_pk_avaliacao.min'           => 'O campo avalicao deve estar entre 1 e 3 !',
+        'fk_pk_avaliacao.max'           => 'O campo avalicao deve estar entre 1 e 3 !',
+        'fk_pk_avaliacao.numeric'       => 'O campo avalicao deve ser numerico !',
+
+        'fk_pk_empresa.required'      => 'O campo empresa é obrigatorio',
+        'fk_pk_empresa.min'           => 'O campo empresa deve ser maior que 0 !',
+        //'fk_pk_empresa.max'           => 'O campo tipo da avalicao deve estar entre 1 e 3 !',
+        'fk_pk_empresa.numeric'       => 'O campo empresa deve ser numerico !',
+
+        'fk_pk_equipamento.required'      => 'O campo equipamento é obrigatorio',
+        'fk_pk_equipamento.min'           => 'O campo equipamento ser maior que 0 !',
+        //'fk_pk_equipamento.max'           => 'O campo tipo da avalicao deve estar entre 1 e 3 !',
+        'fk_pk_equipamento.numeric'       => 'O campo equipamento deve ser numerico !',
     ];
 
     /**
@@ -106,7 +143,12 @@ class Manutencao extends Model
         'id'                 => 'pk_manutencao',
         'data'               => 'data_manutencao',
         'valor'              => 'valor_manutenção',
-        'tipoDocumento'      => 'fk_pk_tipo_documento',
+        'tipo'               => 'fk_pk_tipo_manutencao',
+        'prioridade'         => 'fk_pk_prioridade',
+        'situacao'           => 'fk_pk_situacao',
+        'avaliacao'          => 'fk_pk_avaliacao',
+        'empresa'            => 'fk_pk_empresa',
+        'equipamento'        => 'fk_pk_equipamento',
     ];
 
 
