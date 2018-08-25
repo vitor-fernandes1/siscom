@@ -70,9 +70,9 @@ class Empresa extends Model
         'ds_telefone_empresa'   => 'bail|max:16',
         'ds_email_empresa'      => 'bail|max:150',
         'ds_cnpj_empresa'       => 'bail|max:18',
-        'dt_cadastro_custas'    => 'bail|date',
-        'dt_atualizacao_custas' => 'bail|date',
-        'dt_exclusao_custas'    => 'bail|date',
+        'dt_cadastro_empresa'    => 'bail|date',
+        'dt_atualizacao_empresa' => 'bail|date',
+        'dt_exclusao_empresa'    => 'bail|date',
     ];
 
     /**
