@@ -53,6 +53,17 @@ class initDefaultValuesSiscomSeed extends Seeder
             'ds_situacao'       => 'Concluído',
         ]);
 
+        //AVALIACAO
+        $avalicao = Avaliacao::create([
+            'ds_avaliacao'       => 'Ótimo',
+        ]);
+        $situacao = Situacao::create([
+            'ds_avaliacao'       => 'Médio',
+        ]);
+        $situacao = Situacao::create([
+            'ds_avaliacao'       => 'Ruim',
+        ]);
+
         //TIPOS DE MANUTENCAO
         $tipoManutencao = TipoManutencao::create([
             'ds_tipo_manutencao'       => 'Preventiva',
