@@ -17,7 +17,7 @@ class SiscomEquipamentoTable extends Migration
             $table->increments('pk_equipamento');
             $table->string('nm_equipamento', 150);
             $table->date('dt_compra_equipamento', 150);
-            $table->string('ds_descricao_equipamento', 300);
+            $table->string('ds_descricao_equipamento', 300)->nullable();
             $table->decimal('nr_valor_equipamento', 10, 2)->unsigned();
             $table->unsignedInteger('fk_pk_tipo_equipamento');
             $table->foreign('fk_pk_tipo_equipamento','constraint_fk_pk_tipo_equipamento')

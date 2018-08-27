@@ -80,8 +80,8 @@ class Equipamento extends Model
     public $messages = [
         'dt_compra_equipamento.required'          => 'O campo data de compra é obrigatorio!',
         'ds_descricao_equipamento.max'            => 'A descrição deve conter no máximo 300 caracteres!',
-        'ds_valor_equipamento.numeric'            => 'O campo valor deve ser numerico!',
-        'ds_valor_equipamento.required'           => 'O campo valor é obrigatorio!',
+        'ds_valor_equipamento.numeric'            => 'O campo valor é obrigatorio!',
+        //'ds_valor_equipamento.required'           => 'O campo valor é obrigatorio!',
         'fk_pk_tipo_equipamento.required'         => 'O campo tipo de equipamento é obrigatorio',
         'fk_pk_tipo_equipamento.min'              => 'O campo tipo de equipamento deve conter valores maiores que 0',
     ];
@@ -137,11 +137,12 @@ class Equipamento extends Model
     }
 
     /**
-     * <b>Retorna Banco</b>
+     * <b>tipoEquipamento</b> Método responsável em definir o relacionamento entre as Models de TipoEquipamento e Manutençao e suas
+     * respectivas tabelas.
      */
-    public function banco()
+    public function tipoEquipamento()
     {
-        return $this->hasMany(Banco::class, 'fk_pk_banco', 'pk_banco');
+        return $this->hasMany(TipoEquipamento::class, 'fk_pk_tipo_equipamento', 'pk_tipo_equipamento');
     }
 
 

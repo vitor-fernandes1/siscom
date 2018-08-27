@@ -82,33 +82,24 @@ trait ApiControllerTrait
     /**
      * <b>store</b>Método responsável em gravar os registros de um recurso restfull que use esta TRAIT.
      * Para utilização da mesma deve ser realizado um POST para a URL do recurso,
-     * passando os campos e seus valores, veja abaixo um exemplo de URL:
-     * 
-     * http://www.apirestfull/api/entidades
+     * passando os campos e seus valores
      * 
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        
-        $values = $this->columnsInsert($request);
-        
-      
-        $validate = validator($values, $this->model->rules, $this->model->messages);
-       
-        if($validate->fails())
-        {
-            $errors['messages'] = $this->columnsShow($validate->errors());
-            $errors['error']    = true;
-            
-            return $this->createResponse($errors, 422);
+        //gravando no banco de dados
+        $result = $this->model->create($request->request->all());
+        if($result){
+            return
+            [
+                'success' => true,
+                'message' => 'Sucesso!'
+            ];
         }
+        //return $this->createResponse($this->columnsShow($result), 201);
         
-        $result = $this->model->create($values);
-       
-      
-        return $this->createResponse($this->columnsShow($result), 201);
     }
 
     /**
@@ -201,7 +192,7 @@ trait ApiControllerTrait
        
         $validate = Validator::make($values, $this->model->rules, $this->model->messages);
         
-        if($validate->fails())
+        /*if($validate->fails())
         {
             $errors['messages'] = $this->columnsShow($validate->errors());
             $errors['error']    = true;
@@ -209,7 +200,8 @@ trait ApiControllerTrait
             return $this->createResponse($errors, 422);
         }
 
-        return $this->createResponse($validate);
+        return $this->createResponse($validate);*/
+        return $validate;
     }
 
 

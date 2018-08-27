@@ -6,6 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use App\Models\Avaliacao;
+use App\Models\Empresa;
+use App\Models\Equipamento;
+use App\Models\Prioridade;
+use App\Models\Situacao;
+use App\Models\TipoManutencao;
+
 
 class Manutencao extends Model
 {
@@ -160,57 +167,71 @@ class Manutencao extends Model
     {
         return $this->primaryKey;
     }
-    /**
-     * <b>getTipoDocumento</b>
-     */
-    public static function getTipoDocumento()
-    {
-        return self::$tipoDocumento;
-    }
 
     /**
-     * <b>pena</b> Método responsável em definir o relacionamento entre as Models de Apenado e Pena e suas
+     * <b>avaliacao</b> Método responsável em definir o relacionamento entre as Models de Avaliacao e Manutençao e suas
      * respectivas tabelas.
      */
-    public function pena()
+    public function avaliacao()
     {
-        //return $this->belongsTo(Pena::class, 'pk_apenado', 'fk_pk_apenado');
-        return $this->hasOne(Pena::class, 'fk_pk_apenado', 'pk_apenado');
-    }
-
-
-   /**
-    * <b>motivos</b> Método responsável em definir o relacionamento entre as models de Apenado, Custas, Entidade, Multa, Pecunia, Servico e
-    *  Vara e  e suas respectivas tabelas.Este relacionamento é do tipo poliformico(polymorphic) sendo 1:N(1 para muitos) no caso da model
-    *  de motivo(esta atrelado a ação realizada:ativar, inativar e excluir) a mesma poderá ser utilizada por Custas, Entidade, Multa, Pecunia, Servico , então para diferenciar o motivo 
-    *  é criado uma coluna ds_tipo_motivo e ds_id_motivo na tabela de motivo. 
-    *  Veja mais sobre em : https://laravel.com/docs/5.5/eloquent-relationships#polymorphic-relations
-    */
-    public function motivos()
-    {
-     
-        return $this->morphMany(Motivo::class, 'dsTipoMotivo', 'ds_tipo_motivo', 'ds_id_motivo');
+      
+        return $this->hasMany(Avaliacao::class, 'fk_pk_avaliacao', 'pk_avaliacao');
+    
     }
 
     /**
-    * <b>enderecos</b> Método responsável em definir o relacionamento entre as models de Apenado e Endereco
-    *  Este relacionamento é do tipo poliformico(polymorphic) sendo 1:N(1 para muitos) no caso da model
-    *  de Endereco a mesma poderá ser utilizada por Apenado e Entidade, então para diferenciar o endereco 
-    *  é criado uma coluna ds_tipo_endereco e ds_id_endereco na tabela de endereco. 
-    *  Veja mais sobre em : https://laravel.com/docs/5.5/eloquent-relationships#polymorphic-relations
-    */
-    public function enderecos()
-    {
-        return $this->morphMany(Endereco::class, 'dsTipoEndereco', 'ds_tipo_endereco', 'ds_id_endereco');
-    }
-
-     /**
-     * <b>TipoDocumento</b> Método responsável em definir o relacionamento entre as Models de TipoDocumento e Apenado e suas
+     * <b>empresa</b> Método responsável em definir o relacionamento entre as Models de Empresa e Manutençao e suas
      * respectivas tabelas.
      */
-    public function tipoDocumento()
+    public function empresa()
     {
-        return $this->belongsTo(TipoDocumento::class, 'fk_pk_tipo_documento', 'pk_tipo_documento');
+      
+        return $this->hasMany(Empresa::class, 'fk_pk_empresa', 'pk_empresa');
+    
+    }
+
+    /**
+     * <b>equipamento</b> Método responsável em definir o relacionamento entre as Models de Equipamento e Manutençao e suas
+     * respectivas tabelas.
+     */
+    public function equipamento()
+    {
+      
+        return $this->hasMany(Equipamento::class, 'fk_pk_equipamento', 'pk_equipamento');
+    
+    }
+
+    /**
+     * <b>prioridade</b> Método responsável em definir o relacionamento entre as Models de Prioridade e Manutençao e suas
+     * respectivas tabelas.
+     */
+    public function prioridade()
+    {
+      
+        return $this->hasMany(Prioridade::class, 'fk_pk_prioridade', 'pk_prioridade');
+    
+    }
+
+    /**
+     * <b>situacao</b> Método responsável em definir o relacionamento entre as Models de Situacao e Manutençao e suas
+     * respectivas tabelas.
+     */
+    public function situacao()
+    {
+      
+        return $this->hasMany(Situacao::class, 'fk_pk_situacao', 'pk_situacao');
+    
+    }
+
+    /**
+     * <b>tipoManutencao</b> Método responsável em definir o relacionamento entre as Models de TipoManutencao e Manutençao e suas
+     * respectivas tabelas.
+     */
+    public function tipoManutencao()
+    {
+      
+        return $this->hasMany(TipoManutencao::class, 'fk_pk_tipo_manutencao', 'pk_tipo_manutencao');
+    
     }
 
   
