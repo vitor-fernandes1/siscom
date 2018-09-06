@@ -51,7 +51,7 @@ class Equipamento extends Model
                 'nm_equipamento', 
                 'dt_compra_equipamento',
                 'ds_descricao_equipamento', 
-                'ds_valor_equipamento',
+                'nr_valor_equipamento',
                 'fk_pk_tipo_equipamento',
             ];
 	
@@ -69,7 +69,7 @@ class Equipamento extends Model
         //'nm_nome_equipamento'          => 'bail|required|',
         'dt_compra_equipamento'        => 'bail|required|',
         'ds_descricao_equipamento'     => 'bail|max:300',
-        'ds_valor_equipamento'         => 'bail|numeric|required|min:0',
+        'nr_valor_equipamento'         => 'bail|numeric|required|min:0',
         'fk_pk_tipo_equipamento'       => 'bail|required|min:1',
     ];
 
@@ -80,8 +80,8 @@ class Equipamento extends Model
     public $messages = [
         'dt_compra_equipamento.required'          => 'O campo data de compra é obrigatorio!',
         'ds_descricao_equipamento.max'            => 'A descrição deve conter no máximo 300 caracteres!',
-        'ds_valor_equipamento.numeric'            => 'O campo valor é obrigatorio!',
-        //'ds_valor_equipamento.required'           => 'O campo valor é obrigatorio!',
+        'nr_valor_equipamento.numeric'            => 'O campo valor é obrigatorio!',
+        //'nr_valor_equipamento.required'           => 'O campo valor é obrigatorio!',
         'fk_pk_tipo_equipamento.required'         => 'O campo tipo de equipamento é obrigatorio',
         'fk_pk_tipo_equipamento.min'              => 'O campo tipo de equipamento deve conter valores maiores que 0',
     ];
@@ -119,7 +119,7 @@ class Equipamento extends Model
         'nome'             => 'nm_equipamento',
         'dataCompra'       => 'dt_compra_equipamento',
         'descricao'        => 'ds_descricao_equipamento',
-        'valor'            => 'ds_valor_equipamento',
+        'valor'            => 'nr_valor_equipamento',
         'tipo'             => 'fk_pk_tipo_equipamento',
         'data_cadastro'    => 'dt_cadastro_equipamento',
         'data_atualizacao' => 'dt_atualizacao_equipamento',

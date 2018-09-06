@@ -7,6 +7,7 @@ use App\Models\Situacao;
 use App\Models\TipoEquipamento;
 use App\Models\TipoManutencao;
 use App\Models\Empresa;
+use App\Models\Avaliacao;
 
 class initDefaultValuesSiscomSeed extends Seeder
 {
@@ -57,10 +58,10 @@ class initDefaultValuesSiscomSeed extends Seeder
         $avalicao = Avaliacao::create([
             'ds_avaliacao'       => 'Ótimo',
         ]);
-        $situacao = Situacao::create([
+        $avalicao = Avaliacao::create([
             'ds_avaliacao'       => 'Médio',
         ]);
-        $situacao = Situacao::create([
+        $avalicao = Avaliacao::create([
             'ds_avaliacao'       => 'Ruim',
         ]);
 

@@ -62,7 +62,7 @@
 
                         <div class="col-xs-4">
                             <label for="example-text-input" class="col-2 col-form-label">Valor</label>
-                            <input class="form-control" type="number" name="ds_valor_equipamento" value="{{ old('ds_valor_equipamento') }}">  
+                            <input class="form-control" type="number" name="nr_valor_equipamento" value="{{ old('nr_valor_equipamento') }}">  
                         </div>
 
                         <div class="col-xs-4">
@@ -113,7 +113,7 @@
                             <tr>
                             <th scope="row">{{ $item->pk_equipamento }}</th>
                             <td>{{ $item->nm_equipamento }}</td>
-                            <td>{{ $item->ds_valor_equipamento }}</td>
+                            <td>{{ $item->nr_valor_equipamento }}</td>
                             <td>{{ $item->dt_compra_equipamento }}</td>
                             <td>{{ $item->fk_pk_tipo_equipamento }}</td>
                             </tr>
