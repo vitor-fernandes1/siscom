@@ -82,6 +82,8 @@ class EquipamentoController extends Controller
         $obterTipo = $obterTipo['0'];
         //Convertendo o numero de referencia para inteiro
         $numeroTipo = intval($obterTipo);
+        
+        dd($numeroTipo);
         //atualizando a $request com o numero do tipo
         $request->merge(['fk_pk_tipo_equipamento' =>  $numeroTipo]);
         $gravarDados = $this->storeTrait($request);
@@ -104,8 +106,10 @@ class EquipamentoController extends Controller
     */
     public function show($id)
     {
-
-        return $this->showTrait($id);
+        $recuperandoDados =  $this->showTrait($id);
+        $recuperandoDados = $recuperandoDados->original['Resposta']['conteudo'] ;
+        return view('site.equipamentoEditar', compact('recuperandoDados') );
+        
     }
 
     /**
@@ -118,13 +122,30 @@ class EquipamentoController extends Controller
     */
     public function update(Request $request, $id)
     {
-       //Obtendo o numero de referencia do tipo
-       $obterTipo = explode(" ", $request->tipo);
-       $obterTipo = $obterTipo['0'];
-       //Convertendo o numero de referencia para inteiro
-       $numeroTipo = intval($obterTipo);
-       //atualizando a %request com o numero do tipo
-       $request->merge(['tipo' =>  $numeroTipo]);
+        dd($request, $id);
+        //Validando dados de entrada
+        $validate = Validator::make($request->all(), $this->model->rules, $this->model->messages);
+        if ($validate->fails()) {
+            return redirect()
+                        ->route('equipamento.store')
+                        ->withErrors($validate)
+                        ->withInput();
+        }
+        
+        //Obtendo o numero de referencia do tipo
+        $obterTipo = explode(" ", $request->fk_pk_tipo_equipamento);
+        $obterTipo = $obterTipo['0'];
+        //Convertendo o numero de referencia para inteiro
+        $numeroTipo = intval($obterTipo);
+        //atualizando a $request com o numero do tipo
+        $request->merge(['fk_pk_tipo_equipamento' =>  $numeroTipo]);
+        $gravarDados = $this->storeTrait($request);
+        if($gravarDados['success'])
+            return redirect()
+                        ->route('equipamento.index')
+                        ->with('success', $gravarDados['message']);
+
+
         
         //chamar o metodo store da Trait para realizar o restante das validações de campos e gravar
         return $this->updateTrait($request, $id);

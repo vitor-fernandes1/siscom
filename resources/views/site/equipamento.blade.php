@@ -78,16 +78,16 @@
                         <div class="col-xs-4">
                             <label for="exampleSelect1">Tipo</label>
                             <select class="form-control" name="fk_pk_tipo_equipamento" id="fk_pk_tipo_equipamento">
-                                    <option>1 - Eletroeletrônico</option>
-                                    <option>2 - Eletrônico</option>
-                                    <option>3 - Elétrico</option>
-                                    <option>4 - Eletrodoméstico</option>
+                                    <option value="1">Eletroeletrônico</option>
+                                    <option value="2">Eletrônico</option>
+                                    <option value="3">Elétrico</option>
+                                    <option value="4">Eletrodoméstico</option>
                             </select>
                         </div>
                     </div>
                 </div>
                 <div class="box-footer">
-                    <button type="submit" class="btn btn-success" data-toggle="modal" data-target="#exampleModal"> <i class="fas fa-plus"></i>  Adicionar</button>        
+                    <button type="submit" class="btn btn-success"> <i class="fas fa-plus"></i>  Adicionar</button>        
                 </div>
 
             </form>
@@ -130,6 +130,7 @@
                             <!--<button type="button" class="btn btn-default" data-toggle="modal" data-target="#exampleModal" data-nome="{{ $item->nm_equipamento }}" data-valor="{{ $item->nr_valor_equipamento }}" data-dataCompra="{{ $item->dt_compra_equipamento }}" data-pk="{{ $item->pk_equipamento }}" data-descricao="{{ $item->ds_descricao_equipamento }}"><i class="fas fa-edit"></i> Editar</button>
                             <button type="button" class="btn btn-default" data-toggle="modal" data-target="#exampleModal" data-whatever="@fat"><i class="fas fa-trash-alt"></i> Deletar</button>
                             -->
+                            <a href="/equipamento/{{ $item->pk_equipamento }}"><i class="fas fa-edit"></i></a>
                             <button type="button" class="btn btn-default click-produto"  id="{{ $item->pk_equipamento }}"data-toggle="modal" data-target="#exampleModal"><i class="fas fa-edit"></i> Editar</button>
                             <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-nome="{{ $item->nm_equipamento }}">
                                 <div class="modal-dialog" role="document">
@@ -142,10 +143,9 @@
                                         </div>
                                         <div class="modal-body">
                                             <form>
-                                                {{ $item->fk_pk_tipo_equipamento }}
                                                 <div class="form-group">
                                                 <label for="recipient-name" class="col-form-label">ID</label>
-                                                <input type="text" class="form-control" name="pk_equipamento" id="pk">
+                                                <input type="text" class="form-control" name="pk_equipamento" id="pk" value=" {{ $item->pk_equipamento }} ">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="recipient-name" class="col-form-label">Nome</label>
@@ -179,7 +179,10 @@
                                 $(document).ready(function (){
                                     $(".click-produto").click(function() {
                                         var id = $(this).attr("id");
-                                        console.log(id);
+                                        $.get('/equipamento/1', function(resultado){
+                                            $("#mensagem").html(resultado);
+                                        })
+                                    console.log(resultado);    
                                     });
                                 });
                             </script>
