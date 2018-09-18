@@ -67,7 +67,7 @@ class EquipamentoController extends Controller
     public function store(Request $request)
     {
         
-
+        dd($request);
         //Validando dados de entrada
         $validate = Validator::make($request->all(), $this->model->rules, $this->model->messages);
         if ($validate->fails()) {
@@ -82,11 +82,10 @@ class EquipamentoController extends Controller
         $obterTipo = $obterTipo['0'];
         //Convertendo o numero de referencia para inteiro
         $numeroTipo = intval($obterTipo);
-        
-        dd($numeroTipo);
         //atualizando a $request com o numero do tipo
         $request->merge(['fk_pk_tipo_equipamento' =>  $numeroTipo]);
         $gravarDados = $this->storeTrait($request);
+        dd($gravarDados);
         if($gravarDados['success'])
             return redirect()
                         ->route('equipamento.index')
@@ -122,12 +121,12 @@ class EquipamentoController extends Controller
     */
     public function update(Request $request, $id)
     {
-        dd($request, $id);
+        //dd($request);
         //Validando dados de entrada
         $validate = Validator::make($request->all(), $this->model->rules, $this->model->messages);
+        //dd($validate);
         if ($validate->fails()) {
-            return redirect()
-                        ->route('equipamento.store')
+            return back()
                         ->withErrors($validate)
                         ->withInput();
         }
@@ -139,11 +138,12 @@ class EquipamentoController extends Controller
         $numeroTipo = intval($obterTipo);
         //atualizando a $request com o numero do tipo
         $request->merge(['fk_pk_tipo_equipamento' =>  $numeroTipo]);
-        $gravarDados = $this->storeTrait($request);
-        if($gravarDados['success'])
+        //dd($request);
+        $atualizarDados = $this->updateTrait($request, $id);
+        if($atualizarDados['success'])
             return redirect()
                         ->route('equipamento.index')
-                        ->with('success', $gravarDados['message']);
+                        ->with('success', $atualizarDados['message']);
 
 
         
@@ -157,8 +157,10 @@ class EquipamentoController extends Controller
      *  @param  int  $id
      *  @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy()
     {
+        echo "oláaaaaaaaaaaaaaa";
+        dd($request);
         //chamar e validar regras de negocio
         
         //chamar o metodo store da Trait para realizar o restante das validações de campos e gravar

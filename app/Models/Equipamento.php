@@ -66,7 +66,7 @@ class Equipamento extends Model
     */
 
     public $rules = [
-        //'nm_nome_equipamento'          => 'bail|required|',
+        'nm_equipamento'               => 'bail|required|',
         'dt_compra_equipamento'        => 'bail|required|',
         'ds_descricao_equipamento'     => 'bail|max:300',
         'nr_valor_equipamento'         => 'bail|numeric|required|min:0',
@@ -78,6 +78,7 @@ class Equipamento extends Model
     */
 
     public $messages = [
+        'nm_equipamento.required'                 => 'O campo nome é obrigatorio!',
         'dt_compra_equipamento.required'          => 'O campo data de compra é obrigatorio!',
         'ds_descricao_equipamento.max'            => 'A descrição deve conter no máximo 300 caracteres!',
         'nr_valor_equipamento.numeric'            => 'O campo valor é obrigatorio!',

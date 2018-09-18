@@ -138,20 +138,28 @@ trait ApiControllerTrait
        
         
         $result = $this->model->findOrFail($id); 
-        $values = $this->columnsInsert($request);
+        //$values = $this->columnsInsert($request);
+
+        /*$validate = validator($values, $this->model->rules, $this->model->messages);
        
-        $validate = validator($values, $this->model->rules, $this->model->messages);
-        
         if($validate->fails())
         {
             $errors['messages'] = $this->columnsShow($validate->errors());
             $errors['error']    = true;
             
             return $this->createResponse($errors, 422);
+        }*/
+
+        $result->update($request->all());
+        if($result){
+            return
+            [
+                'success' => true,
+                'message' => 'Sucesso!'
+            ];
         }
 
-        $result->update($values);
-        return $this->createResponse($this->columnsShow($result));
+        //return $this->createResponse($this->columnsShow($result));
 
     }
 
@@ -223,20 +231,20 @@ trait ApiControllerTrait
 
         foreach($columnsRequest as $column)
         {
-            //se existir a columa enviada na requisição no mapeamento
-           if(array_key_exists($column, $columnsModel)) 
-            {   
+            var_dump($column);
+           //se existir a coluna enviada na requisição no mapeamento
+           if(array_key_exists($column, $columnsModel))
+            {  
                 if(array_key_exists($column, $request->all())) 
                 {
+                    
                     $columnInsert = $columnsModel[$column];
                     $valueInsert = $request->input($column);
                     $columnsAndValues[$columnInsert] = $valueInsert;
-
                 }
-           
             }
         }
-
+        
         return $columnsAndValues;
 
      }

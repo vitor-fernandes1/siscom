@@ -25,7 +25,7 @@ Route::group( [ ], function(){
     Route::get('equipamento/{id}', 'Api\EquipamentoController@show')->name('equipamento.show');
     Route::post('equipamento', 'Api\EquipamentoController@store')->name('equipamento.store');
     Route::put('equipamento/update/{id}', 'Api\EquipamentoController@update')->name('equipamento.update');
-    Route::get('equipamento/delete/{id}', 'Api\EquipamentoController@delete')->name('equipamento.delete');
+    Route::delete('equipamento/delete/', 'Api\EquipamentoController@destroy')->name('equipamento.delete');
 });
 
 Route::group( [ ], function(){
