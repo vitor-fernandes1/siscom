@@ -157,13 +157,19 @@ class EquipamentoController extends Controller
      *  @param  int  $id
      *  @return \Illuminate\Http\Response
      */
-    public function destroy()
+    public function destroy(Request $request)
     {
-        echo "oláaaaaaaaaaaaaaa";
-        dd($request);
-        //chamar e validar regras de negocio
-        
+        //Obtendo o id do equipamento
+        $id = intval($request['pk_equipamento']);
+
         //chamar o metodo store da Trait para realizar o restante das validações de campos e gravar
-        return $this->destroyTrait($id);
+        $apagarDados = $this->destroyTrait($id);
+        if($apagarDados['success'])
+            return redirect()
+                        ->route('equipamento.index')
+                        ->with('success', $apagarDados['message']);
+       
+       
+        // return $this->destroyTrait($id);
     }
 }

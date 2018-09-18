@@ -167,7 +167,6 @@ trait ApiControllerTrait
      * <b>destroy</b>Método responsável em excluir um  registro especifico de um recurso retfull que use esta TRAIT.
      * Para utilização deste método deve ser realizado, deverá ser feito um DELETE(HTTP) para a URL do recurso,
      * passando o id do registro desejado, veja abaixo um exemplo de URL:
-     * http://www.apirestfull/api/entidades/1
      * 
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -175,8 +174,14 @@ trait ApiControllerTrait
     public function destroy($id)
     {
         $result = $this->model->findOrFail($id); 
-        $result->delete(); 
-        return $this->createResponse($this->columnsShow($result), 202); 
+        $result->forceDelete(); 
+        if($result){
+            return
+            [
+                'success' => true,
+                'message' => 'Sucesso!'
+            ];
+        }
 
     }
     /**

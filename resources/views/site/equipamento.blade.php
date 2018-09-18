@@ -94,79 +94,34 @@
                             <button type="button" class="btn btn-default" data-toggle="modal" data-target="#exampleModal" data-whatever="@fat"><i class="fas fa-trash-alt"></i> Deletar</button>
                             -->
                             <a href="/equipamento/{{ $item->pk_equipamento }}"><button type="button" class="btn btn-primary"><i class="fas fa-edit"></i> Editar</button></a>
-                            <a data-toggle="modal" data-target="#modal-danger"><button type="button" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Deletar</button></a>
                             <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-danger" data-pk="{{ $item->pk_equipamento }}"><i class="fas fa-edit"></i> Deletar</button>
                             
 
                             <div class="modal modal-danger fade in" id="modal-danger" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
                                         <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">×</span></button>
-                                            <h4 class="modal-title">Confirmação de exclusão</h4>
+                                            <h4 class="modal-title" id="exampleModalLabel">Confirmação de exclusão</h4>
                                         </div>
-                                        <form method="post" action=" {{ route( 'equipamento.delete' ) }} ">
+                                        <form action=" {{ route( 'equipamento.delete' ) }} " method="post">
                                             <input type="hidden" name="_method" value="DELETE">
-                                                {!! csrf_field() !!}   
-                                                <input type="text" name="pk_equipamento" id="pk">
-                                            </form>
+                                            {{method_field('delete')}}
+                                            {!! csrf_field() !!}   
+                                            <input type="hidden" name="pk_equipamento" id="pk">
                                         <div class="modal-body">
                                             <label>Tem certeza que deseja excluir o equipamento ?</label>
-                                            <button type="submit" class="btn btn-outline">Deletar</button>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Cancelar</button>
                                             <button type="submit" class="btn btn-outline">Deletar</button>
                                         </div>
-                                        </div>
+                                        </form>
+                                    </div>
                                         <!-- /.modal-content -->
-                                    </div>
-                                    </div>
-
-
-
-                            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h3 class="modal-title" id="exampleModalLabel">Editar</h3>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form>
-                                                <div class="form-group">
-                                                <label for="recipient-name" class="col-form-label">ID</label>
-                                                <input type="text" class="form-control" name="pk_equipamento" id="pk" value=" {{ $item->pk_equipamento }} ">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="recipient-name" class="col-form-label">Nome</label>
-                                                    <input type="text" class="form-control" name="nm_equipamento" id="nome">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="recipient-name" class="col-form-label">Valor</label>
-                                                    <input type="number" class="form-control" name="nr_valor_equipamento" id="valor">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="message-text" class="control-label">Descrição</label>
-                                                    <textarea class="form-control" name="ds_descricao_equipamento" id="descricao"></textarea>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label  for="recipient-name" class="col-form-label">Data</label>
-                                                    <input class="form-control" type="date" name="dt_compra_equipamento" id="dataCompra">
-                                                </div>
-                                            </form>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                            <button type="button" class="btn btn-primary">Send message</button>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
-
 
                             <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
                             <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
