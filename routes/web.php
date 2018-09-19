@@ -15,9 +15,10 @@ Route::get('/', 'Site\SiteController@index')->name('home');
 
 Route::group( [ ], function(){
     Route::get('empresa', 'Api\EmpresaController@index')->name('empresa.index');
+    Route::get('empresa/{id}', 'Api\EmpresaController@show')->name('empresa.show');
     Route::post('empresa', 'Api\EmpresaController@store')->name('empresa.store');
-    Route::get('empresa/pesquisar', 'Api\EmpresaController@update')->name('empresa.update');
-    Route::get('empresa/deletar', 'Api\EmpresaController@delete')->name('empresa.delete');
+    Route::get('empresa/update/{id}', 'Api\EmpresaController@update')->name('empresa.update');
+    Route::get('empresa/delete/', 'Api\EmpresaController@destroy')->name('empresa.delete');
 });
 
 Route::group( [ ], function(){
@@ -30,9 +31,10 @@ Route::group( [ ], function(){
 
 Route::group( [ ], function(){
     Route::get('manutencao', 'Api\ManutencaoController@index')->name('manutencao.index');
+    Route::get('manutencao/{id}', 'Api\ManutencaoController@show')->name('manutencao.show');
     Route::post('manutencao', 'Api\ManutencaoController@store')->name('manutencao.store');
-    Route::get('manutencao/pesquisar', 'Api\ManutencaoController@update')->name('manutencao.update');
-    Route::get('manutencao/deletar', 'Api\ManutencaoController@delete')->name('manutencao.delete');
+    Route::get('manutencao/update/{id}', 'Api\ManutencaoController@update')->name('manutencao.update');
+    Route::get('manutencao/delete/', 'Api\ManutencaoController@destroy')->name('manutencao.delete');
 });
 
 Auth::routes();

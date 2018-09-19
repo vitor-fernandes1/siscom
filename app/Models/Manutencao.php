@@ -32,9 +32,9 @@ class Manutencao extends Model
      *  
      */
     protected $fillable = [
-                'descricao',
-                'data_manutencao',
-                'valor',
+                'ds_descricao_manutencao',
+                'dt_manutencao',
+                'vl_valor_manutencao',
                 'fk_pk_tipo_manutencao',
                 'fk_pk_prioridade',
                 'fk_pk_situacao',
@@ -77,9 +77,9 @@ class Manutencao extends Model
     */
 
     public $rules = [
-        'descricao'               => 'bail|max:100',
-        'data_manutencao'         => 'bail|required|date',
-        'valor'                   => 'bail|required|numeric',
+        'ds_descricao_manutencao' => 'bail|max:100',
+        'dt_manutencao'           => 'bail|required|date',
+        'vl_valor_manutencao'     => 'bail|required|numeric',
         'fk_pk_tipo_manutencao'   => 'bail|required|', 
         'fk_pk_prioridade'        => 'bail|required|numeric|min:1|max:3',
         'fk_pk_situacao'          => 'bail|required|numeric|min:1|max:3',
@@ -92,9 +92,9 @@ class Manutencao extends Model
      * <b>messages</b>  Atributo responsável em definir mensagem de validação de acordo com as regras especificadas no atributo $rules
     */
     public $messages = [
-        'descricao.max'                 => 'O campo descrição tem no maximo 100 carateres',
-        'data_manutencao.required'      => 'O campo data da manutenção é obrigatorio',
-        'valor.required'                => 'O campo valor é obrigatório ',
+        'ds_descricao_manutencao.max'   => 'O campo descrição tem no maximo 100 carateres',
+        'dt_manutencao.required'        => 'O campo data da manutenção é obrigatorio',
+        'vl_valor_manutencao.required'  => 'O campo valor é obrigatório ',
 
         'fk_pk_tipo_manutencao.required'      => 'O campo tipo é obrigatorio',
         
@@ -148,8 +148,9 @@ class Manutencao extends Model
      */
     public $map = [
         'id'                 => 'pk_manutencao',
-        'data'               => 'data_manutencao',
-        'valor'              => 'valor_manutenção',
+        'descricao'          => 'ds_descricao_manutencao',
+        'data'               => 'dt_manutencao',
+        'valor'              => 'vl_valor_manutencao',
         'tipo'               => 'fk_pk_tipo_manutencao',
         'prioridade'         => 'fk_pk_prioridade',
         'situacao'           => 'fk_pk_situacao',

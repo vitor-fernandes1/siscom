@@ -16,6 +16,7 @@ class SiscomManutencaoTable extends Migration
         Schema::create('siscom_manutencao', function (Blueprint $table) {
             $table->increments('pk_manutencao');
             $table->string('ds_descricao_manutencao', 300)->nullable();
+            $table->date('dt_manutencao', 150);
             $table->decimal('vl_valor_manutencao', 10, 2)->unsigned()->default(0);
             $table->unsignedInteger('fk_pk_tipo_manutencao');
             $table->foreign('fk_pk_tipo_manutencao','constraint_fk_pk_tipo_manutencao')

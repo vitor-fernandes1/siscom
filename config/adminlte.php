@@ -30,7 +30,7 @@ return [
     |
     */
 
-    'logo' => '<b>Siscom</b>',
+    'logo' => '<p>S i s c o m</p>',
 
     'logo_mini' => '<b>A</b>LT',
 
@@ -93,7 +93,7 @@ return [
 
     'login_url' => 'login',
 
-    'register_url' => 'register',
+    'register_url' => null,
 
     /*
     |--------------------------------------------------------------------------
@@ -108,20 +108,28 @@ return [
     */
 
     'menu' => [
-        'MAIN NAVIGATION',
+        'MENU',
         [
             'text' => 'Blog',
             'url'  => 'admin/blog',
             'can'  => 'manage-blog',
         ],
         [
-            'text'        => 'Pages',
-            'url'         => 'admin/pages',
-            'icon'        => 'file',
-            'label'       => 4,
-            'label_color' => 'success',
+            'text'        => 'Equipamento',
+            'url'         => '/equipamento',
+            'icon'        => "gear",
         ],
-        'ACCOUNT SETTINGS',
+        [
+            'text'        => 'Manutenção',
+            'url'         => '/manutencao',
+            'icon'        => 'wrench',
+        ],
+        [
+            'text'        => 'Empresa',
+            'url'         => '/empresa',
+            'icon'        => 'institution',
+        ],
+        /*'ACCOUNT SETTINGS',
         [
             'text' => 'Profile',
             'url'  => 'admin/settings',
@@ -169,7 +177,7 @@ return [
                     'url'  => '#',
                 ],
             ],
-        ],
+        ],*/
         'LABELS',
         [
             'text'       => 'Important',

@@ -67,7 +67,6 @@ class EquipamentoController extends Controller
     public function store(Request $request)
     {
         
-        dd($request);
         //Validando dados de entrada
         $validate = Validator::make($request->all(), $this->model->rules, $this->model->messages);
         if ($validate->fails()) {

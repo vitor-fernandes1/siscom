@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Empresa;
+use Illuminate\Support\Facades\DB;
 
 class EmpresaController extends Controller
 {
@@ -47,7 +48,10 @@ class EmpresaController extends Controller
      */
     public function index(){
         
-        return view('site.empresa');
+        $recuperandoDados = DB::table('siscom_empresa')->paginate(5);
+        //$recuperandoDados = $this->model->get();
+        //dd($recuperandoDados);
+        return view('site.empresa', compact('recuperandoDados') );
     }
 
     /**
@@ -58,7 +62,30 @@ class EmpresaController extends Controller
     */
     public function store(Request $request)
     {
-        //chamar e validar regras de negocio
+        //Validando dados de entrada
+        $validate = Validator::make($request->all(), $this->model->rules, $this->model->messages);
+        if ($validate->fails()) {
+            return redirect()
+                        ->route('empresa.store')
+                        ->withErrors($validate)
+                        ->withInput();
+        }
+        
+        /*//Obtendo o numero de referencia do tipo
+        $obterTipo = explode(" ", $request->fk_pk_tipo_equipamento);
+        $obterTipo = $obterTipo['0'];
+        //Convertendo o numero de referencia para inteiro
+        $numeroTipo = intval($obterTipo);
+        //atualizando a $request com o numero do tipo
+        $request->merge(['fk_pk_tipo_equipamento' =>  $numeroTipo]);*/
+        $gravarDados = $this->storeTrait($request);
+        dd($gravarDados);
+        if($gravarDados['success'])
+            return redirect()
+                        ->route('empresa.index')
+                        ->with('success', $gravarDados['message']);
+
+
         
         //chamar o metodo store da Trait para realizar o restante das validações de campos e gravar
         return $this->storeTrait($request);
@@ -73,7 +100,9 @@ class EmpresaController extends Controller
     public function show($id)
     {
 
-        return $this->showTrait($id);
+        $recuperandoDados =  $this->showTrait($id);
+        $recuperandoDados = $recuperandoDados->original['Resposta']['conteudo'] ;
+        return view('site.empresaEditar', compact('recuperandoDados') );
     }
 
     /**
@@ -86,10 +115,31 @@ class EmpresaController extends Controller
     */
     public function update(Request $request, $id)
     {
-       //chamar e validar regras de negocio
-        
-        //chamar o metodo store da Trait para realizar o restante das validações de campos e gravar
-        return $this->updateTrait($request, $id);
+       //Validando dados de entrada
+       $validate = Validator::make($request->all(), $this->model->rules, $this->model->messages);
+       if ($validate->fails()) {
+           return back()
+                       ->withErrors($validate)
+                       ->withInput();
+       }
+       
+       /*//Obtendo o numero de referencia do tipo
+       $obterTipo = explode(" ", $request->fk_pk_tipo_equipamento);
+       $obterTipo = $obterTipo['0'];
+       //Convertendo o numero de referencia para inteiro
+       $numeroTipo = intval($obterTipo);
+       //atualizando a $request com o numero do tipo
+       $request->merge(['fk_pk_tipo_equipamento' =>  $numeroTipo]);*/
+       $atualizarDados = $this->updateTrait($request, $id);
+       if($atualizarDados['success'])
+           return redirect()
+                       ->route('empresa.index')
+                       ->with('success', $atualizarDados['message']);
+
+
+       
+       //chamar o metodo store da Trait para realizar o restante das validações de campos e gravar
+       return $this->updateTrait($request, $id);
     }
 
     
@@ -100,9 +150,17 @@ class EmpresaController extends Controller
      */
     public function destroy($id)
     {
-        //chamar e validar regras de negocio
-        
+        //Obtendo o id do equipamento
+        $id = intval($request['pk_empresa']);
+
         //chamar o metodo store da Trait para realizar o restante das validações de campos e gravar
-        return $this->destroyTrait($id);
+        $apagarDados = $this->destroyTrait($id);
+        if($apagarDados['success'])
+            return redirect()
+                        ->route('empresa.index')
+                        ->with('success', $apagarDados['message']);
+       
+       
+        // return $this->destroyTrait($id);
     }
 }
