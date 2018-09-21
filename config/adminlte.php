@@ -30,9 +30,10 @@ return [
     |
     */
 
-    'logo' => '<p>S i s c o m</p>',
+    'logo' => '<b>Sis</b><span>com</span>',
+    //'logo' => '<img src="C:\xampp\htdocs\siscom\resources\views\imagensz\logo.png">',
 
-    'logo_mini' => '<b>A</b>LT',
+    'logo_mini' => '',
 
     /*
     |--------------------------------------------------------------------------
@@ -110,9 +111,9 @@ return [
     'menu' => [
         'MENU',
         [
-            'text' => 'Blog',
-            'url'  => 'admin/blog',
-            'can'  => 'manage-blog',
+            'text'        => 'Pagina Inicial',
+            'url'         => '/',
+            'icon'        => "home",
         ],
         [
             'text'        => 'Equipamento',
@@ -128,6 +129,17 @@ return [
             'text'        => 'Empresa',
             'url'         => '/empresa',
             'icon'        => 'institution',
+        ],
+        [
+            'text'        => 'Central de apoio',
+            'url'         => '/empresa',
+            'icon'        => 'hands-helping',
+        ],
+        [
+            'text'        => 'Avisos',
+            'url'         => '/empresa',
+            'icon'        => 'exclamation-circle',
+            
         ],
         /*'ACCOUNT SETTINGS',
         [
@@ -178,17 +190,20 @@ return [
                 ],
             ],
         ],*/
-        'LABELS',
+        'Gerenciamento',
         [
-            'text'       => 'Important',
-            'icon_color' => 'red',
+            'text'        => 'Geren. Vida útil',
+            'url'         => '/empresa',
+            'icon'        => 'heartbeat',
         ],
         [
-            'text'       => 'Warning',
-            'icon_color' => 'yellow',
+            'text'        => 'Baixar Manutenções',
+            'url'         => '/empresa',
+            'icon'        => 'clipboard-check',
         ],
         [
             'text'       => 'Information',
+            'icon'        => "circle",
             'icon_color' => 'aqua',
         ],
     ],

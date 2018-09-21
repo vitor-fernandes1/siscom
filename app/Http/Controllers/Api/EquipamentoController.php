@@ -84,7 +84,6 @@ class EquipamentoController extends Controller
         //atualizando a $request com o numero do tipo
         $request->merge(['fk_pk_tipo_equipamento' =>  $numeroTipo]);
         $gravarDados = $this->storeTrait($request);
-        dd($gravarDados);
         if($gravarDados['success'])
             return redirect()
                         ->route('equipamento.index')
