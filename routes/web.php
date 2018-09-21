@@ -11,7 +11,8 @@
 |
 */
 
-Route::get('/', 'Site\SiteController@index')->name('home');
+Route::get('/', 'Site\SiteController@index')->name('home.index');
+Route::get('central', 'Site\CentralController@index')->name('central.index');
 
 Route::group( [ ], function(){
     Route::get('empresa', 'Api\EmpresaController@index')->name('empresa.index');
@@ -35,6 +36,14 @@ Route::group( [ ], function(){
     Route::post('manutencao', 'Api\ManutencaoController@store')->name('manutencao.store');
     Route::get('manutencao/update/{id}', 'Api\ManutencaoController@update')->name('manutencao.update');
     Route::get('manutencao/delete/', 'Api\ManutencaoController@destroy')->name('manutencao.delete');
+});
+
+Route::group( [ ], function(){
+    Route::get('estatistica', 'Site\EstatisticaController@index')->name('estatistica.index');
+    Route::get('estatistica/equipamento/{id}', 'Site\EstatisticaController@show')->name('estatistica.show');
+    /*Route::post('estatistica', 'Api\ManutencaoController@store')->name('manutencao.store');
+    Route::get('estatistica/update/{id}', 'Api\ManutencaoController@update')->name('manutencao.update');
+    Route::get('estatistica/delete/', 'Api\ManutencaoController@destroy')->name('manutencao.delete');*/
 });
 
 Auth::routes();

@@ -114,7 +114,6 @@ trait ApiControllerTrait
     public function show($id)
     {
         $class = $this->model->resource;
-        
         $result = new $class($this->model->with($this->relationships())
                          ->findOrFail($id));
                 

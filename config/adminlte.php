@@ -132,7 +132,7 @@ return [
         ],
         [
             'text'        => 'Central de apoio',
-            'url'         => '/empresa',
+            'url'         => '/central',
             'icon'        => 'hands-helping',
         ],
         [
