@@ -19,7 +19,7 @@ Route::group( [ ], function(){
     Route::get('empresa/{id}', 'Api\EmpresaController@show')->name('empresa.show');
     Route::post('empresa', 'Api\EmpresaController@store')->name('empresa.store');
     Route::get('empresa/update/{id}', 'Api\EmpresaController@update')->name('empresa.update');
-    Route::get('empresa/delete/', 'Api\EmpresaController@destroy')->name('empresa.delete');
+    Route::delete('empresa/delete/', 'Api\EmpresaController@destroy')->name('empresa.delete');
 });
 
 Route::group( [ ], function(){
