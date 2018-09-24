@@ -48,7 +48,7 @@ class EmpresaController extends Controller
      */
     public function index(){
         
-        $recuperandoDados = DB::table('siscom_empresa')->paginate(5);
+        $recuperandoDados = DB::table('siscom_empresa')->get();
         //$recuperandoDados = $this->model->get();
         //dd($recuperandoDados);
         return view('site.empresa', compact('recuperandoDados') );
