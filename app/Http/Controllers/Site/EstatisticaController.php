@@ -47,7 +47,7 @@ class EstatisticaController extends Controller
      */
     public function index(){
 
-        $recuperandoDados = DB::table('siscom_equipamento')->paginate(10);
+        $recuperandoDados = DB::table('siscom_equipamento')->get();
         //$recuperandoDados = $this->model->get();
         //dd($recuperandoDados);
         return view('site.estatistica', compact('recuperandoDados') );

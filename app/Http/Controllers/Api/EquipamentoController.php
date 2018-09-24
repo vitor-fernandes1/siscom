@@ -52,7 +52,7 @@ class EquipamentoController extends Controller
      */
     public function index()
     {
-        $recuperandoDados = DB::table('siscom_equipamento')->paginate(5);
+        $recuperandoDados = DB::table('siscom_equipamento')->get();
         //$recuperandoDados = $this->model->get();
         //dd($recuperandoDados);
         return view('site.equipamento', compact('recuperandoDados') );
