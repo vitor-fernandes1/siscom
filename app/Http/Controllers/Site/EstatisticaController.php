@@ -60,10 +60,53 @@ class EstatisticaController extends Controller
     */
     public function show($id)
     {
-        //$class = Equipamento::;
-        //dd($class);
+        //obtendo dados do equipamento
         $recuperandoDados =  $this->showTrait($id);
         $recuperandoDados = $recuperandoDados->original['Resposta']['conteudo'] ;
+        //obtendo o valor das manutenções atreladas ao equipamento
+        $obterValorManutencao = DB::table('siscom_manutencao')->select('vl_valor_manutencao')->where('fk_pk_equipamento', $id)->get(); 
+        $valorTotalManutencao = 0 ;
+        foreach($obterValorManutencao as $item)
+        {
+            $valorTotalManutencao += doubleval($item->vl_valor_manutencao);
+        }
+
+        //obtendo Manutenções em andamento atreladas ao equipamento 1-Em Andamento 2-Pendente 3-Concluido
+        $verificaQtdManutencao = DB::table('siscom_manutencao')->where('fk_pk_situacao', 1)->count();
+        $manutencaoEmAndamento = null ;
+        if($verificaQtdManutencao != 0)
+        {
+            $obterManutencaoEmAndamento = DB::table('siscom_manutencao')->where('fk_pk_situacao', 1)->get();
+            foreach($obterManutencaoEmAndamento as $item)
+            {
+                $manutencaoEmAndamento [] = $item;
+            }
+        }
+
+        //obtendo Manutenções concluidas atreladas ao equipamento 1-Em Andamento 2-Pendente 3-Concluido
+        $verificaQtdManutencao = DB::table('siscom_manutencao')->where('fk_pk_situacao', 1)->count();
+        $manutencaoConcluida = null ;
+        if($verificaQtdManutencao != 0)
+        {
+            $obterManutencaoConcluida = DB::table('siscom_manutencao')->where('fk_pk_situacao', 3)->get(); 
+            foreach($obterManutencaoConcluida as $item)
+            {
+                $manutencaoConcluida [] = $item;
+            }
+        }
+
+        //obtendo Manutenções Pendentes atreladas ao equipamento 1-Em Andamento 2-Pendente 3-Concluido
+        $verificaQtdManutencao = DB::table('siscom_manutencao')->where('fk_pk_situacao', 1)->count();
+        $manutencaoPendente = null ;
+        if($verificaQtdManutencao != 0)
+        {
+            $obterManutencaoPendente = DB::table('siscom_manutencao')->where('fk_pk_situacao', 2)->get();
+            foreach($obterManutencaoPendente as $item)
+            {
+                $manutencaoPendente [] = $item;
+            }
+        }
+        
         return view('site.estatistica-id', compact('recuperandoDados') );
         
     }
