@@ -106,7 +106,17 @@ class EstatisticaController extends Controller
                 $manutencaoPendente [] = $item;
             }
         }
+
+        //obtendo manutenções nos ultimos 6 meses
+        $dadosUltimosSeisMeses = DB::select('SELECT * FROM siscom_manutencao WHERE dt_manutencao BETWEEN CURDATE() - INTERVAL 6 MONTH AND CURDATE()');
         
+        //obtendo manutenções nos ultimos 3 meses
+        $dadosUltimosTresMeses = DB::select('SELECT * FROM siscom_manutencao WHERE dt_manutencao BETWEEN CURDATE() - INTERVAL 6 MONTH AND CURDATE()');
+
+        //obtendo manutenções no ultimo ano
+        $dadosUltimoAno = DB::select('SELECT * FROM siscom_manutencao WHERE dt_manutencao BETWEEN CURDATE() - INTERVAL 1 Year AND CURDATE()');
+        
+        dd($dadosUltimoAno);
         return view('site.estatistica-id', compact('recuperandoDados') );
         
     }
