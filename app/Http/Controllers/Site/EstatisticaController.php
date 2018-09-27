@@ -79,7 +79,7 @@ class EstatisticaController extends Controller
         $valorTotalEquipamento = ($recuperandoDados->nr_valor_equipamento + $valorTotalManutencao);
 
         //obtendo Manutenções em andamento atreladas ao equipamento 1-Em Andamento 2-Pendente 3-Concluido
-        $verificaQtdManutencao = DB::table('siscom_manutencao')->where('fk_pk_situacao', 1)->count();
+        $verificaQtdManutencao = DB::table('siscom_manutencao')->where('fk_pk_situacao', 1)->where('fk_pk_equipamento', $id)->count();
         $manutencaoEmAndamento = null ;
         if($verificaQtdManutencao != 0)
         {
@@ -91,7 +91,7 @@ class EstatisticaController extends Controller
         }
 
         //obtendo Manutenções concluidas atreladas ao equipamento 1-Em Andamento 2-Pendente 3-Concluido
-        $verificaQtdManutencao = DB::table('siscom_manutencao')->where('fk_pk_situacao', 1)->count();
+        $verificaQtdManutencao = DB::table('siscom_manutencao')->where('fk_pk_situacao', 1)->where('fk_pk_equipamento', $id)->count();
         $manutencaoConcluida = null ;
         if($verificaQtdManutencao != 0)
         {
@@ -103,7 +103,7 @@ class EstatisticaController extends Controller
         }
 
         //obtendo Manutenções Pendentes atreladas ao equipamento 1-Em Andamento 2-Pendente 3-Concluido
-        $verificaQtdManutencao = DB::table('siscom_manutencao')->where('fk_pk_situacao', 1)->count();
+        $verificaQtdManutencao = DB::table('siscom_manutencao')->where('fk_pk_situacao', 1)->where('fk_pk_equipamento', $id)->count();
         $manutencaoPendente = null ;
         if($verificaQtdManutencao != 0)
         {
