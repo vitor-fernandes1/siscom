@@ -33,7 +33,7 @@ return [
     'logo' => '<b>Sis</b><span>com</span>',
     //'logo' => '<img src="C:\xampp\htdocs\siscom\resources\views\imagensz\logo.png">',
 
-    'logo_mini' => '',
+    'logo_mini' => '<i class="fas fa-angle-right"></i>',
 
     /*
     |--------------------------------------------------------------------------

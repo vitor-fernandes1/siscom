@@ -21,7 +21,7 @@
                 </div>
                 <div class="media-right">
                     <div class="clearfix">
-                        <h3 style=" font-size: 27px; text-align: left; padding: 7px 0px; margin-top: 0 ;">Gerar Estatísticas</h3>
+                        <h3 style=" font-size: 27px; text-align: left; padding: 7px 0px; margin-top: 0 ;">Estatísticas</h3>
                         <p style=" font-size: 16px; text-align: left; padding: 2px 0px; margin-top: 0 ;" class="lead">Reuni informações estatísticas do equipamento</p>
                        
                         <br>
@@ -44,7 +44,7 @@
                 </div>
                 <div class="media-right">
                     <div class="clearfix">
-                        <h3 style=" font-size: 27px; text-align: left; padding: 7px 0px; margin-top: 0 ;">Gerar Gráfico</h3>
+                        <h3 style=" font-size: 27px; text-align: left; padding: 7px 0px; margin-top: 0 ;">Gráfico</h3>
                         <p style=" font-size: 16px; text-align: left; padding: 2px 0px; margin-top: 0 ;" class="lead">Gera graficos de projeção de custos do equipamento</p>
                        
                         <br>

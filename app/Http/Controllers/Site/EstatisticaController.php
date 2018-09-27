@@ -60,9 +60,14 @@ class EstatisticaController extends Controller
     */
     public function show($id)
     {
+        //dd($id);
         //obtendo dados do equipamento
         $recuperandoDados =  $this->showTrait($id);
         $recuperandoDados = $recuperandoDados->original['Resposta']['conteudo'] ;
+
+        //Quantidade de mautenções realizadas
+        $qtdManutencao = DB::table('siscom_manutencao')->where('fk_pk_equipamento', $id)->count();
+
         //obtendo o valor das manutenções atreladas ao equipamento
         $obterValorManutencao = DB::table('siscom_manutencao')->select('vl_valor_manutencao')->where('fk_pk_equipamento', $id)->get(); 
         $valorTotalManutencao = 0 ;
@@ -70,6 +75,8 @@ class EstatisticaController extends Controller
         {
             $valorTotalManutencao += doubleval($item->vl_valor_manutencao);
         }
+        //Valor total do equipamento manutencoes + valor equipamento
+        $valorTotalEquipamento = ($recuperandoDados->nr_valor_equipamento + $valorTotalManutencao);
 
         //obtendo Manutenções em andamento atreladas ao equipamento 1-Em Andamento 2-Pendente 3-Concluido
         $verificaQtdManutencao = DB::table('siscom_manutencao')->where('fk_pk_situacao', 1)->count();
@@ -108,16 +115,27 @@ class EstatisticaController extends Controller
         }
 
         //obtendo manutenções nos ultimos 6 meses
-        $dadosUltimosSeisMeses = DB::select('SELECT * FROM siscom_manutencao WHERE dt_manutencao BETWEEN CURDATE() - INTERVAL 6 MONTH AND CURDATE()');
-        
+        $dadosUltimosSeisMeses = DB::select("SELECT * FROM siscom_manutencao WHERE dt_manutencao BETWEEN CURDATE() - INTERVAL 6 MONTH AND CURDATE() AND fk_pk_equipamento = $id");
+        if(empty($dadosUltimosSeisMeses))
+        {
+            $dadosUltimosSeisMeses = null ;
+        }
+
         //obtendo manutenções nos ultimos 3 meses
-        $dadosUltimosTresMeses = DB::select('SELECT * FROM siscom_manutencao WHERE dt_manutencao BETWEEN CURDATE() - INTERVAL 6 MONTH AND CURDATE()');
+        $dadosUltimosTresMeses = DB::select("SELECT * FROM siscom_manutencao WHERE dt_manutencao BETWEEN CURDATE() - INTERVAL 3 MONTH AND CURDATE() AND fk_pk_equipamento = $id");
+        if(empty($dadosUltimosTresMeses))
+        {
+            $dadosUltimosTresMeses = null ;
+        }
 
         //obtendo manutenções no ultimo ano
-        $dadosUltimoAno = DB::select('SELECT * FROM siscom_manutencao WHERE dt_manutencao BETWEEN CURDATE() - INTERVAL 1 Year AND CURDATE()');
-        
-        dd($dadosUltimoAno);
-        return view('site.estatistica-id', compact('recuperandoDados') );
+        $dadosUltimoAno = DB::select("SELECT * FROM siscom_manutencao WHERE dt_manutencao BETWEEN CURDATE() - INTERVAL 1 Year AND CURDATE() AND fk_pk_equipamento = $id");
+        if(empty($dadosUltimoAno))
+        {
+            $dadosUltimoAno = null ;
+        }
+
+        return view('site.estatistica-id', compact('recuperandoDados', 'valorTotalManutencao', 'valorTotalEquipamento', 'qtdManutencao', 'manutencaoConcluida', 'manutencaoEmAndamento', 'manutencaoPendente', 'dadosUltimoAno', 'dadosUltimosSeisMeses', 'dadosUltimosTresMeses') );
         
     }
 }
