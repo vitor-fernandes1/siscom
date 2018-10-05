@@ -137,7 +137,7 @@ return [
         ],
         [
             'text'        => 'Avisos',
-            'url'         => '/empresa',
+            'url'         => '/avisos',
             'icon'        => 'exclamation-circle',
             
         ],

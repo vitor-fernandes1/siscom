@@ -47,5 +47,10 @@ Route::group( [ ], function(){
     Route::get('estatistica/delete/', 'Api\ManutencaoController@destroy')->name('manutencao.delete');*/
 });
 
+Route::group( [ ], function(){
+    Route::get('avisos', 'Api\AvisoController@index')->name('avisos.index');
+    //Route::get('avisos', 'Api\AvisoController@show')->name('avisos.show');
+});
+
 Auth::routes();
 
