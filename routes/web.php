@@ -48,6 +48,14 @@ Route::group( [ ], function(){
 });
 
 Route::group( [ ], function(){
+    Route::get('grafico', 'Api\GraficoController@index')->name('estatistica.index');
+    Route::get('grafico/equipamento/{id}', 'Api\GraficoController@show')->name('estatistica.show');
+    /*Route::post('estatistica', 'Api\ManutencaoController@store')->name('manutencao.store');
+    Route::get('estatistica/update/{id}', 'Api\ManutencaoController@update')->name('manutencao.update');
+    Route::get('estatistica/delete/', 'Api\ManutencaoController@destroy')->name('manutencao.delete');*/
+});
+
+Route::group( [ ], function(){
     Route::get('avisos', 'Api\AvisoController@index')->name('avisos.index');
     //Route::get('avisos', 'Api\AvisoController@show')->name('avisos.show');
 });

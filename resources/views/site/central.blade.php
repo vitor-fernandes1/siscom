@@ -38,7 +38,7 @@
             <br>
             <div class="media">
                 <div class="media-left">
-                    <a href="/equipamento" class="ad-click-event">
+                    <a href="/grafico" class="ad-click-event">
                         <i style="padding: 7px 30px; margin-top: 0 ;" class="fas fa-chart-line fa-5x"></i>
                     </a>
                 </div>
