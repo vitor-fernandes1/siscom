@@ -63,30 +63,16 @@
 
 <div class="box box-primary">
    <div class="box-body">
-        <canvas id="myChart"></canvas>
+        <div style="width:100%;">
+            {!! $chartjs->render() !!}
+        </div>
+        <div style="width:100%;">
+            {!! $chartjs2->render() !!}
+        </div>
    </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
-<script>
-
-    var teste = "<?php echo $recuperandoDados ?> " ;
-    console.log(teste); 
-</script>
-<script>
-var ctx = document.getElementById("myChart");
-var myChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: ["2018"],
-        datasets: [{
-            label: "Manutenções",
-            data: [0,7]
-            
-        }],
-    }
-});
-</script>
 @stop

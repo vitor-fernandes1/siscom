@@ -150,7 +150,7 @@ return [
         /*
          * Package Service Providers...
          */
-
+        Fx3costa\LaravelChartJs\Providers\ChartjsServiceProvider::class,
         /*
          * Application Service Providers...
          */
