@@ -193,7 +193,7 @@ return [
         'Gerenciamento',
         [
             'text'        => 'Geren. Vida útil',
-            'url'         => '/empresa',
+            'url'         => '/gerenciamento',
             'icon'        => 'heartbeat',
         ],
         [

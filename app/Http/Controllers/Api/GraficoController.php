@@ -298,6 +298,9 @@ class GraficoController extends Controller
         ->options([]);
     }
     
+    //** Recomendação do sistema **
+    //caso valor das manutenções chegue a 60% do valor do equipamento em 1 ano
+        
 
     
 

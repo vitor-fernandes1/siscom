@@ -56,6 +56,11 @@ Route::group( [ ], function(){
 });
 
 Route::group( [ ], function(){
+    Route::get('gerenciamento', 'Api\GerenciamentoController@index')->name('gerenciamento.index');
+    Route::get('gerenciamento/equipamento/{id}', 'Api\GerenciamentoController@show')->name('gerenciamento.show');
+});
+
+Route::group( [ ], function(){
     Route::get('avisos', 'Api\AvisoController@index')->name('avisos.index');
     //Route::get('avisos', 'Api\AvisoController@show')->name('avisos.show');
 });
