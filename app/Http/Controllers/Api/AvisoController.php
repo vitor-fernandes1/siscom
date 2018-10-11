@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Api\ApiControllerTrait;
 
 class AvisoController extends Controller
@@ -31,92 +32,53 @@ class AvisoController extends Controller
      */
     public function index(){
 
-        return view('site.avisos');
-    }
-    /**
-     * <b>show</b> Método responsável em receber a requisição do tipo GET contendo o id do recurso a ser consultado
-     *  e encaminhar a mesma para o metodo index da ApiControllerTrait
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-    */
-    public function show($id)
-    {
-        //dd($id);
-        //obtendo dados do equipamento
-        $recuperandoDados = $this->showTrait($id);
-        $recuperandoDados = $recuperandoDados->original['Resposta']['conteudo'] ;
+        //obtendo os dados dos equipamentos que não receberam manutenções nos ultimos 1 ANO OBS: Só serão avisados os equipamentos que já tenham 1 ano ou mais de uso
+        $obterEquipamentosComUmAnoDeUso = DB::select("SELECT pk_equipamento FROM siscom_equipamento WHERE TIMESTAMPDIFF(YEAR,dt_compra_equipamento, now()) >=1");
+        //dd($obterEquipamentosComUmAnoDeUso);
 
-        //Quantidade de mautenções realizadas
-        $qtdManutencao = DB::table('siscom_manutencao')->where('fk_pk_equipamento', $id)->count();
-
-        //obtendo o valor das manutenções atreladas ao equipamento
-        $obterValorManutencao = DB::table('siscom_manutencao')->select('vl_valor_manutencao')->where('fk_pk_equipamento', $id)->get(); 
-        $valorTotalManutencao = 0 ;
-        foreach($obterValorManutencao as $item)
-        {
-            $valorTotalManutencao += doubleval($item->vl_valor_manutencao);
-        }
-        //Valor total do equipamento manutencoes + valor equipamento
-        $valorTotalEquipamento = ($recuperandoDados->nr_valor_equipamento + $valorTotalManutencao);
-
-        //obtendo Manutenções em andamento atreladas ao equipamento 1-Em Andamento 2-Pendente 3-Concluido
-        $verificaQtdManutencao = DB::table('siscom_manutencao')->where('fk_pk_situacao', 1)->where('fk_pk_equipamento', $id)->count();
-        $manutencaoEmAndamento = null ;
-        if($verificaQtdManutencao != 0)
-        {
-            $obterManutencaoEmAndamento = DB::table('siscom_manutencao')->where('fk_pk_situacao', 1)->get();
-            foreach($obterManutencaoEmAndamento as $item)
-            {
-                $manutencaoEmAndamento [] = $item;
+        if(!empty($obterEquipamentosComUmAnoDeUso)){
+            foreach($obterEquipamentosComUmAnoDeUso as $item){
+                //obtendo os dados dos equipamentos que não receberam manutenções nos ultimos 2 ANOS OBS: Só serão avisados os equipamentos que já tenham 1 ano ou mais de uso
+                $obterEquipamentoSeisMesesSemManutencao = DB::select("SELECT p2.pk_manutencao, p1.pk_equipamento, p1.nm_equipamento, p1.dt_compra_equipamento FROM siscom_equipamento p1 INNER JOIN siscom_manutencao p2 ON p2.fk_pk_equipamento = p1.pk_equipamento WHERE p2.fk_pk_equipamento = $item->pk_equipamento AND p1.pk_equipamento = $item->pk_equipamento AND TIMESTAMPDIFF(YEAR,p1.dt_compra_equipamento, p2.dt_manutencao) >= 1 AND TIMESTAMPDIFF(MONTH,p2.dt_manutencao, NOW()) <= 6");
+                $obterEquipamentoUmAnoSemManutencao = DB::select("SELECT p2.pk_manutencao, p1.pk_equipamento, p1.nm_equipamento, p1.dt_compra_equipamento FROM siscom_equipamento p1 INNER JOIN siscom_manutencao p2 ON p2.fk_pk_equipamento = p1.pk_equipamento WHERE p2.fk_pk_equipamento = $item->pk_equipamento AND p1.pk_equipamento = $item->pk_equipamento AND TIMESTAMPDIFF(YEAR,p1.dt_compra_equipamento, p2.dt_manutencao) >= 1 AND TIMESTAMPDIFF(YEAR,p2.dt_manutencao, NOW()) <= 1");
+                $obterEquipamentoDoisAnoSemManutencao = DB::select("SELECT p2.pk_manutencao, p1.pk_equipamento, p1.nm_equipamento, p1.dt_compra_equipamento FROM siscom_equipamento p1 INNER JOIN siscom_manutencao p2 ON p2.fk_pk_equipamento = p1.pk_equipamento WHERE p2.fk_pk_equipamento = $item->pk_equipamento AND p1.pk_equipamento = $item->pk_equipamento AND TIMESTAMPDIFF(YEAR,p1.dt_compra_equipamento, p2.dt_manutencao) >= 1 AND TIMESTAMPDIFF(YEAR,p2.dt_manutencao, NOW()) <= 2");
+                //dd($obterEquipamentoSeisMesesSemManutencao['0']->nm_equipamento, $obterEquipamentoUmAnoSemManutencao, $obterEquipamentoDoisAnoSemManutencao);
+                dd($obterEquipamentoSeisMesesSemManutencao, $obterEquipamentoUmAnoSemManutencao, $obterEquipamentoDoisAnoSemManutencao);
+                /*dd($obterEquipamentoDoisAnosSemManutencao);
+                foreach($obterEquipamentoDoisAnosSemManutencao as $registro){
+                    $obtendo [] = ['pk_equipamento' => $registro->pk_equipamento,];
+                }
+                dd($obtendo);
+                Removendo valores duplicados no array
+                $teste = array_unique($obtendo);*/
+                if(!empty($obterEquipamentoSeisMesesSemManutencao))
+                {
+                    $equipamentoSeisMesesSemManutencao [] = [
+                        'pk_equipamento'        => $obterEquipamentoSeisMesesSemManutencao['0']->pk_equipamento,
+                        'nm_equipamento'        => $obterEquipamentoSeisMesesSemManutencao['0']->nm_equipamento,
+                        'dt_compra_equipamento' => $obterEquipamentoSeisMesesSemManutencao['0']->dt_compra_equipamento,
+                    ];
+                }else if(!empty($obterEquipamentoUmAnoSemManutencao)){
+                    $equipamentoUmAnoSemManutencao [] = [
+                        'pk_equipamento'        => $obterEquipamentoUmAnoSemManutencao['0']->pk_equipamento,
+                        'nm_equipamento'        => $obterEquipamentoUmAnoSemManutencao['0']->nm_equipamento,
+                        'dt_compra_equipamento' => $obterEquipamentoUmAnoSemManutencao['0']->dt_compra_equipamento,
+                    ];
+                    
+                }else if(!empty($obterEquipamentoDoisAnosSemManutencao)){
+                    $equipamentoDoisAnosSemManutencao [] = [
+                        'pk_equipamento'        => $obterEquipamentoDoisAnosSemManutencao['0']->pk_equipamento,
+                        'nm_equipamento'        => $obterEquipamentoDoisAnosSemManutencao['0']->nm_equipamento,
+                        'dt_compra_equipamento' => $obterEquipamentoDoisAnosSemManutencao['0']->dt_compra_equipamento,
+                    ];
+                    
+                }
             }
-        }
+            dd($obterEquipamentoUmAnoSemManutencao);
+            dd($equipamentoUmAnoSemManutencao);
 
-        //obtendo Manutenções concluidas atreladas ao equipamento 1-Em Andamento 2-Pendente 3-Concluido
-        $verificaQtdManutencao = DB::table('siscom_manutencao')->where('fk_pk_situacao', 1)->where('fk_pk_equipamento', $id)->count();
-        $manutencaoConcluida = null ;
-        if($verificaQtdManutencao != 0)
-        {
-            $obterManutencaoConcluida = DB::table('siscom_manutencao')->where('fk_pk_situacao', 3)->get(); 
-            foreach($obterManutencaoConcluida as $item)
-            {
-                $manutencaoConcluida [] = $item;
-            }
         }
+        return view('site.avisos', compact('equipamentoUmAnoSemManutencao', 'equipamentoDoisAnosSemManutencao', 'equipamentoSeisMesesSemManutencao'));
 
-        //obtendo Manutenções Pendentes atreladas ao equipamento 1-Em Andamento 2-Pendente 3-Concluido
-        $verificaQtdManutencao = DB::table('siscom_manutencao')->where('fk_pk_situacao', 1)->where('fk_pk_equipamento', $id)->count();
-        $manutencaoPendente = null ;
-        if($verificaQtdManutencao != 0)
-        {
-            $obterManutencaoPendente = DB::table('siscom_manutencao')->where('fk_pk_situacao', 2)->get();
-            foreach($obterManutencaoPendente as $item)
-            {
-                $manutencaoPendente [] = $item;
-            }
-        }
-
-        //obtendo manutenções nos ultimos 6 meses
-        $dadosUltimosSeisMeses = DB::select("SELECT * FROM siscom_manutencao WHERE dt_manutencao BETWEEN CURDATE() - INTERVAL 6 MONTH AND CURDATE() AND fk_pk_equipamento = $id");
-        if(empty($dadosUltimosSeisMeses))
-        {
-            $dadosUltimosSeisMeses = null ;
-        }
-
-        //obtendo manutenções nos ultimos 3 meses
-        $dadosUltimosTresMeses = DB::select("SELECT * FROM siscom_manutencao WHERE dt_manutencao BETWEEN CURDATE() - INTERVAL 3 MONTH AND CURDATE() AND fk_pk_equipamento = $id");
-        if(empty($dadosUltimosTresMeses))
-        {
-            $dadosUltimosTresMeses = null ;
-        }
-
-        //obtendo manutenções no ultimo ano
-        $dadosUltimoAno = DB::select("SELECT * FROM siscom_manutencao WHERE dt_manutencao BETWEEN CURDATE() - INTERVAL 1 Year AND CURDATE() AND fk_pk_equipamento = $id");
-        if(empty($dadosUltimoAno))
-        {
-            $dadosUltimoAno = null ;
-        }
-
-        return view('site.estatistica-id', compact('recuperandoDados', 'valorTotalManutencao', 'valorTotalEquipamento', 'qtdManutencao', 'manutencaoConcluida', 'manutencaoEmAndamento', 'manutencaoPendente', 'dadosUltimoAno', 'dadosUltimosSeisMeses', 'dadosUltimosTresMeses') );
-        
     }
 }
