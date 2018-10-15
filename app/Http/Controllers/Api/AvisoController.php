@@ -39,11 +39,11 @@ class AvisoController extends Controller
         if(!empty($obterEquipamentosComUmAnoDeUso)){
             foreach($obterEquipamentosComUmAnoDeUso as $item){
                 //obtendo os dados dos equipamentos que não receberam manutenções nos ultimos 2 ANOS OBS: Só serão avisados os equipamentos que já tenham 1 ano ou mais de uso
-                $obterEquipamentoSeisMesesSemManutencao = DB::select("SELECT p2.pk_manutencao, p1.pk_equipamento, p1.nm_equipamento, p1.dt_compra_equipamento FROM siscom_equipamento p1 INNER JOIN siscom_manutencao p2 ON p2.fk_pk_equipamento = p1.pk_equipamento WHERE p2.fk_pk_equipamento = $item->pk_equipamento AND p1.pk_equipamento = $item->pk_equipamento AND TIMESTAMPDIFF(YEAR,p1.dt_compra_equipamento, p2.dt_manutencao) >= 1 AND TIMESTAMPDIFF(MONTH,p2.dt_manutencao, NOW()) <= 6");
-                $obterEquipamentoUmAnoSemManutencao = DB::select("SELECT p2.pk_manutencao, p1.pk_equipamento, p1.nm_equipamento, p1.dt_compra_equipamento FROM siscom_equipamento p1 INNER JOIN siscom_manutencao p2 ON p2.fk_pk_equipamento = p1.pk_equipamento WHERE p2.fk_pk_equipamento = $item->pk_equipamento AND p1.pk_equipamento = $item->pk_equipamento AND TIMESTAMPDIFF(YEAR,p1.dt_compra_equipamento, p2.dt_manutencao) >= 1 AND TIMESTAMPDIFF(YEAR,p2.dt_manutencao, NOW()) <= 1");
-                $obterEquipamentoDoisAnoSemManutencao = DB::select("SELECT p2.pk_manutencao, p1.pk_equipamento, p1.nm_equipamento, p1.dt_compra_equipamento FROM siscom_equipamento p1 INNER JOIN siscom_manutencao p2 ON p2.fk_pk_equipamento = p1.pk_equipamento WHERE p2.fk_pk_equipamento = $item->pk_equipamento AND p1.pk_equipamento = $item->pk_equipamento AND TIMESTAMPDIFF(YEAR,p1.dt_compra_equipamento, p2.dt_manutencao) >= 1 AND TIMESTAMPDIFF(YEAR,p2.dt_manutencao, NOW()) <= 2");
+                $obterEquipamentoSeisMesesSemManutencao = DB::select("SELECT p2.pk_manutencao, p1.pk_equipamento, p1.nm_equipamento, p1.dt_compra_equipamento FROM siscom_equipamento p1 INNER JOIN siscom_manutencao p2 ON p2.fk_pk_equipamento = p1.pk_equipamento WHERE p2.fk_pk_equipamento = $item->pk_equipamento AND p1.pk_equipamento = $item->pk_equipamento AND TIMESTAMPDIFF(YEAR,p1.dt_compra_equipamento, p2.dt_manutencao) >= 1 AND TIMESTAMPDIFF(MONTH, NOW(), p2.dt_manutencao) < 6");
+                $obterEquipamentoUmAnoSemManutencao = DB::select("SELECT p2.pk_manutencao, p1.pk_equipamento, p1.nm_equipamento, p1.dt_compra_equipamento FROM siscom_equipamento p1 INNER JOIN siscom_manutencao p2 ON p2.fk_pk_equipamento = p1.pk_equipamento WHERE p2.fk_pk_equipamento = $item->pk_equipamento AND p1.pk_equipamento = $item->pk_equipamento AND TIMESTAMPDIFF(YEAR,p1.dt_compra_equipamento, p2.dt_manutencao) >= 1 AND TIMESTAMPDIFF(MONTH, NOW(), p2.dt_manutencao) <= 12");
+                $obterEquipamentoDoisAnoSemManutencao = DB::select("SELECT p2.pk_manutencao, p1.pk_equipamento, p1.nm_equipamento, p1.dt_compra_equipamento FROM siscom_equipamento p1 INNER JOIN siscom_manutencao p2 ON p2.fk_pk_equipamento = p1.pk_equipamento WHERE p2.fk_pk_equipamento = $item->pk_equipamento AND p1.pk_equipamento = $item->pk_equipamento AND TIMESTAMPDIFF(YEAR,p1.dt_compra_equipamento, p2.dt_manutencao) >= 1 AND TIMESTAMPDIFF(MONTH, NOW(), p2.dt_manutencao) <= 24");
                 //dd($obterEquipamentoSeisMesesSemManutencao['0']->nm_equipamento, $obterEquipamentoUmAnoSemManutencao, $obterEquipamentoDoisAnoSemManutencao);
-                dd($obterEquipamentoSeisMesesSemManutencao, $obterEquipamentoUmAnoSemManutencao, $obterEquipamentoDoisAnoSemManutencao);
+                //dd($obterEquipamentoSeisMesesSemManutencao, $obterEquipamentoUmAnoSemManutencao,$obterEquipamentoDoisAnoSemManutencao );
                 /*dd($obterEquipamentoDoisAnosSemManutencao);
                 foreach($obterEquipamentoDoisAnosSemManutencao as $registro){
                     $obtendo [] = ['pk_equipamento' => $registro->pk_equipamento,];
@@ -58,24 +58,25 @@ class AvisoController extends Controller
                         'nm_equipamento'        => $obterEquipamentoSeisMesesSemManutencao['0']->nm_equipamento,
                         'dt_compra_equipamento' => $obterEquipamentoSeisMesesSemManutencao['0']->dt_compra_equipamento,
                     ];
+                    dd('seis',$equipamentoSeisMesesSemManutencao);
                 }else if(!empty($obterEquipamentoUmAnoSemManutencao)){
                     $equipamentoUmAnoSemManutencao [] = [
                         'pk_equipamento'        => $obterEquipamentoUmAnoSemManutencao['0']->pk_equipamento,
                         'nm_equipamento'        => $obterEquipamentoUmAnoSemManutencao['0']->nm_equipamento,
                         'dt_compra_equipamento' => $obterEquipamentoUmAnoSemManutencao['0']->dt_compra_equipamento,
                     ];
-                    
+                    dd('um', $equipamentoUmAnoSemManutencao);
                 }else if(!empty($obterEquipamentoDoisAnosSemManutencao)){
                     $equipamentoDoisAnosSemManutencao [] = [
                         'pk_equipamento'        => $obterEquipamentoDoisAnosSemManutencao['0']->pk_equipamento,
                         'nm_equipamento'        => $obterEquipamentoDoisAnosSemManutencao['0']->nm_equipamento,
                         'dt_compra_equipamento' => $obterEquipamentoDoisAnosSemManutencao['0']->dt_compra_equipamento,
                     ];
-                    
+                    dd('dois', $equipamentoDoisAnosSemManutencao);
                 }
             }
-            dd($obterEquipamentoUmAnoSemManutencao);
-            dd($equipamentoUmAnoSemManutencao);
+            
+            
 
         }
         return view('site.avisos', compact('equipamentoUmAnoSemManutencao', 'equipamentoDoisAnosSemManutencao', 'equipamentoSeisMesesSemManutencao'));
