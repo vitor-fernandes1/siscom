@@ -134,7 +134,7 @@ class EstatisticaController extends Controller
         {
             $dadosUltimoAno = null ;
         }
-
+        
         return view('site.estatistica-id', compact('recuperandoDados', 'valorTotalManutencao', 'valorTotalEquipamento', 'qtdManutencao', 'manutencaoConcluida', 'manutencaoEmAndamento', 'manutencaoPendente', 'dadosUltimoAno', 'dadosUltimosSeisMeses', 'dadosUltimosTresMeses') );
         
     }

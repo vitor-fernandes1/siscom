@@ -83,179 +83,179 @@ class initDefaultValuesSiscomSeed extends Seeder
         //EQUIPAMENTOS
         $equipamento = Equipamento::create([
             'nm_equipamento'            => 'Ar-Condicionado',
-            'dt_compra_equipamento'     => '2018-08-05',
+            'dt_compra_equipamento'     => '2015-08-05',
             'ds_descricao_equipamento'  => 'Compra realizada por necessidades operacionais',
             'nr_valor_equipamento'      => '1500',
             'fk_pk_tipo_equipamento'    => '1',
         ]);
         $equipamento = Equipamento::create([
             'nm_equipamento'            => 'Computador',
-            'dt_compra_equipamento'     => '2018-08-05',
+            'dt_compra_equipamento'     => '2015-08-05',
             'ds_descricao_equipamento'  => '',
             'nr_valor_equipamento'      => '2150',
             'fk_pk_tipo_equipamento'    => '2',
         ]);
         $equipamento = Equipamento::create([
             'nm_equipamento'            => 'Televisao',
-            'dt_compra_equipamento'     => '2018-08-06',
+            'dt_compra_equipamento'     => '2015-08-06',
             'ds_descricao_equipamento'  => '',
             'nr_valor_equipamento'      => '3500',
             'fk_pk_tipo_equipamento'    => '2',
         ]);
         $equipamento = Equipamento::create([
             'nm_equipamento'            => 'Frigobar',
-            'dt_compra_equipamento'     => '2018-08-07',
+            'dt_compra_equipamento'     => '2015-08-07',
             'ds_descricao_equipamento'  => '',
             'nr_valor_equipamento'      => '1400',
             'fk_pk_tipo_equipamento'    => '4',
         ]);
         $equipamento = Equipamento::create([
             'nm_equipamento'            => 'Circuito de cameras',
-            'dt_compra_equipamento'     => '2018-08-10',
+            'dt_compra_equipamento'     => '2015-08-10',
             'ds_descricao_equipamento'  => 'Aumento da segurança',
             'nr_valor_equipamento'      => '5000',
             'fk_pk_tipo_equipamento'    => '2',
         ]);
         $equipamento = Equipamento::create([
             'nm_equipamento'            => 'Cofre 500tgu',
-            'dt_compra_equipamento'     => '2018-08-11',
+            'dt_compra_equipamento'     => '2015-08-11',
             'ds_descricao_equipamento'  => 'Aumento da segurança',
             'nr_valor_equipamento'      => '5000',
             'fk_pk_tipo_equipamento'    => '2',
         ]);
         $equipamento = Equipamento::create([
             'nm_equipamento'            => 'Fechaduras Eletrónicas para Hotéis',
-            'dt_compra_equipamento'     => '2018-08-12',
+            'dt_compra_equipamento'     => '2015-08-12',
             'ds_descricao_equipamento'  => 'Aumento da segurança',
             'nr_valor_equipamento'      => '5000',
             'fk_pk_tipo_equipamento'    => '2',
         ]);
         $equipamento = Equipamento::create([
             'nm_equipamento'            => 'Monitor',
-            'dt_compra_equipamento'     => '2018-08-13',
+            'dt_compra_equipamento'     => '2015-08-13',
             'nr_valor_equipamento'      => '800',
             'fk_pk_tipo_equipamento'    => '2',
         ]);
         $equipamento = Equipamento::create([
             'nm_equipamento'            => 'Televisão Sony 42 polegadas',
-            'dt_compra_equipamento'     => '2018-02-05',
+            'dt_compra_equipamento'     => '2015-02-05',
             'nr_valor_equipamento'      => '1980',
             'fk_pk_tipo_equipamento'    => '2',
         ]);
         $equipamento = Equipamento::create([
             'nm_equipamento'            => 'Monitor Led curvo 30"',
-            'dt_compra_equipamento'     => '2018-07-17',
+            'dt_compra_equipamento'     => '2015-07-17',
             'nr_valor_equipamento'      => '1580',
             'fk_pk_tipo_equipamento'    => '2',
         ]);
         $equipamento = Equipamento::create([
             'nm_equipamento'            => 'Ar-Condicionado 9000BTU',
-            'dt_compra_equipamento'     => '2018-08-15',
+            'dt_compra_equipamento'     => '2015-08-15',
             'ds_descricao_equipamento'  => 'Será instalado na copa',
             'nr_valor_equipamento'      => '3940',
             'fk_pk_tipo_equipamento'    => '3',
         ]);
         $equipamento = Equipamento::create([
             'nm_equipamento'            => 'Laptop Positivo QuadCore',
-            'dt_compra_equipamento'     => '2018-08-20',
+            'dt_compra_equipamento'     => '2015-08-20',
             'ds_descricao_equipamento'  => 'De uso da recepção',
             'nr_valor_equipamento'      => '3940',
             'fk_pk_tipo_equipamento'    => '2',
         ]);
         $equipamento = Equipamento::create([
             'nm_equipamento'            => 'Laptop Lenovo DualCore',
-            'dt_compra_equipamento'     => '2018-08-20',
+            'dt_compra_equipamento'     => '2015-08-20',
             'ds_descricao_equipamento'  => 'De uso da recepção',
             'nr_valor_equipamento'      => '3940',
             'fk_pk_tipo_equipamento'    => '2',
         ]);
         $equipamento = Equipamento::create([
             'nm_equipamento'            => 'Modem TP-Link 4g 9 Bandas',
-            'dt_compra_equipamento'     => '2018-08-21',
+            'dt_compra_equipamento'     => '2015-08-21',
             'nr_valor_equipamento'      => '580',
             'fk_pk_tipo_equipamento'    => '2',
         ]);
         $equipamento = Equipamento::create([
             'nm_equipamento'            => 'Lavadora Brastemp 11KG 1ªun.',
-            'dt_compra_equipamento'     => '2018-08-21',
+            'dt_compra_equipamento'     => '2015-08-21',
             'nr_valor_equipamento'      => '1980',
             'fk_pk_tipo_equipamento'    => '4',
         ]);
         $equipamento = Equipamento::create([
             'nm_equipamento'            => 'Lavadora Brastemp 11KG 2ªun.',
-            'dt_compra_equipamento'     => '2018-08-22',
+            'dt_compra_equipamento'     => '2015-08-22',
             'nr_valor_equipamento'      => '1980',
             'fk_pk_tipo_equipamento'    => '4',
         ]);
         $equipamento = Equipamento::create([
             'nm_equipamento'            => 'Lavadora Brastemp 11KG 3ªun.',
-            'dt_compra_equipamento'     => '2018-08-23',
+            'dt_compra_equipamento'     => '2015-08-23',
             'nr_valor_equipamento'      => '1980',
             'fk_pk_tipo_equipamento'    => '4',
         ]);
         $equipamento = Equipamento::create([
             'nm_equipamento'            => 'Fogão Industrial',
-            'dt_compra_equipamento'     => '2018-09-12',
+            'dt_compra_equipamento'     => '2015-09-12',
             'nr_valor_equipamento'      => '4500',
             'fk_pk_tipo_equipamento'    => '4',
         ]);
         $equipamento = Equipamento::create([
             'nm_equipamento'            => 'Ar-Condicionado 3500BTU 1ªun',
-            'dt_compra_equipamento'     => '2018-09-12',
+            'dt_compra_equipamento'     => '2015-09-12',
             'nr_valor_equipamento'      => '1560',
             'fk_pk_tipo_equipamento'    => '3',
         ]);
         $equipamento = Equipamento::create([
             'nm_equipamento'            => 'Ar-Condicionado 3500BTU 2ªun.',
-            'dt_compra_equipamento'     => '2018-09-12',
+            'dt_compra_equipamento'     => '2015-09-12',
             'nr_valor_equipamento'      => '1560',
             'fk_pk_tipo_equipamento'    => '3',
         ]);
         $equipamento = Equipamento::create([
             'nm_equipamento'            => 'Ar-Condicionado 3500BTU 3ªun.',
-            'dt_compra_equipamento'     => '2018-09-15',
+            'dt_compra_equipamento'     => '2015-09-15',
             'nr_valor_equipamento'      => '1560',
             'fk_pk_tipo_equipamento'    => '3',
         ]);
         $equipamento = Equipamento::create([
             'nm_equipamento'            => 'Ar-Condicionado 3500BTU 4ªun.',
-            'dt_compra_equipamento'     => '2018-09-15',
+            'dt_compra_equipamento'     => '2015-09-15',
             'nr_valor_equipamento'      => '1560',
             'fk_pk_tipo_equipamento'    => '3',
         ]);
         $equipamento = Equipamento::create([
             'nm_equipamento'            => 'Minibar 26L 1ªun.',
-            'dt_compra_equipamento'     => '2018-09-15',
+            'dt_compra_equipamento'     => '2015-09-15',
             'nr_valor_equipamento'      => '1789',
             'fk_pk_tipo_equipamento'    => '4',
         ]);
         $equipamento = Equipamento::create([
             'nm_equipamento'            => 'Minibar 20L 1ªun.',
-            'dt_compra_equipamento'     => '2018-09-15',
+            'dt_compra_equipamento'     => '2015-09-15',
             'nr_valor_equipamento'      => '1789',
             'fk_pk_tipo_equipamento'    => '4',
         ]);
         $equipamento = Equipamento::create([
             'nm_equipamento'            => 'Minibar 26L 2ªun.',
-            'dt_compra_equipamento'     => '2018-09-15',
+            'dt_compra_equipamento'     => '2015-09-15',
             'nr_valor_equipamento'      => '1789',
             'fk_pk_tipo_equipamento'    => '4',
         ]);
         $equipamento = Equipamento::create([
             'nm_equipamento'            => 'Minibar 20L 2ªun.',
-            'dt_compra_equipamento'     => '2018-09-15',
+            'dt_compra_equipamento'     => '2015-09-15',
             'nr_valor_equipamento'      => '1789',
             'fk_pk_tipo_equipamento'    => '4',
         ]);
         $equipamento = Equipamento::create([
             'nm_equipamento'            => 'Televisao AOC 50"',
-            'dt_compra_equipamento'     => '2018-09-28',
+            'dt_compra_equipamento'     => '2015-09-28',
             'nr_valor_equipamento'      => '2600',
             'fk_pk_tipo_equipamento'    => '2',
         ]);
         $equipamento = Equipamento::create([
             'nm_equipamento'            => 'Televisao AOC 50 2ªun"',
-            'dt_compra_equipamento'     => '2018-09-28',
+            'dt_compra_equipamento'     => '2015-09-28',
             'nr_valor_equipamento'      => '2600',
             'fk_pk_tipo_equipamento'    => '2',
         ]);
@@ -390,7 +390,7 @@ class initDefaultValuesSiscomSeed extends Seeder
 
         $manutencao = Manutencao::create([
             'ds_descricao_manutencao'  => 'Reparo preventivo',
-            'dt_manutencao'            => '2018-12-09',
+            'dt_manutencao'            => '2018-08-11',
             'vl_valor_manutencao'      => '380',
             'fk_pk_tipo_manutencao'    => '1',
             'fk_pk_prioridade'         => '3',
@@ -401,7 +401,7 @@ class initDefaultValuesSiscomSeed extends Seeder
         ]);
         $manutencao = Manutencao::create([
             'ds_descricao_manutencao'  => 'Lubrificação de peças',
-            'dt_manutencao'            => '2019-03-09',
+            'dt_manutencao'            => '2018-04-17',
             'vl_valor_manutencao'      => '380',
             'fk_pk_tipo_manutencao'    => '1',
             'fk_pk_prioridade'         => '3',
@@ -412,7 +412,7 @@ class initDefaultValuesSiscomSeed extends Seeder
         ]);
         $manutencao = Manutencao::create([
             'ds_descricao_manutencao'  => 'Verificação de gás',
-            'dt_manutencao'            => '2019-06-12',
+            'dt_manutencao'            => '2018-04-16',
             'vl_valor_manutencao'      => '380',
             'fk_pk_tipo_manutencao'    => '1',
             'fk_pk_prioridade'         => '3',
@@ -423,7 +423,7 @@ class initDefaultValuesSiscomSeed extends Seeder
         ]);
         $manutencao = Manutencao::create([
             'ds_descricao_manutencao'  => 'Verificação de canaletas',
-            'dt_manutencao'            => '2019-09-15',
+            'dt_manutencao'            => '2017-12-15',
             'vl_valor_manutencao'      => '380',
             'fk_pk_tipo_manutencao'    => '1',
             'fk_pk_prioridade'         => '3',
@@ -434,7 +434,7 @@ class initDefaultValuesSiscomSeed extends Seeder
         ]);
         $manutencao = Manutencao::create([
             'ds_descricao_manutencao'  => 'Checar fiação',
-            'dt_manutencao'            => '2019-12-18',
+            'dt_manutencao'            => '2017-12-13',
             'vl_valor_manutencao'      => '380',
             'fk_pk_tipo_manutencao'    => '1',
             'fk_pk_prioridade'         => '3',
@@ -445,7 +445,7 @@ class initDefaultValuesSiscomSeed extends Seeder
         ]);
         $manutencao = Manutencao::create([
             'ds_descricao_manutencao'  => 'Trocar Exautor com problemas',
-            'dt_manutencao'            => '2019-12-25',
+            'dt_manutencao'            => '2018-08-18',
             'vl_valor_manutencao'      => '560',
             'fk_pk_tipo_manutencao'    => '2',
             'fk_pk_prioridade'         => '3',
@@ -456,7 +456,7 @@ class initDefaultValuesSiscomSeed extends Seeder
         ]);
         $manutencao = Manutencao::create([
             'ds_descricao_manutencao'  => 'Troca do comando remoto defeituoso',
-            'dt_manutencao'            => '2019-12-25',
+            'dt_manutencao'            => '2018-01-23',
             'vl_valor_manutencao'      => '287',
             'fk_pk_tipo_manutencao'    => '2',
             'fk_pk_prioridade'         => '3',
@@ -464,6 +464,62 @@ class initDefaultValuesSiscomSeed extends Seeder
             'fk_pk_avaliacao'          => '1',
             'fk_pk_empresa'            => '1',
             'fk_pk_equipamento'        => '1',
+        ]);
+        //Para testar avisos
+        $manutencao = Manutencao::create([
+            'ds_descricao_manutencao'  => 'Reparo no comando eletrico',
+            'dt_manutencao'            => '2016-10-15',
+            'vl_valor_manutencao'      => '365',
+            'fk_pk_tipo_manutencao'    => '2',
+            'fk_pk_prioridade'         => '3',
+            'fk_pk_situacao'           => '1',
+            'fk_pk_avaliacao'          => '1',
+            'fk_pk_empresa'            => '1',
+            'fk_pk_equipamento'        => '4',
+        ]);
+        $manutencao = Manutencao::create([
+            'ds_descricao_manutencao'  => 'Reparo hidraulico',
+            'dt_manutencao'            => '2018-02-15',
+            'vl_valor_manutencao'      => '450',
+            'fk_pk_tipo_manutencao'    => '2',
+            'fk_pk_prioridade'         => '3',
+            'fk_pk_situacao'           => '1',
+            'fk_pk_avaliacao'          => '1',
+            'fk_pk_empresa'            => '1',
+            'fk_pk_equipamento'        => '9',
+        ]);
+        $manutencao = Manutencao::create([
+            'ds_descricao_manutencao'  => 'Reparo na fiação',
+            'dt_manutencao'            => '2017-10-15',
+            'vl_valor_manutencao'      => '415',
+            'fk_pk_tipo_manutencao'    => '2',
+            'fk_pk_prioridade'         => '3',
+            'fk_pk_situacao'           => '1',
+            'fk_pk_avaliacao'          => '1',
+            'fk_pk_empresa'            => '1',
+            'fk_pk_equipamento'        => '3',
+        ]);
+        $manutencao = Manutencao::create([
+            'ds_descricao_manutencao'  => 'Reparo quadro eletrico',
+            'dt_manutencao'            => '2018-02-01',
+            'vl_valor_manutencao'      => '415',
+            'fk_pk_tipo_manutencao'    => '2',
+            'fk_pk_prioridade'         => '3',
+            'fk_pk_situacao'           => '1',
+            'fk_pk_avaliacao'          => '1',
+            'fk_pk_empresa'            => '1',
+            'fk_pk_equipamento'        => '11',
+        ]);
+        $manutencao = Manutencao::create([
+            'ds_descricao_manutencao'  => 'motivos eletricos',
+            'dt_manutencao'            => '2017-10-10',
+            'vl_valor_manutencao'      => '300',
+            'fk_pk_tipo_manutencao'    => '2',
+            'fk_pk_prioridade'         => '3',
+            'fk_pk_situacao'           => '1',
+            'fk_pk_avaliacao'          => '1',
+            'fk_pk_empresa'            => '1',
+            'fk_pk_equipamento'        => '7',
         ]);
     }
 }
