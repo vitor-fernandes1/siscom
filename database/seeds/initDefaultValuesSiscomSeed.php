@@ -521,5 +521,39 @@ class initDefaultValuesSiscomSeed extends Seeder
             'fk_pk_empresa'            => '1',
             'fk_pk_equipamento'        => '7',
         ]);
+        //teste de vida util
+        $manutencao = Manutencao::create([
+            'ds_descricao_manutencao'  => 'reparo necessário',
+            'dt_manutencao'            => '2015-10-10',
+            'vl_valor_manutencao'      => '300',
+            'fk_pk_tipo_manutencao'    => '2',
+            'fk_pk_prioridade'         => '3',
+            'fk_pk_situacao'           => '1',
+            'fk_pk_avaliacao'          => '1',
+            'fk_pk_empresa'            => '1',
+            'fk_pk_equipamento'        => '8',
+        ]);
+        $manutencao = Manutencao::create([
+            'ds_descricao_manutencao'  => 'reparo necessário',
+            'dt_manutencao'            => '2016-08-10',
+            'vl_valor_manutencao'      => '300',
+            'fk_pk_tipo_manutencao'    => '2',
+            'fk_pk_prioridade'         => '3',
+            'fk_pk_situacao'           => '1',
+            'fk_pk_avaliacao'          => '1',
+            'fk_pk_empresa'            => '1',
+            'fk_pk_equipamento'        => '8',
+        ]);
+        $manutencao = Manutencao::create([
+            'ds_descricao_manutencao'  => 'reparo necessário',
+            'dt_manutencao'            => '2015-10-18',
+            'vl_valor_manutencao'      => '300',
+            'fk_pk_tipo_manutencao'    => '2',
+            'fk_pk_prioridade'         => '3',
+            'fk_pk_situacao'           => '1',
+            'fk_pk_avaliacao'          => '1',
+            'fk_pk_empresa'            => '1',
+            'fk_pk_equipamento'        => '5',
+        ]);
     }
 }

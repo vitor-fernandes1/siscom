@@ -93,34 +93,46 @@ class GerenciamentoController extends Controller
         }
 
         /** Barra de progresso será setada de acordo com a quantidade de manutenções realizadas no equipamento, seguindo a regra:
-         * Cada manutenção reduzirá 10% de vida util do equipamento
-         * Se houver 1 manutenção no intervalo de 1 ano da compra do equipamento, abaixar a vida útil do equipamento em 20%
-         *      caso superior a 1 abaixar em 30%
-         * Se >= 2 manutenções em um periodo de 6 meses reduzir a vida útil do equipamento em 40 %
+         * Cada manutenção reduzirá 5% de vida util do equipamento
+         * Se houver manutenções no intervalo de 1 ano da compra do equipamento, abaixar a vida útil do equipamento em 20% para cada manutenção neste intervalo
+         * Se houver manutenções em um periodo de 6 da compra meses reduzir a vida útil do equipamento em 40 % para cada manutenção neste intervalo
          */
+        $porcentagemBarra = 100;
 
         //Quantidade de mautenções realizadas
         $qtdManutencao = DB::table('siscom_manutencao')->where('fk_pk_equipamento', $id)->count();
+        
+        //calculado a qtd de manutenções para reduzir do percentual da barra
+        $porcentagemBarra = $porcentagemBarra - ($qtdManutencao * 5);
 
         //Quantidade de manutenções em 1 ano
-        $obterQtdManutencaoAno = DB::select("SELECT COUNT(p1.pk_equipamento) as registros FROM siscom_equipamento p1 INNER JOIN siscom_manutencao p2 ON p2.fk_pk_equipamento = p1.pk_equipamento WHERE p1.pk_equipamento = $id AND p2.fk_pk_equipamento = $id AND TIMESTAMPDIFF(DAY,p1.DT_COMPRA_EQUIPAMENTO, p2.DT_MANUTENCAO) <= 365 ");
+        $obterQtdManutencaoAno = DB::select("SELECT COUNT(p1.pk_equipamento) as registros FROM siscom_equipamento p1 INNER JOIN siscom_manutencao p2 ON p2.fk_pk_equipamento = p1.pk_equipamento WHERE p1.pk_equipamento = $id AND p2.fk_pk_equipamento = $id AND TIMESTAMPDIFF(DAY,p1.DT_COMPRA_EQUIPAMENTO, p2.DT_MANUTENCAO) > 180 AND TIMESTAMPDIFF(DAY,p1.DT_COMPRA_EQUIPAMENTO, p2.DT_MANUTENCAO) <= 365  ");
         if(!empty($obterQtdManutencaoAno))
         {
             $qtdManutencaoAno = $obterQtdManutencaoAno['0']->registros ;
         }else{
             $qtdManutencaoAno = null ;
         }
+        //calculado a qtd de manutenções no periodo de 1 ano para reduzir do percentual da barra
+        $porcentagemBarra = $porcentagemBarra - ($qtdManutencaoAno * 20);
 
         //Quantidade de manutenções em 6 meses
-        $obterQtdManutencaoMes = DB::select("SELECT COUNT(p1.pk_equipamento) as registros FROM siscom_equipamento p1 INNER JOIN siscom_manutencao p2 ON p2.fk_pk_equipamento = p1.pk_equipamento WHERE p1.pk_equipamento = $id AND p2.fk_pk_equipamento = $id AND TIMESTAMPDIFF(MONTH,p1.DT_COMPRA_EQUIPAMENTO, p2.DT_MANUTENCAO) <= 6 ");
+        $obterQtdManutencaoMes = DB::select("SELECT COUNT(p1.pk_equipamento) as registros FROM siscom_equipamento p1 INNER JOIN siscom_manutencao p2 ON p2.fk_pk_equipamento = p1.pk_equipamento WHERE p1.pk_equipamento = $id AND p2.fk_pk_equipamento = $id AND TIMESTAMPDIFF(DAY,p1.DT_COMPRA_EQUIPAMENTO, p2.DT_MANUTENCAO) <= 180 ");
         if(!empty($obterQtdManutencaoMes))
         {
             $qtdManutencaoMes = $obterQtdManutencaoMes['0']->registros ;
         }else{
             $qtdManutencaoMes = null ;
         }
+        //calculado a qtd de manutenções no periodo de 6 meses para reduzir do percentual da barra
+        $porcentagemBarra = $porcentagemBarra - ($qtdManutencaoAno * 40);
 
-        return view('site.gerenciamento-id', compact('recuperandoDados', 'qtdManutencao', 'qtdManutencaoAno', 'diasUsoEquipamento', 'mesesUsoEquipamento', 'anosUsoEquipamento') );
+        //conferindo se a barra está com numero negativo
+        if($porcentagemBarra < 0){
+            $porcentagemBarra = 0 ;
+        }
+        
+        return view('site.gerenciamento-id', compact('recuperandoDados','porcentagemBarra', 'qtdManutencao', 'qtdManutencaoAno', 'diasUsoEquipamento', 'mesesUsoEquipamento', 'anosUsoEquipamento') );
         
     }
 

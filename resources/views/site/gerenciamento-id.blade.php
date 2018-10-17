@@ -93,10 +93,20 @@
         
         <div class="col-md-12">
             <div class="box box-solid">
-                <h3>Vida útil estimada do equipamento: 100%</h3>    
+                <h3>Vida útil estimada do equipamento: {{ $porcentagemBarra }}%</h3>
+                @if($porcentagemBarra < 40)
                 <div class="progress progress active">
-                    <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+                    <div class="progress-bar progress-bar-danger progress-bar-striped" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: {{ $porcentagemBarra }}%"></div>
                 </div>
+                @elseif($porcentagemBarra < 70)
+                <div class="progress progress active">
+                    <div class="progress-bar progress-bar-warning progress-bar-striped" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: {{ $porcentagemBarra }}%"></div>
+                </div>
+                @else
+                <div class="progress progress active">
+                    <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: {{ $porcentagemBarra }}%"></div>
+                </div>
+                @endif
             </div>
         </div>
     </div>

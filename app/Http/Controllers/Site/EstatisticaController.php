@@ -83,7 +83,7 @@ class EstatisticaController extends Controller
         $manutencaoEmAndamento = null ;
         if($verificaQtdManutencao != 0)
         {
-            $obterManutencaoEmAndamento = DB::table('siscom_manutencao')->where('fk_pk_situacao', 1)->get();
+            $obterManutencaoEmAndamento = DB::table('siscom_manutencao')->where('fk_pk_situacao', 1)->where('fk_pk_equipamento', $id)->get();
             foreach($obterManutencaoEmAndamento as $item)
             {
                 $manutencaoEmAndamento [] = $item;
@@ -95,7 +95,7 @@ class EstatisticaController extends Controller
         $manutencaoConcluida = null ;
         if($verificaQtdManutencao != 0)
         {
-            $obterManutencaoConcluida = DB::table('siscom_manutencao')->where('fk_pk_situacao', 3)->get(); 
+            $obterManutencaoConcluida = DB::table('siscom_manutencao')->where('fk_pk_situacao', 3)->where('fk_pk_equipamento', $id)->get(); 
             foreach($obterManutencaoConcluida as $item)
             {
                 $manutencaoConcluida [] = $item;
@@ -107,7 +107,7 @@ class EstatisticaController extends Controller
         $manutencaoPendente = null ;
         if($verificaQtdManutencao != 0)
         {
-            $obterManutencaoPendente = DB::table('siscom_manutencao')->where('fk_pk_situacao', 2)->get();
+            $obterManutencaoPendente = DB::table('siscom_manutencao')->where('fk_pk_situacao', 2)->where('fk_pk_equipamento', $id)->get();
             foreach($obterManutencaoPendente as $item)
             {
                 $manutencaoPendente [] = $item;
