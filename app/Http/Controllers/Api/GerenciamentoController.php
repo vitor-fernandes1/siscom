@@ -94,14 +94,14 @@ class GerenciamentoController extends Controller
 
         /** Barra de progresso será setada de acordo com a quantidade de manutenções realizadas no equipamento, seguindo a regra:
          * Cada manutenção reduzirá 5% de vida util do equipamento
-         * Se houver manutenções no intervalo de 1 ano da compra do equipamento, abaixar a vida útil do equipamento em 20% para cada manutenção neste intervalo
-         * Se houver manutenções em um periodo de 6 da compra meses reduzir a vida útil do equipamento em 40 % para cada manutenção neste intervalo
+         * Se a manutenção ocorrer no intervalo de 1 ano da data de compra do equipamento será acreascido 20% de redução a cada manutenção deste periodo
+         * Se a manutenção ocorrer no intervalo de 6 meses da data de compra do equipamento será acreascido 40% de redução a cada manutenção deste periodo
          */
         $porcentagemBarra = 100;
 
         //Quantidade de mautenções realizadas
         $qtdManutencao = DB::table('siscom_manutencao')->where('fk_pk_equipamento', $id)->count();
-        
+
         //calculado a qtd de manutenções para reduzir do percentual da barra
         $porcentagemBarra = $porcentagemBarra - ($qtdManutencao * 5);
 
@@ -125,13 +125,13 @@ class GerenciamentoController extends Controller
             $qtdManutencaoMes = null ;
         }
         //calculado a qtd de manutenções no periodo de 6 meses para reduzir do percentual da barra
-        $porcentagemBarra = $porcentagemBarra - ($qtdManutencaoAno * 40);
+        $porcentagemBarra = $porcentagemBarra - ($qtdManutencaoMes * 40);
 
         //conferindo se a barra está com numero negativo
         if($porcentagemBarra < 0){
             $porcentagemBarra = 0 ;
         }
-        
+
         return view('site.gerenciamento-id', compact('recuperandoDados','porcentagemBarra', 'qtdManutencao', 'qtdManutencaoAno', 'diasUsoEquipamento', 'mesesUsoEquipamento', 'anosUsoEquipamento') );
         
     }
