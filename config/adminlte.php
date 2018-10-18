@@ -1,8 +1,6 @@
 <?php
-$buscaLogo = asset('vendor/adminlte/dist/js/logo-escuro.png');
 $tamanho = "width=65%";
-$logo = " <img src='$buscaLogo' $tamanho> ";
-//dd($logo);
+$logo = " <img src='/vendor/adminlte/dist/js/logo-escuro.png' $tamanho> ";
 return [
 
     /*
