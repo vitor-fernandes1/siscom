@@ -16,7 +16,7 @@
             <div class="media">
                 <div class="media-left">
                     <a href="/estatistica" class="ad-click-event">
-                        <i style="padding: 7px 30px; margin-top: 0 ;" class="fas fa-calculator fa-5x"></i>
+                        <i style="padding: 7px 30px; margin-top: 0 ;" class="fas fa-calculator fa-5x text-primary"></i>
                     </a>
                 </div>
                 <div class="media-right">
@@ -39,7 +39,7 @@
             <div class="media">
                 <div class="media-left">
                     <a href="/grafico" class="ad-click-event">
-                        <i style="padding: 7px 30px; margin-top: 0 ;" class="fas fa-chart-line fa-5x"></i>
+                        <i style="padding: 7px 30px; margin-top: 0 ;" class="fas fa-chart-line fa-5x text-primary"></i>
                     </a>
                 </div>
                 <div class="media-right">

@@ -28,7 +28,7 @@
          <td>{{ $item->nr_valor_equipamento }}</td>
          <td>{{ $item->dt_compra_equipamento }}</td>
          <td>
-            <a href="grafico/equipamento/{{ $item->pk_equipamento }}"><i class="fas fa-share fa-2x"></i></a>
+            <a href="grafico/equipamento/{{ $item->pk_equipamento }}"><i class="fas fa-share fa-2x text-primary"></i></a>
          </td>
       </tr>
       <div class="modal modal-danger fade in" id="modal-danger" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

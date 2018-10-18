@@ -1,5 +1,8 @@
 <?php
-
+$buscaLogo = asset('vendor/adminlte/dist/js/logo-escuro.png');
+$tamanho = "width=65%";
+$logo = " <img src='$buscaLogo' $tamanho> ";
+//dd($logo);
 return [
 
     /*
@@ -31,7 +34,8 @@ return [
     */
 
     //'logo' => '<b>Sis</b><span>com</span>',
-    //'logo' => '<img src="C:\xampp\htdocs\siscom\resources\views\imagensz\logo.png">',
+    
+    'logo' => $logo,
 
     'logo_mini' => '<i class="fas fa-angle-right"></i>',
 
@@ -86,7 +90,7 @@ return [
     |
     */
 
-    'dashboard_url' => '/',
+    'dashboard_url' => '/index',
 
     'logout_url' => 'logout',
 
@@ -111,8 +115,8 @@ return [
     'menu' => [
         'MENU',
         [
-            'text'        => 'Pagina Inicial',
-            'url'         => '/',
+            'text'        => 'Pagina inicial',
+            'url'         => '/index',
             'icon'        => "home",
         ],
         [
@@ -200,11 +204,6 @@ return [
             'text'        => 'Baixar Manutenções',
             'url'         => '/empresa',
             'icon'        => 'clipboard-check',
-        ],
-        [
-            'text'       => 'Information',
-            'icon'        => "circle",
-            'icon_color' => 'aqua',
         ],
     ],
 

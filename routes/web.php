@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('/', 'Site\SiteController@index')->name('home.index');
+Route::get('/index', 'Site\SiteController@index')->name('home.index');
 Route::get('central', 'Site\CentralController@index')->name('central.index');
 Route::get('avisos', 'Site\AvisoController@index')->name('avisos.index');
 

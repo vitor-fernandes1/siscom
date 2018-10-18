@@ -1,23 +1,23 @@
                                 /*barra superior*/
-.skin-blue .main-header .navbar{background-color:#3c8dbc}.skin-blue .main-header .navbar .nav>li>a
-{color:#3c8dbc}.skin-blue .main-header .navbar .nav>li>a:hover,.skin-blue .main-header .navbar .nav>li>a:active,.skin-blue .main-header .navbar .nav>li>a:focus,.skin-blue .main-header .navbar .nav .open>a,.skin-blue .main-header .navbar .nav .open>a:hover,.skin-blue .main-header .navbar .nav .open>a:focus,.skin-blue .main-header .navbar .nav>.active>a
-{background:rgba(0, 0, 0, 0.1);color:#f6f6f6}.skin-blue .main-header .navbar .sidebar-toggle
+.skin-blue .main-header .navbar{background-color:#192231}.skin-blue .main-header .navbar .nav>li>a
+{color:#192231}.skin-blue .main-header .navbar .nav>li>a:hover,.skin-blue .main-header .navbar .nav>li>a:active,.skin-blue .main-header .navbar .nav>li>a:focus,.skin-blue .main-header .navbar .nav .open>a,.skin-blue .main-header .navbar .nav .open>a:hover,.skin-blue .main-header .navbar .nav .open>a:focus,.skin-blue .main-header .navbar .nav>.active>a
+{background:#192231;color:#192231}.skin-blue .main-header .navbar .sidebar-toggle
 {color:#fff}.skin-blue .main-header .navbar .sidebar-toggle:hover
 {color:#f6f6f6;
     background:rgba(0,0,0,0.1)}.skin-blue .main-header .navbar .sidebar-toggle
     /*Botao e diminuir o menu*/                                         /*cor ao passar o mouse por cima do diminur menu*/
-    {color:#fff}.skin-blue .main-header .navbar .sidebar-toggle:hover{background-color:#367fa9}@media (max-width:767px){.skin-blue .main-header .navbar .dropdown-menu li.divider
+    {color:#f1f4f7}.skin-blue .main-header .navbar .sidebar-toggle:hover{background-color:#02558b}@media (max-width:767px){.skin-blue .main-header .navbar .dropdown-menu li.divider
         {background-color:rgba(255,255,255,0.1)}.skin-blue .main-header .navbar .dropdown-menu li a{color:#fff}.skin-blue .main-header .navbar .dropdown-menu li a:hover
                                                                 /* cor backgrou parte da logo/ cor da letra do logo*/
-        {background:#367fa9}}.skin-blue .main-header .logo{background-color:#367fa9;color:#fff;border-bottom:0 solid transparent}.skin-blue .main-header .logo:hover
+        {background:#367fa9}}.skin-blue .main-header .logo{background-color:#192231;color:#fff;border-bottom:0 solid transparent}.skin-blue .main-header .logo:hover
         /*cor ao passar o mouse no logo*/
-        {background-color:#357ca5}.skin-blue .main-header li.user-header{background-color:#3c8dbc}.skin-blue .content-header
+        {background-color:#192231}.skin-blue .main-header li.user-header{background-color:#3c8dbc}.skin-blue .content-header
                                                                                                             /*cor do back do menu*/
-        {background:transparent}.skin-blue .wrapper,.skin-blue .main-sidebar,.skin-blue .left-side{background-color:#222d32}.skin-blue .user-panel>.info,.skin-blue .user-panel>.info>a
+        {background:transparent}.skin-blue .wrapper,.skin-blue .main-sidebar,.skin-blue .left-side{background-color:#192231}.skin-blue .user-panel>.info,.skin-blue .user-panel>.info>a
                                                         /*Cor da letra do menu   /   cor do back*/
-        {color:#fff}.skin-blue .sidebar-menu>li.header{color:#4b646f;background:#1a2226}.skin-blue .sidebar-menu>li>a{border-left:3px solid transparent}.skin-blue .sidebar-menu>li:hover>a,.skin-blue .sidebar-menu>li.active>a,.skin-blue .sidebar-menu>li.menu-open>a
+        {color:#fff}.skin-blue .sidebar-menu>li.header{color:#fff;background:#0f1626}.skin-blue .sidebar-menu>li>a{border-left:3px solid transparent}.skin-blue .sidebar-menu>li:hover>a,.skin-blue .sidebar-menu>li.active>a,.skin-blue .sidebar-menu>li.menu-open>a
         /*cor da letra dos botoes do menu que estao selecionados/ back*/        /*cor do filetezinho do lado dos botoes*/
-        {color:#fff;background:#1e282c}.skin-blue .sidebar-menu>li.active>a{border-left-color:#3c8dbc}.skin-blue .sidebar-menu>li>.treeview-menu
+        {color:#fff;background:#02558b}.skin-blue .sidebar-menu>li.active>a{border-left-color:#4ec5c1}.skin-blue .sidebar-menu>li>.treeview-menu
         {margin:0 1px;background:#2c3b41}.skin-blue .sidebar a
         /*cor dos botoes que nao estao selecionados*/
         {color:#b8c7ce}.skin-blue .sidebar a:hover{text-decoration:none}.skin-blue .sidebar-menu .treeview-menu>li>a
