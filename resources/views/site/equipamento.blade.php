@@ -66,7 +66,7 @@
          <td>{{ $item->dt_compra_equipamento }}</td>
          <td>
             <a href="/equipamento/{{ $item->pk_equipamento }}"><button type="button" class="btn btn-primary"><i class="fas fa-edit"></i> Editar</button></a>
-            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modal-danger" data-pk="{{ $item->pk_equipamento }}"><i class="fas fa-trash"></i> Deletar</button>
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modal-danger" data-pk="{{ $item->pk_equipamento }}"><i class="far fa-trash-alt"></i> Deletar</button>
          </td>
       </tr>
       <div class="modal modal-danger fade in" id="modal-danger" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

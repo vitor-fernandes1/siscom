@@ -3,7 +3,7 @@
 @section('title', 'Siscom')
 
 @section('content_header')
-    <h1>Equipamento</h1>
+    <h1>Equipamento - <cite>Editar</cite></h1>
 @stop
 
 @section('content')
@@ -68,7 +68,7 @@
                             @endif
                         </select>
                     <div class="box-footer">
-                        <button type="submit" class="btn btn-success" > <i class="fas fa-edit"></i>  Editar</button>        
+                        <button type="submit" class="btn btn-success" > <i class="fas fa-check"></i>  Confirmar</button>        
                     </div>
                 </div>
             <form>

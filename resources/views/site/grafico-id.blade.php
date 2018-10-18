@@ -1,7 +1,7 @@
 @extends('adminlte::page')
 @section('title', 'Siscom')
 @section('content_header')
-<h1>Equipamento - <cite>Informações</cite></h1>
+<h1>Gráfico - <cite>Informações</cite></h1>
 @stop
 @section('content')
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
