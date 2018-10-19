@@ -200,7 +200,12 @@ return [
         ],
         [
             'text'        => 'Baixar Manutenções',
-            'url'         => '/empresa',
+            'url'         => '/baixar-manutencao',
+            'icon'        => 'clipboard-check',
+        ],
+        [
+            'text'        => 'Indicar Empresa',
+            'url'         => '/indicar-empresa',
             'icon'        => 'clipboard-check',
         ],
     ],

@@ -15,14 +15,14 @@
             <br>
             <div class="media">
                 <div class="media-left">
-                    <a href="/equipamento" class="ad-click-event">
-                        <i style="padding: 7px 30px; margin-top: 0 ;" class="fas fa-laptop fa-5x text-primary"></i>
+                    <a href="/baixar-manutencao" class="ad-click-event">
+                        <i style="padding: 7px 30px; margin-top: 0 ;" class="fas fa-clipboard-check fa-5x text-primary"></i>
                     </a>
                 </div>
                 <div class="media-right">
                     <div class="clearfix">
-                        <h3 style=" font-size: 27px; text-align: left; padding: 7px 0px; margin-top: 0 ;">Equipamento</h3>
-                        <p style=" font-size: 16px; text-align: left; padding: 2px 0px; margin-top: 0 ;" class="lead">Acessar funcionalidade de equipamento</p>
+                        <h3 style=" font-size: 27px; text-align: left; padding: 7px 0px; margin-top: 0 ;">Baixar manutenções</h3>
+                        <p style=" font-size: 16px; text-align: left; padding: 2px 0px; margin-top: 0 ;" class="lead">Acesse a funcionalidade para baixar manutenções </p>
                        
                         <br>
                     </div>

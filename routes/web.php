@@ -65,5 +65,16 @@ Route::group( [ ], function(){
     //Route::get('avisos', 'Api\AvisoController@show')->name('avisos.show');
 });
 
+Route::group( [ ], function(){
+    Route::get('indicar-empresa', 'Api\IndicarEmpresaController@index')->name('indicar.index');
+    //Route::get('indicar/equipamento/{id}', 'Api\indicarController@show')->name('indicar.show');
+});
+
+Route::group( [ ], function(){
+    Route::get('baixar-manutencao', 'Api\BaixarManutencaoController@index')->name('baixar-manutencao.index');
+    Route::get('baixar-manutencao/{id}', 'Api\BaixarManutencaoController@show')->name('baixar-manutencao.show');
+    Route::get('baixar-manutencao/{id}/{avaliacao}', 'Api\BaixarManutencaoController@avaliar')->name('baixar-manutencao.avaliar');
+});
+
 Auth::routes();
 

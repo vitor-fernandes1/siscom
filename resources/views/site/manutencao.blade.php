@@ -8,6 +8,7 @@
 
 @section('content')
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    <!--
     <div class="box box-primary">
         <div class="box-body">
 
@@ -61,6 +62,7 @@
             </form>
         </div>
     </div>
+    -->
     <div class="box box-primary">
         <div class="box-body">
 
@@ -69,9 +71,9 @@
                 <thead class="thead-dark">
                     <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Nome</th>
-                    <th scope="col">Endereço</th>
-                    <th scope="col">CNPJ</th>
+                    <th scope="col">Descrição</th>
+                    <th scope="col">Data</th>
+                    <th scope="col">Valor</th>
                     <th scope="col">Ações</th>
                     </tr>
                 </thead>
@@ -80,12 +82,12 @@
                     @foreach($recuperandoDados as $item)
                         <tr>
                             <th scope="row">{{ $item->pk_manutencao }}</th>
-                            <td>{{ $item->nm_empresa }}</td>
-                            <td>{{ $item->ds_endereco_empresa }}</td>
-                            <td>{{ $item->ds_cnpj_empresa }}</td>
+                            <td>{{ $item->ds_descricao_manutencao }}</td>
+                            <td>{{ $item->dt_manutencao }}</td>
+                            <td>{{ $item->vl_valor_manutencao }}</td>
                             <td>
                             
-                            <a href="/equipamento/{{ $item->pk_manutencao }}"><button type="button" class="btn btn-primary"><i class="fas fa-edit"></i> Editar</button></a>
+                            <a><button type="button" class="btn btn-primary"><i class="fas fa-edit"></i> Editar</button></a>
                             <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modal-danger" data-pk="{{ $item->pk_manutencao }}"><i class="fas fa-edit"></i> Deletar</button>
                             
 
@@ -149,7 +151,6 @@
                 </tbody>
 
             </table>
-            {!! $recuperandoDados->links() !!}
         </div>
     </div>
 @stop

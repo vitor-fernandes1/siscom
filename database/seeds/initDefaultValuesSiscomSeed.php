@@ -73,12 +73,13 @@ class initDefaultValuesSiscomSeed extends Seeder
         $tipoManutencao = TipoManutencao::create([
             'ds_tipo_manutencao'       => 'Corretiva',
         ]);
+        /*
         $tipoManutencao = TipoManutencao::create([
             'ds_tipo_manutencao'       => 'Preditiva',
         ]);
         $tipoManutencao = TipoManutencao::create([
             'ds_tipo_manutencao'       => 'Detectiva',
-        ]);
+        ]);*/
 
         //EQUIPAMENTOS
         $equipamento = Equipamento::create([
