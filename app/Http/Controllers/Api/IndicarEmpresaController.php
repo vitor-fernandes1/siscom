@@ -47,6 +47,110 @@ class IndicarEmpresaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(){
+        /**tratando manutenções PREVENTIVAS */
+        //buscando empresas que já efetuaram manutenções
+        $qtdEmpresasQueJaEfetuaramManutencaoPreventiva = DB::select("SELECT COUNT(fk_pk_empresa) AS qtdRegistro FROM SISCOM_MANUTENCAO WHERE fk_pk_tipo_manutencao = 1");
+        $qtdEmpresasQueJaEfetuaramManutencaoPreventiva = $qtdEmpresasQueJaEfetuaramManutencaoPreventiva['0']->qtdRegistro ; 
+        $empresasQueJaEfetuaramManutençaoPreventiva = DB::select("SELECT fk_pk_empresa, fk_pk_avaliacao FROM SISCOM_MANUTENCAO WHERE fk_pk_tipo_manutencao = 1");
+        //dd($empresasQueJaEfetuaramManutençao);
+
+        if(!empty($empresasQueJaEfetuaramManutençaoPreventiva)){
+            $dadosEmpresaMelhorAvaliadaPreventiva['idEmpresa'] = null;
+            $dadosEmpresaMelhorAvaliadaPreventiva['total'] = 0;
+            foreach($empresasQueJaEfetuaramManutençaoPreventiva as $item){
+                var_dump("id de referencia : $item->fk_pk_empresa");
+                $cont = 0 ;
+                $buscaEmpresaMelhorAvaliadaPreventiva['idEmpresa'] = null;
+                $buscaEmpresaMelhorAvaliadaPreventiva['total'] = 0;
+                do{
+                    //Obtendo o total de notas que uma mesma empresa possui
+                    if(($empresasQueJaEfetuaramManutençaoPreventiva["$cont"]->fk_pk_empresa) === ($item->fk_pk_empresa)){
+                        $buscaEmpresaMelhorAvaliadaPreventiva['idEmpresa'] = ($empresasQueJaEfetuaramManutençaoPreventiva["$cont"]->fk_pk_empresa);
+                        $buscaEmpresaMelhorAvaliadaPreventiva['total']     = ($buscaEmpresaMelhorAvaliadaPreventiva['total']) + ($empresasQueJaEfetuaramManutençaoPreventiva["$cont"]->fk_pk_avaliacao);
+                    }
+                    $cont ++ ;
+                }while($cont <= ($qtdEmpresasQueJaEfetuaramManutencaoPreventiva -1));
+                //var_dump("TOTAL: $totalAvaliacao") ;
+                //dd($dadosEmpresaMelhorAvaliada['total']);
+                //dd('total', $totalAvaliacao);
+                if(($buscaEmpresaMelhorAvaliadaPreventiva['total']) > $dadosEmpresaMelhorAvaliadaPreventiva['total']){
+                    $dadosEmpresaMelhorAvaliadaPreventiva['idEmpresa'] = $buscaEmpresaMelhorAvaliadaPreventiva['idEmpresa'] ;
+                    $dadosEmpresaMelhorAvaliadaPreventiva['total'] = $buscaEmpresaMelhorAvaliadaPreventiva['total'] ;
+                }
+                //dd($dadosEmpresaMelhorAvaliadaPreventiva);
+            }
+        }
+
+        /**tratando manutenções CORRETIVAS */
+        //buscando empresas que já efetuaram manutenções
+        $qtdEmpresasQueJaEfetuaramManutencaoCorretiva = DB::select("SELECT COUNT(fk_pk_empresa) AS qtdRegistro FROM SISCOM_MANUTENCAO WHERE fk_pk_tipo_manutencao = 2");
+        $qtdEmpresasQueJaEfetuaramManutencaoCorretiva = $qtdEmpresasQueJaEfetuaramManutencaoCorretiva['0']->qtdRegistro ; 
+        $empresasQueJaEfetuaramManutençaoCorretiva = DB::select("SELECT fk_pk_empresa, fk_pk_avaliacao FROM SISCOM_MANUTENCAO WHERE fk_pk_tipo_manutencao = 2");
+        //dd($empresasQueJaEfetuaramManutençao);
+
+        if(!empty($empresasQueJaEfetuaramManutençaoCorretiva)){
+            $dadosEmpresaMelhorAvaliadaCorretiva['idEmpresa'] = null;
+            $dadosEmpresaMelhorAvaliadaCorretiva['total'] = 0;
+            foreach($empresasQueJaEfetuaramManutençaoCorretiva as $item){
+                var_dump("id de referencia : $item->fk_pk_empresa");
+                $cont = 0 ;
+                $buscaEmpresaMelhorAvaliadaCorretiva['idEmpresa'] = null;
+                $buscaEmpresaMelhorAvaliadaCorretiva['total'] = 0;
+                do{
+                    //Obtendo o total de notas que uma mesma empresa possui
+                    if(($empresasQueJaEfetuaramManutençaoCorretiva["$cont"]->fk_pk_empresa) === ($item->fk_pk_empresa)){
+                        $buscaEmpresaMelhorAvaliadaCorretiva['idEmpresa'] = ($empresasQueJaEfetuaramManutençaoCorretiva["$cont"]->fk_pk_empresa);
+                        $buscaEmpresaMelhorAvaliadaCorretiva['total']     = ($buscaEmpresaMelhorAvaliadaCorretiva['total']) + ($empresasQueJaEfetuaramManutençaoCorretiva["$cont"]->fk_pk_avaliacao);
+                    }
+                    $cont ++ ;
+                }while($cont <= ($qtdEmpresasQueJaEfetuaramManutencaoCorretiva -1));
+                //var_dump("TOTAL: $totalAvaliacao") ;
+                //dd($dadosEmpresaMelhorAvaliada['total']);
+                //dd('total', $totalAvaliacao);
+                if(($buscaEmpresaMelhorAvaliadaCorretiva['total']) > $dadosEmpresaMelhorAvaliadaCorretiva['total']){
+                    $dadosEmpresaMelhorAvaliadaCorretiva['idEmpresa'] = $buscaEmpresaMelhorAvaliadaCorretiva['idEmpresa'] ;
+                    $dadosEmpresaMelhorAvaliadaCorretiva['total'] = $buscaEmpresaMelhorAvaliadaCorretiva['total'] ;
+                }
+                //dd($dadosEmpresaMelhorAvaliadaCorretiva);
+            }
+        }
+
+        /**tratando manutenções nos equipamentos Eletricos */
+        //buscando empresas que já efetuaram manutenções
+        $qtdEmpresasQueJaEfetuaramManutencaoEletrico = DB::select("SELECT COUNT(p1.fk_pk_empresa) as qtdRegistro FROM siscom_manutencao p1 INNER JOIN siscom_equipamento p2 ON p2.pk_equipamento = p1.fk_pk_equipamento where p2.fk_pk_tipo_equipamento = 3");
+        $qtdEmpresasQueJaEfetuaramManutencaoEletrico = $qtdEmpresasQueJaEfetuaramManutencaoEletrico['0']->qtdRegistro ; 
+        //dd($qtdEmpresasQueJaEfetuaramManutencaoEletrico);
+        $empresasQueJaEfetuaramManutençaoEletrico = DB::select("SELECT p1.fk_pk_empresa, p1.fk_pk_avaliacao FROM siscom_manutencao p1 INNER JOIN siscom_equipamento p2 ON p2.pk_equipamento = p1.fk_pk_equipamento where p2.fk_pk_tipo_equipamento = 3");
+        //dd($empresasQueJaEfetuaramManutençaoEletrico);
+
+        if(!empty($empresasQueJaEfetuaramManutençaoEletrico)){
+            $dadosEmpresaMelhorAvaliadaEletrico['idEmpresa'] = null;
+            $dadosEmpresaMelhorAvaliadaEletrico['total'] = 0;
+            foreach($empresasQueJaEfetuaramManutençaoEletrico as $item){
+                var_dump("id de referencia : $item->fk_pk_empresa");
+                $cont = 0 ;
+                $buscaEmpresaMelhorAvaliadaEletrico['idEmpresa'] = null;
+                $buscaEmpresaMelhorAvaliadaEletrico['total'] = 0;
+                do{
+                    //Obtendo o total de notas que uma mesma empresa possui
+                    if(($empresasQueJaEfetuaramManutençaoEletrico["$cont"]->fk_pk_empresa) === ($item->fk_pk_empresa)){
+                        $buscaEmpresaMelhorAvaliadaEletrico['idEmpresa'] = ($empresasQueJaEfetuaramManutençaoEletrico["$cont"]->fk_pk_empresa);
+                        $buscaEmpresaMelhorAvaliadaEletrico['total']     = ($buscaEmpresaMelhorAvaliadaEletrico['total']) + ($empresasQueJaEfetuaramManutençaoEletrico["$cont"]->fk_pk_avaliacao);
+                    }
+                    $cont ++ ;
+                }while($cont <= ($qtdEmpresasQueJaEfetuaramManutencaoEletrico -1));
+                //var_dump("TOTAL: $totalAvaliacao") ;
+                //dd($dadosEmpresaMelhorAvaliada['total']);
+                //dd('total', $totalAvaliacao);
+                if(($buscaEmpresaMelhorAvaliadaEletrico['total']) > $dadosEmpresaMelhorAvaliadaEletrico['total']){
+                    $dadosEmpresaMelhorAvaliadaEletrico['idEmpresa'] = $buscaEmpresaMelhorAvaliadaEletrico['idEmpresa'] ;
+                    $dadosEmpresaMelhorAvaliadaEletrico['total'] = $buscaEmpresaMelhorAvaliadaEletrico['total'] ;
+                }
+                dd($dadosEmpresaMelhorAvaliadaEletrico);
+            }
+        }
+        
+        dd($empresasQueJaEfetuaramManutençao,'empresa com melhor avaliacao', $empresaMelhorAvaliada);
         //buscando empresas com melhor qualificação, pelo tipo de manutenção PREVENTIVA
         $obterEmpresasPorTipo = DB::select("SELECT fk_pk_empresa,fk_pk_avaliacao FROM SISCOM_MANUTENCAO WHERE fk_pk_tipo_manutencao = 1 AND fk_pk_avaliacao > 0 AND fk_pk_avaliacao < 4  ");
         //dd($obterEmpresasPorTipo);
@@ -56,7 +160,12 @@ class IndicarEmpresaController extends Controller
                 $empresaIndicada = DB::select("SELECT nm_empresa,ds_endereco_empresa,ds_telefone_empresa, ds_email_empresa, ds_cnpj_empresa FROM SISCOM_EMPRESA WHERE PK_EMPRESA = $item->fk_pk_empresa  ");
             }
         }
-        if($flag != true)
+        if($flag != true){
+            if($item->fk_pk_avaliacao == 2){
+                $flag = true;
+                $empresaIndicada = DB::select("SELECT nm_empresa,ds_endereco_empresa,ds_telefone_empresa, ds_email_empresa, ds_cnpj_empresa FROM SISCOM_EMPRESA WHERE PK_EMPRESA = $item->fk_pk_empresa  ");
+            }
+        }
         //$recuperandoDados = $this->model->get();
         //dd($recuperandoDados);
         return view('site.indicar-empresa', compact('recuperandoDados') );
