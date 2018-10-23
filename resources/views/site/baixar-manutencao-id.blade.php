@@ -44,13 +44,13 @@
       <br>
     </div>
     <div class="col-lg-4 col-xs-7" align="center">
-      <a href="{{ $recuperandoDados->pk_manutencao }}/1"><i class="fas fa-smile-beam fa-5x text-green" ></i> <div><b>Ótimo</div></a>
+      <a href="{{ $recuperandoDados->pk_manutencao }}/3"><i class="fas fa-smile-beam fa-5x text-green" ></i> <div><b>Ótimo</div></a>
     </div>
     <div class="col-lg-4 col-xs-7" align="center">
       <a href="{{ $recuperandoDados->pk_manutencao }}/2"><i class="fas fa-meh fa-5x text-primary" ></i> <div><b>Médio</div></a>
     </div>
     <div class="col-lg-4 col-xs-7" align="center">
-      <a href="{{ $recuperandoDados->pk_manutencao }}/3"><i class="fas fa-angry fa-5x text-red"></i> <div><b>Ruim</div></a>
+      <a href="{{ $recuperandoDados->pk_manutencao }}/1"><i class="fas fa-angry fa-5x text-red"></i> <div><b>Ruim</div></a>
     </div>
   </div>
 </div>
