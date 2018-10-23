@@ -57,13 +57,13 @@ class initDefaultValuesSiscomSeed extends Seeder
 
         //AVALIACAO
         $avalicao = Avaliacao::create([
-            'ds_avaliacao'       => 'Ótimo',
+            'ds_avaliacao'       => 'Ruim',
         ]);
         $avalicao = Avaliacao::create([
             'ds_avaliacao'       => 'Médio',
         ]);
         $avalicao = Avaliacao::create([
-            'ds_avaliacao'       => 'Ruim',
+            'ds_avaliacao'       => 'Ótimo',
         ]);
 
         //TIPOS DE MANUTENCAO
