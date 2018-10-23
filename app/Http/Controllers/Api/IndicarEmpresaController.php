@@ -82,7 +82,7 @@ class IndicarEmpresaController extends Controller
                 }
             }
             // Empresas só serão recomendadas se atingirem a média ou mais
-            if( ( ($dadosEmpresaMelhorAvaliadaPreventiva['total']) / ($dadosEmpresaMelhorAvaliadaPreventiva['qtdManutencoes']) ) == 2  ){
+            if( ( ($dadosEmpresaMelhorAvaliadaPreventiva['total']) / ($dadosEmpresaMelhorAvaliadaPreventiva['qtdManutencoes']) ) >= 2  ){
                 $dadosEmpresaMelhorAvaliadaPreventiva['indicar'] = true;
                 $idEmpresa = $dadosEmpresaMelhorAvaliadaPreventiva['idEmpresa'];
                 $query = DB::select("SELECT nm_empresa, ds_endereco_empresa, ds_email_empresa, ds_telefone_empresa FROM SISCOM_EMPRESA WHERE pk_empresa = $idEmpresa ");
@@ -134,7 +134,7 @@ class IndicarEmpresaController extends Controller
                 }
             }
             // Empresas só serão recomendadas se atingirem a média ou mais
-            if( ( ($dadosEmpresaMelhorAvaliadaCorretiva['total']) / ($dadosEmpresaMelhorAvaliadaCorretiva['qtdManutencoes']) ) == 2  ){
+            if( ( ($dadosEmpresaMelhorAvaliadaCorretiva['total']) / ($dadosEmpresaMelhorAvaliadaCorretiva['qtdManutencoes']) ) >= 2  ){
                 $dadosEmpresaMelhorAvaliadaCorretiva['indicar'] = true;
                 $idEmpresa = $dadosEmpresaMelhorAvaliadaCorretiva['idEmpresa'];
                 $query = DB::select("SELECT nm_empresa, ds_endereco_empresa, ds_email_empresa, ds_telefone_empresa FROM SISCOM_EMPRESA WHERE pk_empresa = $idEmpresa ");
@@ -184,7 +184,7 @@ class IndicarEmpresaController extends Controller
                 }
             }
             // Empresas só serão recomendadas se atingirem a média ou mais
-            if( ( ($dadosEmpresaMelhorAvaliadaEletrico['total']) / ($dadosEmpresaMelhorAvaliadaEletrico['qtdManutencoes']) ) == 2  ){
+            if( ( ($dadosEmpresaMelhorAvaliadaEletrico['total']) / ($dadosEmpresaMelhorAvaliadaEletrico['qtdManutencoes']) ) >= 2  ){
                 $dadosEmpresaMelhorAvaliadaEletrico['indicar'] = true;
                 $idEmpresa = $dadosEmpresaMelhorAvaliadaEletrico['idEmpresa'];
                 $query = DB::select("SELECT nm_empresa, ds_endereco_empresa, ds_email_empresa, ds_telefone_empresa FROM SISCOM_EMPRESA WHERE pk_empresa = $idEmpresa ");
@@ -235,7 +235,7 @@ class IndicarEmpresaController extends Controller
                 
             }
             // Empresas só serão recomendadas se atingirem a média ou mais
-            if( ( ($dadosEmpresaMelhorAvaliadaEletroeletronico['total']) / ($dadosEmpresaMelhorAvaliadaEletroeletronico['qtdManutencoes']) ) == 2  ){
+            if( ( ($dadosEmpresaMelhorAvaliadaEletroeletronico['total']) / ($dadosEmpresaMelhorAvaliadaEletroeletronico['qtdManutencoes']) ) >= 2  ){
                 $dadosEmpresaMelhorAvaliadaEletroeletronico['indicar'] = true;
                 $idEmpresa = $dadosEmpresaMelhorAvaliadaEletroeletronico['idEmpresa'];
                 $query = DB::select("SELECT nm_empresa, ds_endereco_empresa, ds_email_empresa, ds_telefone_empresa FROM SISCOM_EMPRESA WHERE pk_empresa = $idEmpresa ");
@@ -284,7 +284,7 @@ class IndicarEmpresaController extends Controller
                 }
             }
             // Empresas só serão recomendadas se atingirem a média ou mais
-            if( ( ($dadosEmpresaMelhorAvaliadaEletronico['total']) / ($dadosEmpresaMelhorAvaliadaEletronico['qtdManutencoes']) ) == 2  ){
+            if( ( ($dadosEmpresaMelhorAvaliadaEletronico['total']) / ($dadosEmpresaMelhorAvaliadaEletronico['qtdManutencoes']) ) >= 2  ){
                 $dadosEmpresaMelhorAvaliadaEletronico['indicar'] = true;
                 $idEmpresa = $dadosEmpresaMelhorAvaliadaEletronico['idEmpresa'];
                 $query = DB::select("SELECT nm_empresa, ds_endereco_empresa, ds_email_empresa, ds_telefone_empresa FROM SISCOM_EMPRESA WHERE pk_empresa = $idEmpresa ");
@@ -334,7 +334,7 @@ class IndicarEmpresaController extends Controller
                 }
             }
             // Empresas só serão recomendadas se atingirem a média ou mais
-            if( ( ($buscaEmpresaMelhorAvaliadaEletrodomestico['total']) / ($buscaEmpresaMelhorAvaliadaEletrodomestico['qtdManutencoes']) ) == 2  ){
+            if( ( ($buscaEmpresaMelhorAvaliadaEletrodomestico['total']) / ($buscaEmpresaMelhorAvaliadaEletrodomestico['qtdManutencoes']) ) >= 2  ){
                 $buscaEmpresaMelhorAvaliadaEletrodomestico['indicar'] = true;
                 $idEmpresa = $buscaEmpresaMelhorAvaliadaEletrodomestico['idEmpresa'];
                 $query = DB::select("SELECT nm_empresa, ds_endereco_empresa, ds_email_empresa, ds_telefone_empresa FROM SISCOM_EMPRESA WHERE pk_empresa = $idEmpresa ");

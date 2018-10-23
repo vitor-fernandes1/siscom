@@ -143,6 +143,11 @@ return [
             'icon'        => 'exclamation-circle',
             
         ],
+        [
+            'text'        => 'Indicar Empresa',
+            'url'         => '/indicar-empresa',
+            'icon'        => 'lightbulb',
+        ],
         /*'ACCOUNT SETTINGS',
         [
             'text' => 'Profile',
@@ -201,11 +206,6 @@ return [
         [
             'text'        => 'Baixar Manutenções',
             'url'         => '/baixar-manutencao',
-            'icon'        => 'clipboard-check',
-        ],
-        [
-            'text'        => 'Indicar Empresa',
-            'url'         => '/indicar-empresa',
             'icon'        => 'clipboard-check',
         ],
     ],
