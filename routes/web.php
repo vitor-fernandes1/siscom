@@ -40,8 +40,8 @@ Route::group( [ ], function(){
 });
 
 Route::group( [ ], function(){
-    Route::get('estatistica', 'Site\EstatisticaController@index')->name('estatistica.index');
-    Route::get('estatistica/equipamento/{id}', 'Site\EstatisticaController@show')->name('estatistica.show');
+    Route::get('estatistica', 'Api\EstatisticaController@index')->name('estatistica.index');
+    Route::get('estatistica/equipamento/{id}', 'Api\EstatisticaController@show')->name('estatistica.show');
     /*Route::post('estatistica', 'Api\ManutencaoController@store')->name('manutencao.store');
     Route::get('estatistica/update/{id}', 'Api\ManutencaoController@update')->name('manutencao.update');
     Route::get('estatistica/delete/', 'Api\ManutencaoController@destroy')->name('manutencao.delete');*/
