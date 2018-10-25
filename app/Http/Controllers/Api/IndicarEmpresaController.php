@@ -53,36 +53,51 @@ class IndicarEmpresaController extends Controller
         $qtdEmpresasQueJaEfetuaramManutencaoPreventiva = $qtdEmpresasQueJaEfetuaramManutencaoPreventiva['0']->qtdRegistro ; 
         $empresasQueJaEfetuaramManutençaoPreventiva = DB::select("SELECT fk_pk_empresa, fk_pk_avaliacao FROM SISCOM_MANUTENCAO WHERE fk_pk_tipo_manutencao = 1");
         $dadosEmpresaMelhorAvaliadaPreventiva = null;
-        
+
         if(!empty($empresasQueJaEfetuaramManutençaoPreventiva)){
             $dadosEmpresaMelhorAvaliadaPreventiva['idEmpresa'] = null;
-            $dadosEmpresaMelhorAvaliadaPreventiva['total'] = 0;
+            $dadosEmpresaMelhorAvaliadaPreventiva['media'] = 0;
             $dadosEmpresaMelhorAvaliadaPreventiva['qtdManutencoes'] = 0;
             $dadosEmpresaMelhorAvaliadaPreventiva['indicar'] = false;
             $dadosEmpresaMelhorAvaliadaPreventiva['superiorMedia'] = false;
-            foreach($empresasQueJaEfetuaramManutençaoPreventiva as $item){
-                $cont = 0 ;
-                $buscaEmpresaMelhorAvaliadaPreventiva['idEmpresa'] = null;
-                $buscaEmpresaMelhorAvaliadaPreventiva['total'] = 0;
-                $buscaEmpresaMelhorAvaliadaPreventiva['qtdManutencoes'] = 0;
-                do{
-                    //Obtendo o total de notas que uma mesma empresa possui
-                    if(($empresasQueJaEfetuaramManutençaoPreventiva["$cont"]->fk_pk_empresa) === ($item->fk_pk_empresa)){
-                        $buscaEmpresaMelhorAvaliadaPreventiva['idEmpresa'] = ($empresasQueJaEfetuaramManutençaoPreventiva["$cont"]->fk_pk_empresa);
-                        $buscaEmpresaMelhorAvaliadaPreventiva['total']     = ($buscaEmpresaMelhorAvaliadaPreventiva['total']) + ($empresasQueJaEfetuaramManutençaoPreventiva["$cont"]->fk_pk_avaliacao);
-                        $buscaEmpresaMelhorAvaliadaPreventiva['qtdManutencoes'] = $buscaEmpresaMelhorAvaliadaPreventiva['qtdManutencoes'] + 1;
-                    }
-                    $cont ++ ;
-                }while($cont <= ($qtdEmpresasQueJaEfetuaramManutencaoPreventiva -1));
 
-                if(($buscaEmpresaMelhorAvaliadaPreventiva['total']) > $dadosEmpresaMelhorAvaliadaPreventiva['total']){
-                    $dadosEmpresaMelhorAvaliadaPreventiva['idEmpresa'] = $buscaEmpresaMelhorAvaliadaPreventiva['idEmpresa'] ;
-                    $dadosEmpresaMelhorAvaliadaPreventiva['total'] = $buscaEmpresaMelhorAvaliadaPreventiva['total'] ;
-                    $dadosEmpresaMelhorAvaliadaPreventiva['qtdManutencoes'] = $buscaEmpresaMelhorAvaliadaPreventiva['qtdManutencoes'] ;
+            foreach($empresasQueJaEfetuaramManutençaoPreventiva as $item){
+                $total = 0 ;
+                $flagNotaRuim = false ;
+                $buscaEmpresaMelhorAvaliadaPreventiva['idEmpresa'] = null;
+                $buscaEmpresaMelhorAvaliadaPreventiva['media'] = 0;
+                $buscaEmpresaMelhorAvaliadaPreventiva['qtdManutencoes'] = 0;
+                foreach($empresasQueJaEfetuaramManutençaoPreventiva as $registro){
+                    //Obtendo o total de notas que uma mesma empresa possui
+                    if( ( ($registro->fk_pk_empresa) === ($item->fk_pk_empresa) ) ){
+
+                        if(($item->fk_pk_avaliacao) == 1){
+                            $flagNotaRuim = true ;
+                            $buscaEmpresaMelhorAvaliadaPreventiva['idEmpresa'] = null;
+                            $buscaEmpresaMelhorAvaliadaPreventiva['media'] = 0;
+                            $buscaEmpresaMelhorAvaliadaPreventiva['qtdManutencoes'] = 0;
+                            break;
+                        }
+                        else
+                        {
+                            $buscaEmpresaMelhorAvaliadaPreventiva['idEmpresa'] = ($registro->fk_pk_empresa);
+                            $total = $total + ($registro->fk_pk_avaliacao);
+                            $buscaEmpresaMelhorAvaliadaPreventiva['qtdManutencoes'] = $buscaEmpresaMelhorAvaliadaPreventiva['qtdManutencoes'] + 1;
+                        }
+                    }
+                }
+
+                if( $flagNotaRuim == false){
+                    $buscaEmpresaMelhorAvaliadaPreventiva['media'] = $total / $buscaEmpresaMelhorAvaliadaPreventiva['qtdManutencoes'];
+                    if( ( ($buscaEmpresaMelhorAvaliadaPreventiva['media']) > ($dadosEmpresaMelhorAvaliadaPreventiva['media']) ) ){
+                        $dadosEmpresaMelhorAvaliadaPreventiva['idEmpresa'] = $buscaEmpresaMelhorAvaliadaPreventiva['idEmpresa'] ;
+                        $dadosEmpresaMelhorAvaliadaPreventiva['media'] = $buscaEmpresaMelhorAvaliadaPreventiva['media'] ;
+                        $dadosEmpresaMelhorAvaliadaPreventiva['qtdManutencoes'] = $buscaEmpresaMelhorAvaliadaPreventiva['qtdManutencoes'] ;
+                    }
                 }
             }
             // Empresas só serão recomendadas se atingirem a média ou mais
-            if( ( ($dadosEmpresaMelhorAvaliadaPreventiva['total']) / ($dadosEmpresaMelhorAvaliadaPreventiva['qtdManutencoes']) ) >= 2  ){
+            if( ($dadosEmpresaMelhorAvaliadaPreventiva['idEmpresa'] != null ) && ($dadosEmpresaMelhorAvaliadaPreventiva['media']) >= 2  ){
                 $dadosEmpresaMelhorAvaliadaPreventiva['indicar'] = true;
                 $idEmpresa = $dadosEmpresaMelhorAvaliadaPreventiva['idEmpresa'];
                 $query = DB::select("SELECT nm_empresa, ds_endereco_empresa, ds_email_empresa, ds_telefone_empresa FROM SISCOM_EMPRESA WHERE pk_empresa = $idEmpresa ");
@@ -91,11 +106,10 @@ class IndicarEmpresaController extends Controller
                 $dadosEmpresaMelhorAvaliadaPreventiva['ds_email_empresa']    = $query['0']->ds_email_empresa;
                 $dadosEmpresaMelhorAvaliadaPreventiva['ds_telefone_empresa'] = $query['0']->ds_telefone_empresa;
 
-                if( ( ($dadosEmpresaMelhorAvaliadaPreventiva['total']) / ($dadosEmpresaMelhorAvaliadaPreventiva['qtdManutencoes']) ) > 2  ){
+                if( ($dadosEmpresaMelhorAvaliadaPreventiva['media']) > 2  ){
                     $dadosEmpresaMelhorAvaliadaPreventiva['superiorMedia'] = true;
                 }
             }
-            
         }
         
 
@@ -108,33 +122,50 @@ class IndicarEmpresaController extends Controller
 
         if(!empty($empresasQueJaEfetuaramManutençaoCorretiva)){
             $dadosEmpresaMelhorAvaliadaCorretiva['idEmpresa'] = null;
-            $dadosEmpresaMelhorAvaliadaCorretiva['total'] = 0;
+            $dadosEmpresaMelhorAvaliadaCorretiva['media'] = 0;
             $dadosEmpresaMelhorAvaliadaCorretiva['qtdManutencoes'] = 0;
             $dadosEmpresaMelhorAvaliadaCorretiva['indicar'] = false;
             $dadosEmpresaMelhorAvaliadaCorretiva['superiorMedia'] = false;
-            foreach($empresasQueJaEfetuaramManutençaoCorretiva as $item){
-                $cont = 0 ;
-                $buscaEmpresaMelhorAvaliadaCorretiva['idEmpresa'] = null;
-                $buscaEmpresaMelhorAvaliadaCorretiva['total'] = 0;
-                $buscaEmpresaMelhorAvaliadaCorretiva['qtdManutencoes'] = 0;
-                do{
-                    //Obtendo o total de notas que uma mesma empresa possui
-                    if(($empresasQueJaEfetuaramManutençaoCorretiva["$cont"]->fk_pk_empresa) === ($item->fk_pk_empresa)){
-                        $buscaEmpresaMelhorAvaliadaCorretiva['idEmpresa'] = ($empresasQueJaEfetuaramManutençaoCorretiva["$cont"]->fk_pk_empresa);
-                        $buscaEmpresaMelhorAvaliadaCorretiva['total']     = ($buscaEmpresaMelhorAvaliadaCorretiva['total']) + ($empresasQueJaEfetuaramManutençaoCorretiva["$cont"]->fk_pk_avaliacao);
-                        $buscaEmpresaMelhorAvaliadaCorretiva['qtdManutencoes'] = $buscaEmpresaMelhorAvaliadaCorretiva['qtdManutencoes'] + 1;
-                    }
-                    $cont ++ ;
-                }while($cont <= ($qtdEmpresasQueJaEfetuaramManutencaoCorretiva -1));
 
-                if(($buscaEmpresaMelhorAvaliadaCorretiva['total']) > $dadosEmpresaMelhorAvaliadaCorretiva['total']){
-                    $dadosEmpresaMelhorAvaliadaCorretiva['idEmpresa'] = $buscaEmpresaMelhorAvaliadaCorretiva['idEmpresa'] ;
-                    $dadosEmpresaMelhorAvaliadaCorretiva['total'] = $buscaEmpresaMelhorAvaliadaCorretiva['total'] ;
-                    $dadosEmpresaMelhorAvaliadaCorretiva['qtdManutencoes'] = $buscaEmpresaMelhorAvaliadaCorretiva['qtdManutencoes'] ;
+            foreach($empresasQueJaEfetuaramManutençaoCorretiva as $item){
+                $total = 0 ;
+                $flagNotaRuim = false ;
+                $buscaEmpresaMelhorAvaliadaCorretiva['idEmpresa'] = null;
+                $buscaEmpresaMelhorAvaliadaCorretiva['media'] = 0;
+                $buscaEmpresaMelhorAvaliadaCorretiva['qtdManutencoes'] = 0;
+                
+                foreach($empresasQueJaEfetuaramManutençaoCorretiva as $registro){
+                    //Obtendo o total de notas que uma mesma empresa possui
+                    if( ( ($registro->fk_pk_empresa) === ($item->fk_pk_empresa) ) ){
+
+                        if(($registro->fk_pk_avaliacao) == 1){
+                            $flagNotaRuim = true ;
+                            $buscaEmpresaMelhorAvaliadaCorretiva['idEmpresa'] = null;
+                            $buscaEmpresaMelhorAvaliadaCorretiva['media'] = 0;
+                            $buscaEmpresaMelhorAvaliadaCorretiva['qtdManutencoes'] = 0;
+                            break;
+                        }
+                        else
+                        {
+                            $buscaEmpresaMelhorAvaliadaCorretiva['idEmpresa'] = ($registro->fk_pk_empresa);
+                            $total = $total + ($registro->fk_pk_avaliacao);
+                            $buscaEmpresaMelhorAvaliadaCorretiva['qtdManutencoes'] = $buscaEmpresaMelhorAvaliadaCorretiva['qtdManutencoes'] + 1;
+                        }
+                    }
+                }
+
+                if( $flagNotaRuim == false){
+                    $buscaEmpresaMelhorAvaliadaCorretiva['media'] = $total / $buscaEmpresaMelhorAvaliadaCorretiva['qtdManutencoes'];
+                    if( ( ($buscaEmpresaMelhorAvaliadaCorretiva['media']) > ($dadosEmpresaMelhorAvaliadaCorretiva['media']) ) ){
+                        $dadosEmpresaMelhorAvaliadaCorretiva['idEmpresa'] = $buscaEmpresaMelhorAvaliadaCorretiva['idEmpresa'] ;
+                        $dadosEmpresaMelhorAvaliadaCorretiva['media'] = $buscaEmpresaMelhorAvaliadaCorretiva['media'] ;
+                        $dadosEmpresaMelhorAvaliadaCorretiva['qtdManutencoes'] = $buscaEmpresaMelhorAvaliadaCorretiva['qtdManutencoes'] ;
+                    }
                 }
             }
+
             // Empresas só serão recomendadas se atingirem a média ou mais
-            if( ( ($dadosEmpresaMelhorAvaliadaCorretiva['total']) / ($dadosEmpresaMelhorAvaliadaCorretiva['qtdManutencoes']) ) >= 2  ){
+            if( ($dadosEmpresaMelhorAvaliadaCorretiva['idEmpresa'] != null ) && ($dadosEmpresaMelhorAvaliadaCorretiva['media']) >= 2  ){
                 $dadosEmpresaMelhorAvaliadaCorretiva['indicar'] = true;
                 $idEmpresa = $dadosEmpresaMelhorAvaliadaCorretiva['idEmpresa'];
                 $query = DB::select("SELECT nm_empresa, ds_endereco_empresa, ds_email_empresa, ds_telefone_empresa FROM SISCOM_EMPRESA WHERE pk_empresa = $idEmpresa ");
@@ -143,7 +174,7 @@ class IndicarEmpresaController extends Controller
                 $dadosEmpresaMelhorAvaliadaCorretiva['ds_email_empresa']    = $query['0']->ds_email_empresa;
                 $dadosEmpresaMelhorAvaliadaCorretiva['ds_telefone_empresa'] = $query['0']->ds_telefone_empresa;
                 
-                if( ( ($dadosEmpresaMelhorAvaliadaCorretiva['total']) / ($dadosEmpresaMelhorAvaliadaCorretiva['qtdManutencoes']) ) > 2  ){
+                if( ($dadosEmpresaMelhorAvaliadaCorretiva['media']) > 2  ){
                     $dadosEmpresaMelhorAvaliadaCorretiva['superiorMedia'] = true;
                 }
             }
@@ -158,33 +189,49 @@ class IndicarEmpresaController extends Controller
 
         if(!empty($empresasQueJaEfetuaramManutençaoEletrico)){
             $dadosEmpresaMelhorAvaliadaEletrico['idEmpresa'] = null;
-            $dadosEmpresaMelhorAvaliadaEletrico['total'] = 0;
+            $dadosEmpresaMelhorAvaliadaEletrico['media'] = 0;
             $dadosEmpresaMelhorAvaliadaEletrico['qtdManutencoes'] = 0;
             $dadosEmpresaMelhorAvaliadaEletrico['indicar'] = false;
             $dadosEmpresaMelhorAvaliadaEletrico['superiorMedia'] = false;
             foreach($empresasQueJaEfetuaramManutençaoEletrico as $item){
-                $cont = 0 ;
+                $total = 0 ;
+                $flagNotaRuim = false ;
                 $buscaEmpresaMelhorAvaliadaEletrico['idEmpresa'] = null;
-                $buscaEmpresaMelhorAvaliadaEletrico['total'] = 0;
+                $buscaEmpresaMelhorAvaliadaEletrico['media'] = 0;
                 $buscaEmpresaMelhorAvaliadaEletrico['qtdManutencoes'] = 0;
-                do{
-                    //Obtendo o total de notas que uma mesma empresa possui
-                    if(($empresasQueJaEfetuaramManutençaoEletrico["$cont"]->fk_pk_empresa) === ($item->fk_pk_empresa)){
-                        $buscaEmpresaMelhorAvaliadaEletrico['idEmpresa'] = ($empresasQueJaEfetuaramManutençaoEletrico["$cont"]->fk_pk_empresa);
-                        $buscaEmpresaMelhorAvaliadaEletrico['total']     = ($buscaEmpresaMelhorAvaliadaEletrico['total']) + ($empresasQueJaEfetuaramManutençaoEletrico["$cont"]->fk_pk_avaliacao);
-                        $buscaEmpresaMelhorAvaliadaEletrico['qtdManutencoes'] = $buscaEmpresaMelhorAvaliadaEletrico['qtdManutencoes'] + 1;
-                    }
-                    $cont ++ ;
-                }while($cont <= ($qtdEmpresasQueJaEfetuaramManutencaoEletrico -1));
 
-                if(($buscaEmpresaMelhorAvaliadaEletrico['total']) > $dadosEmpresaMelhorAvaliadaEletrico['total']){
-                    $dadosEmpresaMelhorAvaliadaEletrico['idEmpresa'] = $buscaEmpresaMelhorAvaliadaEletrico['idEmpresa'] ;
-                    $dadosEmpresaMelhorAvaliadaEletrico['total'] = $buscaEmpresaMelhorAvaliadaEletrico['total'] ;
-                    $dadosEmpresaMelhorAvaliadaEletrico['qtdManutencoes'] = $buscaEmpresaMelhorAvaliadaEletrico['qtdManutencoes'] ;
+                foreach($empresasQueJaEfetuaramManutençaoEletrico as $registro){
+                    //Obtendo o total de notas que uma mesma empresa possui
+                    if( ( ($registro->fk_pk_empresa) === ($item->fk_pk_empresa) ) ){
+
+                        if(($registro->fk_pk_avaliacao) == 1){
+                            $flagNotaRuim = true ;
+                            $buscaEmpresaMelhorAvaliadaEletrico['idEmpresa'] = null;
+                            $buscaEmpresaMelhorAvaliadaEletrico['media'] = 0;
+                            $buscaEmpresaMelhorAvaliadaEletrico['qtdManutencoes'] = 0;
+                            break;
+                        }
+                        else
+                        {
+                            $buscaEmpresaMelhorAvaliadaEletrico['idEmpresa'] = ($registro->fk_pk_empresa);
+                            $total = $total + ($registro->fk_pk_avaliacao);
+                            $buscaEmpresaMelhorAvaliadaEletrico['qtdManutencoes'] = $buscaEmpresaMelhorAvaliadaEletrico['qtdManutencoes'] + 1;
+                        }
+                    }
+                }
+
+                if( $flagNotaRuim == false){
+                    $buscaEmpresaMelhorAvaliadaEletrico['media'] = $total / $buscaEmpresaMelhorAvaliadaEletrico['qtdManutencoes'];
+                    if( ( ($buscaEmpresaMelhorAvaliadaEletrico['media']) > ($dadosEmpresaMelhorAvaliadaEletrico['media']) ) ){
+                        $dadosEmpresaMelhorAvaliadaEletrico['idEmpresa'] = $buscaEmpresaMelhorAvaliadaEletrico['idEmpresa'] ;
+                        $dadosEmpresaMelhorAvaliadaEletrico['media'] = $buscaEmpresaMelhorAvaliadaEletrico['media'] ;
+                        $dadosEmpresaMelhorAvaliadaEletrico['qtdManutencoes'] = $buscaEmpresaMelhorAvaliadaEletrico['qtdManutencoes'] ;
+                    }
                 }
             }
+
             // Empresas só serão recomendadas se atingirem a média ou mais
-            if( ( ($dadosEmpresaMelhorAvaliadaEletrico['total']) / ($dadosEmpresaMelhorAvaliadaEletrico['qtdManutencoes']) ) >= 2  ){
+            if( ($dadosEmpresaMelhorAvaliadaEletrico['idEmpresa'] != null ) && ($dadosEmpresaMelhorAvaliadaEletrico['media']) >= 2  ){
                 $dadosEmpresaMelhorAvaliadaEletrico['indicar'] = true;
                 $idEmpresa = $dadosEmpresaMelhorAvaliadaEletrico['idEmpresa'];
                 $query = DB::select("SELECT nm_empresa, ds_endereco_empresa, ds_email_empresa, ds_telefone_empresa FROM SISCOM_EMPRESA WHERE pk_empresa = $idEmpresa ");
@@ -193,7 +240,7 @@ class IndicarEmpresaController extends Controller
                 $dadosEmpresaMelhorAvaliadaEletrico['ds_email_empresa']    = $query['0']->ds_email_empresa;
                 $dadosEmpresaMelhorAvaliadaEletrico['ds_telefone_empresa'] = $query['0']->ds_telefone_empresa;
                 
-                if( ( ($dadosEmpresaMelhorAvaliadaEletrico['total']) / ($dadosEmpresaMelhorAvaliadaEletrico['qtdManutencoes']) ) > 2  ){
+                if(  ($dadosEmpresaMelhorAvaliadaEletrico['media']) > 2  ){
                     $dadosEmpresaMelhorAvaliadaEletrico['superiorMedia'] = true;
                 }
             }
@@ -208,34 +255,50 @@ class IndicarEmpresaController extends Controller
 
         if(!empty($empresasQueJaEfetuaramManutençaoEletroeletronico)){
             $dadosEmpresaMelhorAvaliadaEletroeletronico['idEmpresa'] = null;
-            $dadosEmpresaMelhorAvaliadaEletroeletronico['total'] = 0;
+            $dadosEmpresaMelhorAvaliadaEletroeletronico['media'] = 0;
             $dadosEmpresaMelhorAvaliadaEletroeletronico['qtdManutencoes'] = 0;
             $dadosEmpresaMelhorAvaliadaEletroeletronico['indicar'] = false;
             $dadosEmpresaMelhorAvaliadaEletroeletronico['superiorMedia'] = false;
             foreach($empresasQueJaEfetuaramManutençaoEletroeletronico as $item){
-                $cont = 0 ;
+                $total = 0 ;
+                $flagNotaRuim = false ;
                 $buscaEmpresaMelhorAvaliadaEletroeletronico['idEmpresa'] = null;
-                $buscaEmpresaMelhorAvaliadaEletroeletronico['total'] = 0;
+                $buscaEmpresaMelhorAvaliadaEletroeletronico['media'] = 0;
                 $buscaEmpresaMelhorAvaliadaEletroeletronico['qtdManutencoes'] = 0;
-                do{
+                
+                foreach($empresasQueJaEfetuaramManutençaoEletroeletronico as $registro){
                     //Obtendo o total de notas que uma mesma empresa possui
-                    if(($empresasQueJaEfetuaramManutençaoEletroeletronico["$cont"]->fk_pk_empresa) === ($item->fk_pk_empresa)){
-                        $buscaEmpresaMelhorAvaliadaEletroeletronico['idEmpresa'] = ($empresasQueJaEfetuaramManutençaoEletroeletronico["$cont"]->fk_pk_empresa);
-                        $buscaEmpresaMelhorAvaliadaEletroeletronico['total']     = ($buscaEmpresaMelhorAvaliadaEletroeletronico['total']) + ($empresasQueJaEfetuaramManutençaoEletroeletronico["$cont"]->fk_pk_avaliacao);
-                        $buscaEmpresaMelhorAvaliadaEletroeletronico['qtdManutencoes'] = $buscaEmpresaMelhorAvaliadaEletroeletronico['qtdManutencoes'] + 1;
-                    }
-                    $cont ++ ;
-                }while($cont <= ($qtdEmpresasQueJaEfetuaramManutencaoEletroeletronico -1));
+                    if( ( ($registro->fk_pk_empresa) === ($item->fk_pk_empresa) ) ){
 
-                if(($buscaEmpresaMelhorAvaliadaEletroeletronico['total']) > $dadosEmpresaMelhorAvaliadaEletroeletronico['total']){
-                    $dadosEmpresaMelhorAvaliadaEletroeletronico['idEmpresa'] = $buscaEmpresaMelhorAvaliadaEletroeletronico['idEmpresa'] ;
-                    $dadosEmpresaMelhorAvaliadaEletroeletronico['total'] = $buscaEmpresaMelhorAvaliadaEletroeletronico['total'] ;
-                    $dadosEmpresaMelhorAvaliadaEletroeletronico['qtdManutencoes'] = $buscaEmpresaMelhorAvaliadaEletroeletronico['qtdManutencoes'] ;
+                        if(($registro->fk_pk_avaliacao) == 1){
+                            $flagNotaRuim = true ;
+                            $buscaEmpresaMelhorAvaliadaEletroeletronico['idEmpresa'] = null;
+                            $buscaEmpresaMelhorAvaliadaEletroeletronico['media'] = 0;
+                            $buscaEmpresaMelhorAvaliadaEletroeletronico['qtdManutencoes'] = 0;
+                            break;
+                        }
+                        else
+                        {
+                            $buscaEmpresaMelhorAvaliadaEletroeletronico['idEmpresa'] = ($registro->fk_pk_empresa);
+                            $total = $total + ($registro->fk_pk_avaliacao);
+                            $buscaEmpresaMelhorAvaliadaEletroeletronico['qtdManutencoes'] = $buscaEmpresaMelhorAvaliadaEletroeletronico['qtdManutencoes'] + 1;
+                        }
+                    }
+                }
+
+                if( $flagNotaRuim == false){
+                    $buscaEmpresaMelhorAvaliadaEletroeletronico['media'] = $total / $buscaEmpresaMelhorAvaliadaEletroeletronico['qtdManutencoes'];
+                    if( ( ($buscaEmpresaMelhorAvaliadaEletroeletronico['media']) > ($dadosEmpresaMelhorAvaliadaEletroeletronico['media']) ) ){
+                        $dadosEmpresaMelhorAvaliadaEletroeletronico['idEmpresa'] = $buscaEmpresaMelhorAvaliadaEletroeletronico['idEmpresa'] ;
+                        $dadosEmpresaMelhorAvaliadaEletroeletronico['media'] = $buscaEmpresaMelhorAvaliadaEletroeletronico['media'] ;
+                        $dadosEmpresaMelhorAvaliadaEletroeletronico['qtdManutencoes'] = $buscaEmpresaMelhorAvaliadaEletroeletronico['qtdManutencoes'] ;
+                    }
                 }
                 
             }
+
             // Empresas só serão recomendadas se atingirem a média ou mais
-            if( ( ($dadosEmpresaMelhorAvaliadaEletroeletronico['total']) / ($dadosEmpresaMelhorAvaliadaEletroeletronico['qtdManutencoes']) ) >= 2  ){
+            if( ($dadosEmpresaMelhorAvaliadaEletroeletronico['idEmpresa'] != null ) && ($dadosEmpresaMelhorAvaliadaEletroeletronico['media']) >= 2  ){
                 $dadosEmpresaMelhorAvaliadaEletroeletronico['indicar'] = true;
                 $idEmpresa = $dadosEmpresaMelhorAvaliadaEletroeletronico['idEmpresa'];
                 $query = DB::select("SELECT nm_empresa, ds_endereco_empresa, ds_email_empresa, ds_telefone_empresa FROM SISCOM_EMPRESA WHERE pk_empresa = $idEmpresa ");
@@ -244,7 +307,7 @@ class IndicarEmpresaController extends Controller
                 $dadosEmpresaMelhorAvaliadaEletroeletronico['ds_email_empresa']    = $query['0']->ds_email_empresa;
                 $dadosEmpresaMelhorAvaliadaEletroeletronico['ds_telefone_empresa'] = $query['0']->ds_telefone_empresa;
                 
-                if( ( ($dadosEmpresaMelhorAvaliadaEletroeletronico['total']) / ($dadosEmpresaMelhorAvaliadaEletroeletronico['qtdManutencoes']) ) > 2  ){
+                if( ($dadosEmpresaMelhorAvaliadaEletroeletronico['media']) > 2  ){
                     $dadosEmpresaMelhorAvaliadaEletroeletronico['superiorMedia'] = true;
                 }
             }
@@ -254,37 +317,55 @@ class IndicarEmpresaController extends Controller
         //buscando empresas que já efetuaram manutenções
         $qtdEmpresasQueJaEfetuaramManutencaoEletronico = DB::select("SELECT COUNT(p1.fk_pk_empresa) as qtdRegistro FROM siscom_manutencao p1 INNER JOIN siscom_equipamento p2 ON p2.pk_equipamento = p1.fk_pk_equipamento where p2.fk_pk_tipo_equipamento = 2");
         $qtdEmpresasQueJaEfetuaramManutencaoEletronico = $qtdEmpresasQueJaEfetuaramManutencaoEletronico['0']->qtdRegistro ; 
-        $empresasQueJaEfetuaramManutençaoEletronico = DB::select("SELECT p1.fk_pk_empresa, p1.fk_pk_avaliacao FROM siscom_manutencao p1 INNER JOIN siscom_equipamento p2 ON p2.pk_equipamento = p1.fk_pk_equipamento where p2.fk_pk_tipo_equipamento = 2");
+        $empresasQueJaEfetuaramManutençaoEletronico = DB::select("SELECT p2.pk_equipamento, p1.pk_manutencao, p1.fk_pk_empresa, p1.fk_pk_avaliacao FROM siscom_manutencao p1 INNER JOIN siscom_equipamento p2 ON p2.pk_equipamento = p1.fk_pk_equipamento where p2.fk_pk_tipo_equipamento = 2");
         $dadosEmpresaMelhorAvaliadaEletronico = null;
-
+        //dd($empresasQueJaEfetuaramManutençaoEletronico);
         if(!empty($empresasQueJaEfetuaramManutençaoEletronico)){
             $dadosEmpresaMelhorAvaliadaEletronico['idEmpresa'] = null;
-            $dadosEmpresaMelhorAvaliadaEletronico['total'] = 0;
+            $dadosEmpresaMelhorAvaliadaEletronico['media'] = 0;
             $dadosEmpresaMelhorAvaliadaEletronico['qtdManutencoes'] = 0;
             $dadosEmpresaMelhorAvaliadaEletronico['indicar'] = false;
             $dadosEmpresaMelhorAvaliadaEletronico['superiorMedia'] = false;
+
             foreach($empresasQueJaEfetuaramManutençaoEletronico as $item){
-                $cont = 0 ;
+                $total = 0 ;
+                $flagNotaRuim = false ;
                 $buscaEmpresaMelhorAvaliadaEletronico['idEmpresa'] = null;
-                $buscaEmpresaMelhorAvaliadaEletronico['total'] = 0;
+                $buscaEmpresaMelhorAvaliadaEletronico['media'] = 0;
                 $buscaEmpresaMelhorAvaliadaEletronico['qtdManutencoes'] = 0;
-                do{
+                
+                foreach($empresasQueJaEfetuaramManutençaoEletronico as $registro){
+                    
                     //Obtendo o total de notas que uma mesma empresa possui
-                    if(($empresasQueJaEfetuaramManutençaoEletronico["$cont"]->fk_pk_empresa) === ($item->fk_pk_empresa)){
-                        $buscaEmpresaMelhorAvaliadaEletronico['idEmpresa'] = ($empresasQueJaEfetuaramManutençaoEletronico["$cont"]->fk_pk_empresa);
-                        $buscaEmpresaMelhorAvaliadaEletronico['total']     = ($buscaEmpresaMelhorAvaliadaEletronico['total']) + ($empresasQueJaEfetuaramManutençaoEletronico["$cont"]->fk_pk_avaliacao);
-                        $buscaEmpresaMelhorAvaliadaEletronico['qtdManutencoes'] = $buscaEmpresaMelhorAvaliadaEletronico['qtdManutencoes'] + 1;
+                    if( ( ($registro->fk_pk_empresa) === ($item->fk_pk_empresa) ) ){
+                        if(($registro->fk_pk_avaliacao) == 1){
+                            $flagNotaRuim = true ;
+                            $buscaEmpresaMelhorAvaliadaEletronico['idEmpresa'] = null;
+                            $buscaEmpresaMelhorAvaliadaEletronico['media'] = 0;
+                            $buscaEmpresaMelhorAvaliadaEletronico['qtdManutencoes'] = 0;
+                            break;
+                        }
+                        else
+                        {
+                            //var_dump($registro);
+                            $buscaEmpresaMelhorAvaliadaEletronico['idEmpresa'] = ($registro->fk_pk_empresa);
+                            $total = $total + ($registro->fk_pk_avaliacao);
+                            $buscaEmpresaMelhorAvaliadaEletronico['qtdManutencoes'] = $buscaEmpresaMelhorAvaliadaEletronico['qtdManutencoes'] + 1;
+                        }
                     }
-                    $cont ++ ;
-                }while($cont <= ($qtdEmpresasQueJaEfetuaramManutencaoEletronico -1));
-                if(($buscaEmpresaMelhorAvaliadaEletronico['total']) > $dadosEmpresaMelhorAvaliadaEletronico['total']){
-                    $dadosEmpresaMelhorAvaliadaEletronico['idEmpresa'] = $buscaEmpresaMelhorAvaliadaEletronico['idEmpresa'] ;
-                    $dadosEmpresaMelhorAvaliadaEletronico['total'] = $buscaEmpresaMelhorAvaliadaEletronico['total'] ;
-                    $dadosEmpresaMelhorAvaliadaEletronico['qtdManutencoes'] = $buscaEmpresaMelhorAvaliadaEletronico['qtdManutencoes'] ;
+                }
+
+                if( $flagNotaRuim == false){
+                    $buscaEmpresaMelhorAvaliadaEletronico['media'] = $total / $buscaEmpresaMelhorAvaliadaEletronico['qtdManutencoes'];
+                    if( ( ($buscaEmpresaMelhorAvaliadaEletronico['media']) > ($dadosEmpresaMelhorAvaliadaEletronico['media']) ) ){
+                        $dadosEmpresaMelhorAvaliadaEletronico['idEmpresa'] = $buscaEmpresaMelhorAvaliadaEletronico['idEmpresa'] ;
+                        $dadosEmpresaMelhorAvaliadaEletronico['media'] = $buscaEmpresaMelhorAvaliadaEletronico['media'] ;
+                        $dadosEmpresaMelhorAvaliadaEletronico['qtdManutencoes'] = $buscaEmpresaMelhorAvaliadaEletronico['qtdManutencoes'] ;
+                    }
                 }
             }
             // Empresas só serão recomendadas se atingirem a média ou mais
-            if( ( ($dadosEmpresaMelhorAvaliadaEletronico['total']) / ($dadosEmpresaMelhorAvaliadaEletronico['qtdManutencoes']) ) >= 2  ){
+            if( ($dadosEmpresaMelhorAvaliadaEletronico['idEmpresa'] != null ) && ($dadosEmpresaMelhorAvaliadaEletronico['media'])  >= 2  ){
                 $dadosEmpresaMelhorAvaliadaEletronico['indicar'] = true;
                 $idEmpresa = $dadosEmpresaMelhorAvaliadaEletronico['idEmpresa'];
                 $query = DB::select("SELECT nm_empresa, ds_endereco_empresa, ds_email_empresa, ds_telefone_empresa FROM SISCOM_EMPRESA WHERE pk_empresa = $idEmpresa ");
@@ -293,12 +374,12 @@ class IndicarEmpresaController extends Controller
                 $dadosEmpresaMelhorAvaliadaEletronico['ds_email_empresa']    = $query['0']->ds_email_empresa;
                 $dadosEmpresaMelhorAvaliadaEletronico['ds_telefone_empresa'] = $query['0']->ds_telefone_empresa;
                 
-                if( ( ($dadosEmpresaMelhorAvaliadaEletronico['total']) / ($dadosEmpresaMelhorAvaliadaEletronico['qtdManutencoes']) ) > 2  ){
+                if( ($dadosEmpresaMelhorAvaliadaEletronico['media']) > 2  ){
                     $dadosEmpresaMelhorAvaliadaEletronico['superiorMedia'] = true;
                 }
-            }
+            }   
         }
-        
+
         /**tratando manutenções nos equipamentos ELETRODOMESTICO */
         //buscando empresas que já efetuaram manutenções
         $qtdEmpresasQueJaEfetuaramManutencaoEletrodomestico = DB::select("SELECT COUNT(p1.fk_pk_empresa) as qtdRegistro FROM siscom_manutencao p1 INNER JOIN siscom_equipamento p2 ON p2.pk_equipamento = p1.fk_pk_equipamento where p2.fk_pk_tipo_equipamento = 4");
@@ -308,48 +389,63 @@ class IndicarEmpresaController extends Controller
 
         if(!empty($empresasQueJaEfetuaramManutençaoEletrodomestico)){
             $dadosEmpresaMelhorAvaliadaEletrodomestico['idEmpresa'] = null;
-            $dadosEmpresaMelhorAvaliadaEletrodomestico['total'] = 0;
+            $dadosEmpresaMelhorAvaliadaEletrodomestico['media'] = 0;
             $dadosEmpresaMelhorAvaliadaEletrodomestico['qtdManutencoes'] = 0;
             $dadosEmpresaMelhorAvaliadaEletrodomestico['indicar'] = false;
             $dadosEmpresaMelhorAvaliadaEletrodomestico['superiorMedia'] = false;
             foreach($empresasQueJaEfetuaramManutençaoEletrodomestico as $item){
-                $cont = 0 ;
+                $total = 0 ;
+                $flagNotaRuim = false ;
                 $buscaEmpresaMelhorAvaliadaEletrodomestico['idEmpresa'] = null;
-                $buscaEmpresaMelhorAvaliadaEletrodomestico['total'] = 0;
+                $buscaEmpresaMelhorAvaliadaEletrodomestico['media'] = 0;
                 $buscaEmpresaMelhorAvaliadaEletrodomestico['qtdManutencoes'] = 0;
-                do{
+                
+                foreach($empresasQueJaEfetuaramManutençaoEletrodomestico as $registro){
                     //Obtendo o total de notas que uma mesma empresa possui
-                    if(($empresasQueJaEfetuaramManutençaoEletrodomestico["$cont"]->fk_pk_empresa) === ($item->fk_pk_empresa)){
-                        $buscaEmpresaMelhorAvaliadaEletrodomestico['idEmpresa'] = ($empresasQueJaEfetuaramManutençaoEletrodomestico["$cont"]->fk_pk_empresa);
-                        $buscaEmpresaMelhorAvaliadaEletrodomestico['total']     = ($buscaEmpresaMelhorAvaliadaEletrodomestico['total']) + ($empresasQueJaEfetuaramManutençaoEletrodomestico["$cont"]->fk_pk_avaliacao);
-                        $buscaEmpresaMelhorAvaliadaEletrodomestico['qtdManutencoes'] = $buscaEmpresaMelhorAvaliadaEletrodomestico['qtdManutencoes'] + 1;
-                    }
-                    $cont ++ ;
-                }while($cont <= ($qtdEmpresasQueJaEfetuaramManutencaoEletrodomestico -1));
+                    if( ( ($registro->fk_pk_empresa) === ($item->fk_pk_empresa) ) ){
 
-                if(($buscaEmpresaMelhorAvaliadaEletrodomestico['total']) > $dadosEmpresaMelhorAvaliadaEletrodomestico['total']){
-                    $dadosEmpresaMelhorAvaliadaEletrodomestico['idEmpresa'] = $buscaEmpresaMelhorAvaliadaEletrodomestico['idEmpresa'] ;
-                    $dadosEmpresaMelhorAvaliadaEletrodomestico['total'] = $buscaEmpresaMelhorAvaliadaEletrodomestico['total'] ;
-                    $dadosEmpresaMelhorAvaliadaEletrodomestico['qtdManutencoes'] = $buscaEmpresaMelhorAvaliadaEletrodomestico['qtdManutencoes'] ;
+                        if(($registro->fk_pk_avaliacao) == 1){
+                            $flagNotaRuim = true ;
+                            $buscaEmpresaMelhorAvaliadaEletrodomestico['idEmpresa'] = null;
+                            $buscaEmpresaMelhorAvaliadaEletrodomestico['media'] = 0;
+                            $buscaEmpresaMelhorAvaliadaEletrodomestico['qtdManutencoes'] = 0;
+                            break;
+                        }
+                        else
+                        {
+                            $buscaEmpresaMelhorAvaliadaEletrodomestico['idEmpresa'] = ($registro->fk_pk_empresa);
+                            $total = $total + ($registro->fk_pk_avaliacao);
+                            $buscaEmpresaMelhorAvaliadaEletrodomestico['qtdManutencoes'] = $buscaEmpresaMelhorAvaliadaEletrodomestico['qtdManutencoes'] + 1;
+                        }
+                    }
+                }
+
+                if( $flagNotaRuim == false){
+                    $buscaEmpresaMelhorAvaliadaEletrodomestico['media'] = $total / $buscaEmpresaMelhorAvaliadaEletrodomestico['qtdManutencoes'];
+                    if( ( ($buscaEmpresaMelhorAvaliadaEletrodomestico['media']) > ($dadosEmpresaMelhorAvaliadaEletrodomestico['media']) ) ){
+                        $dadosEmpresaMelhorAvaliadaEletrodomestico['idEmpresa'] = $buscaEmpresaMelhorAvaliadaEletrodomestico['idEmpresa'] ;
+                        $dadosEmpresaMelhorAvaliadaEletrodomestico['media'] = $buscaEmpresaMelhorAvaliadaEletrodomestico['media'] ;
+                        $dadosEmpresaMelhorAvaliadaEletrodomestico['qtdManutencoes'] = $buscaEmpresaMelhorAvaliadaEletrodomestico['qtdManutencoes'] ;
+                    }
                 }
             }
             // Empresas só serão recomendadas se atingirem a média ou mais
-            if( ( ($buscaEmpresaMelhorAvaliadaEletrodomestico['total']) / ($buscaEmpresaMelhorAvaliadaEletrodomestico['qtdManutencoes']) ) >= 2  ){
-                $buscaEmpresaMelhorAvaliadaEletrodomestico['indicar'] = true;
-                $idEmpresa = $buscaEmpresaMelhorAvaliadaEletrodomestico['idEmpresa'];
+            if( ($dadosEmpresaMelhorAvaliadaEletrodomestico['idEmpresa'] != null ) && ($dadosEmpresaMelhorAvaliadaEletrodomestico['media']) >= 2  ){
+                $dadosEmpresaMelhorAvaliadaEletrodomestico['indicar'] = true;
+                $idEmpresa = $dadosEmpresaMelhorAvaliadaEletrodomestico['idEmpresa'];
                 $query = DB::select("SELECT nm_empresa, ds_endereco_empresa, ds_email_empresa, ds_telefone_empresa FROM SISCOM_EMPRESA WHERE pk_empresa = $idEmpresa ");
-                $buscaEmpresaMelhorAvaliadaEletrodomestico['nm_empresa']          = $query['0']->nm_empresa;
-                $buscaEmpresaMelhorAvaliadaEletrodomestico['ds_endereco_empresa'] = $query['0']->ds_endereco_empresa;
-                $buscaEmpresaMelhorAvaliadaEletrodomestico['ds_email_empresa']    = $query['0']->ds_email_empresa;
-                $buscaEmpresaMelhorAvaliadaEletrodomestico['ds_telefone_empresa'] = $query['0']->ds_telefone_empresa;
+                $dadosEmpresaMelhorAvaliadaEletrodomestico['nm_empresa']          = $query['0']->nm_empresa;
+                $dadosEmpresaMelhorAvaliadaEletrodomestico['ds_endereco_empresa'] = $query['0']->ds_endereco_empresa;
+                $dadosEmpresaMelhorAvaliadaEletrodomestico['ds_email_empresa']    = $query['0']->ds_email_empresa;
+                $dadosEmpresaMelhorAvaliadaEletrodomestico['ds_telefone_empresa'] = $query['0']->ds_telefone_empresa;
                 
-                if( ( ($buscaEmpresaMelhorAvaliadaEletrodomestico['total']) / ($buscaEmpresaMelhorAvaliadaEletrodomestico['qtdManutencoes']) ) > 2  ){
-                    $buscaEmpresaMelhorAvaliadaEletrodomestico['superiorMedia'] = true;
+                if(  ($dadosEmpresaMelhorAvaliadaEletrodomestico['media']) > 2  ){
+                    $dadosEmpresaMelhorAvaliadaEletrodomestico['superiorMedia'] = true;
                 }
             }
         }
 
-        //dd($dadosEmpresaMelhorAvaliadaCorretiva, $dadosEmpresaMelhorAvaliadaEletrico, $dadosEmpresaMelhorAvaliadaEletrodomestico, $dadosEmpresaMelhorAvaliadaEletroeletronico, $dadosEmpresaMelhorAvaliadaEletronico, $dadosEmpresaMelhorAvaliadaPreventiva);
+        dd($dadosEmpresaMelhorAvaliadaCorretiva, $dadosEmpresaMelhorAvaliadaEletrico, $dadosEmpresaMelhorAvaliadaEletrodomestico, $dadosEmpresaMelhorAvaliadaEletroeletronico, $dadosEmpresaMelhorAvaliadaEletronico, $dadosEmpresaMelhorAvaliadaPreventiva);
 
         return view('site.indicar-empresa', compact('dadosEmpresaMelhorAvaliadaCorretiva', 'dadosEmpresaMelhorAvaliadaEletrico', 'dadosEmpresaMelhorAvaliadaEletrodomestico', 'dadosEmpresaMelhorAvaliadaEletroeletronico', 'dadosEmpresaMelhorAvaliadaEletronico', 'dadosEmpresaMelhorAvaliadaPreventiva') );
     }

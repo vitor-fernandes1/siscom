@@ -556,5 +556,61 @@ class initDefaultValuesSiscomSeed extends Seeder
             'fk_pk_empresa'            => '1',
             'fk_pk_equipamento'        => '5',
         ]);
+        //Seed de indicação de empresa
+        $manutencao = Manutencao::create([
+            'ds_descricao_manutencao'  => 'Reparo requerido',
+            'dt_manutencao'            => '2015-10-18',
+            'vl_valor_manutencao'      => '300',
+            'fk_pk_tipo_manutencao'    => '2',
+            'fk_pk_prioridade'         => '3',
+            'fk_pk_situacao'           => '1',
+            'fk_pk_avaliacao'          => '2',
+            'fk_pk_empresa'            => '7',
+            'fk_pk_equipamento'        => '12',
+        ]);
+        $manutencao = Manutencao::create([
+            'ds_descricao_manutencao'  => 'Reparo requerido',
+            'dt_manutencao'            => '2015-10-18',
+            'vl_valor_manutencao'      => '300',
+            'fk_pk_tipo_manutencao'    => '2',
+            'fk_pk_prioridade'         => '3',
+            'fk_pk_situacao'           => '1',
+            'fk_pk_avaliacao'          => '2',
+            'fk_pk_empresa'            => '7',
+            'fk_pk_equipamento'        => '12',
+        ]);
+        $manutencao = Manutencao::create([
+            'ds_descricao_manutencao'  => 'Reparo requerido',
+            'dt_manutencao'            => '2015-10-18',
+            'vl_valor_manutencao'      => '300',
+            'fk_pk_tipo_manutencao'    => '2',
+            'fk_pk_prioridade'         => '3',
+            'fk_pk_situacao'           => '1',
+            'fk_pk_avaliacao'          => '3',
+            'fk_pk_empresa'            => '5',
+            'fk_pk_equipamento'        => '13',
+        ]);
+        $manutencao = Manutencao::create([
+            'ds_descricao_manutencao'  => 'Reparo requerido',
+            'dt_manutencao'            => '2015-10-18',
+            'vl_valor_manutencao'      => '300',
+            'fk_pk_tipo_manutencao'    => '1',
+            'fk_pk_prioridade'         => '3',
+            'fk_pk_situacao'           => '1',
+            'fk_pk_avaliacao'          => '3',
+            'fk_pk_empresa'            => '14',
+            'fk_pk_equipamento'        => '14',
+        ]);
+        $manutencao = Manutencao::create([
+            'ds_descricao_manutencao'  => 'Reparo requerido',
+            'dt_manutencao'            => '2015-10-18',
+            'vl_valor_manutencao'      => '300',
+            'fk_pk_tipo_manutencao'    => '2',
+            'fk_pk_prioridade'         => '3',
+            'fk_pk_situacao'           => '1',
+            'fk_pk_avaliacao'          => '2',
+            'fk_pk_empresa'            => '11',
+            'fk_pk_equipamento'        => '15',
+        ]);
     }
 }
