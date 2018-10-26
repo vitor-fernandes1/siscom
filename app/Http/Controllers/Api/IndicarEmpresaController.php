@@ -445,7 +445,7 @@ class IndicarEmpresaController extends Controller
             }
         }
 
-        dd($dadosEmpresaMelhorAvaliadaCorretiva, $dadosEmpresaMelhorAvaliadaEletrico, $dadosEmpresaMelhorAvaliadaEletrodomestico, $dadosEmpresaMelhorAvaliadaEletroeletronico, $dadosEmpresaMelhorAvaliadaEletronico, $dadosEmpresaMelhorAvaliadaPreventiva);
+        //dd($dadosEmpresaMelhorAvaliadaCorretiva, $dadosEmpresaMelhorAvaliadaEletrico, $dadosEmpresaMelhorAvaliadaEletrodomestico, $dadosEmpresaMelhorAvaliadaEletroeletronico, $dadosEmpresaMelhorAvaliadaEletronico, $dadosEmpresaMelhorAvaliadaPreventiva);
 
         return view('site.indicar-empresa', compact('dadosEmpresaMelhorAvaliadaCorretiva', 'dadosEmpresaMelhorAvaliadaEletrico', 'dadosEmpresaMelhorAvaliadaEletrodomestico', 'dadosEmpresaMelhorAvaliadaEletroeletronico', 'dadosEmpresaMelhorAvaliadaEletronico', 'dadosEmpresaMelhorAvaliadaPreventiva') );
     }
