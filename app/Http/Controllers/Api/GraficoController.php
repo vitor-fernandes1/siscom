@@ -67,193 +67,85 @@ class GraficoController extends Controller
         //Quantidade de mautenções realizadas
         $qtdManutencao = DB::table('siscom_manutencao')->where('fk_pk_equipamento', $id)->count();
 
-        //obtendo o valor das manutenções atreladas ao equipamento
-        $obterValorManutencao = DB::table('siscom_manutencao')->select('vl_valor_manutencao')->where('fk_pk_equipamento', $id)->get(); 
-        $valorTotalManutencao = 0 ;
-        foreach($obterValorManutencao as $item)
+        //obtendo o valor total das manutenções atreladas ao equipamento selecionado, os valores serao arredondados posteriormente
+        $query = DB::select("SELECT SUM(vl_valor_manutencao) as valorTotalManutencao FROM siscom_manutencao WHERE fk_pk_equipamento = $id");
+        //obtendo intervalo em dias entre as datas das manutenções nos ultimos 1 ano, os valores serao arredondados posteriormente(após obter a media de dias)
+        $obterDataManutencao = DB::select("SELECT TIMESTAMPDIFF(DAY,dt_manutencao,NOW()) AS dias FROM siscom_manutencao WHERE fk_pk_equipamento = $id AND TIMESTAMPDIFF(DAY,dt_manutencao,NOW()) <= 365 ORDER BY dt_manutencao DESC");
+        
+        if(!empty($query) && !empty($obterDataManutencao) && $qtdManutencao > 1)
         {
-            $valorTotalManutencao += doubleval($item->vl_valor_manutencao);
-        }
-        //Valor total do equipamento manutencoes + valor equipamento
-        $valorTotalEquipamento = ($recuperandoDados->nr_valor_equipamento + $valorTotalManutencao);
-        if($valorTotalManutencao != 0){
+            /**TRATANDO DATAS */
+            $indice = $qtdManutencao - 1 ;
+            $mediaDiasManutencao = 0 ;
+            do{
+                $intervaloEmDiasEntreManutencao = $obterDataManutencao["$indice"]->dias;
+                $indice--;
+                if( (isset($obterDataManutencao["$indice"])) === true )
+                {
+                    $intervaloEmDiasEntreManutencao = $intervaloEmDiasEntreManutencao - $obterDataManutencao["$indice"]->dias ;
+                    $mediaDiasManutencao = $mediaDiasManutencao + $intervaloEmDiasEntreManutencao ;
+                }
+                $validaIndiceAnterior = $indice ;
+                $validaIndiceAnterior-- ;
+            }while( (isset($obterDataManutencao["$validaIndiceAnterior"])) === true );
+            $mediaDiasManutencao = $mediaDiasManutencao / $qtdManutencao ;
+            //arredondado número médio de dias
+            $mediaDiasManutencao = round($mediaDiasManutencao) ;
+            
+            /**TRATANDO VALORES */
+            $valorTotalManutencao = doubleval($query['0']->valorTotalManutencao) ;
             $valorMedioManutencao = $valorTotalManutencao/$qtdManutencao ;
-            $somandoValoresMedios = $valorMedioManutencao ;
-            $cont = 1 ;
-                do{
-                    $valores ["$cont"] = $somandoValoresMedios;
-                    $somandoValoresMedios = $somandoValoresMedios + $valorMedioManutencao;
-                    $cont++;
-                }while($cont <= $qtdManutencao);
-        }
-        if($qtdManutencao === 0){
-                $chartjs = app()->chartjs
-                ->name('lineChartTest')
-                ->type('line')
-                ->size(['width' => 400, 'height' => 200])
-                ->labels([''])
-                ->datasets([
-                    [
-                        "label" => "Não houveram manutenções",
-                        'backgroundColor' => "rgba(38, 185, 154, 0.31)",
-                        'borderColor' => "rgba(38, 185, 154, 0.7)",
-                        "pointBorderColor" => "rgba(38, 185, 154, 0.7)",
-                        "pointBackgroundColor" => "rgba(38, 185, 154, 0.7)",
-                        "pointHoverBackgroundColor" => "#fff",
-                        "pointHoverBorderColor" => "rgba(220,220,220,1)",
-                        'data' => [0],
-                    ],
-                ])
-                ->options([]);
-        }else if($qtdManutencao == 1){
+            $valorMedioManutencao = round($valorMedioManutencao) ;
+            $somandoValorMedio = $valorMedioManutencao ;
+            $cont = 0 ;
+            do{
+                $valoresMedios ["$cont"] = $somandoValorMedio ;
+                $somandoValorMedio = $somandoValorMedio + $valorMedioManutencao;
+                $cont++;
+            }while($cont <= ($qtdManutencao - 1));
+
+            /**GERANDO O GRAFICO */
+            for( $cont = 0 ; $cont < ($qtdManutencao) ; $cont++ ){
+                $dataLabel ["$cont"] = $cont + 1;
+            }
+    
             $chartjs = app()->chartjs
             ->name('lineChartTest')
             ->type('line')
             ->size(['width' => 400, 'height' => 200])
-            ->labels([
-                '1'
-                ])
-            ->datasets([
-                [
-                    "label" => "1 ano",
-                    'backgroundColor' => "rgba(38, 185, 154, 0.31)",
-                    'borderColor' => "rgba(38, 185, 154, 0.7)",
-                    "pointBorderColor" => "rgba(38, 185, 154, 0.7)",
-                    "pointBackgroundColor" => "rgba(38, 185, 154, 0.7)",
-                    "pointHoverBackgroundColor" => "#fff",
-                    "pointHoverBorderColor" => "rgba(220,220,220,1)",
-                    'data' => [$valores['1']],
-                ],
-            ])
+            ->labels($dataLabel)
+            ->datasets([[
+                "label" => "1 ano",
+                'backgroundColor' => "rgba(38, 185, 154, 0.31)",
+                'borderColor' => "rgba(38, 185, 154, 0.7)",
+                "pointBorderColor" => "rgba(38, 185, 154, 0.7)",
+                "pointBackgroundColor" => "rgba(38, 185, 154, 0.7)",
+                "pointHoverBackgroundColor" => "#fff",
+                "pointHoverBorderColor" => "rgba(220,220,220,1)",
+                'data' => $valoresMedios,
+            ]])
             ->options([]);
-        }else if($qtdManutencao == 2){
+        }else{
             $chartjs = app()->chartjs
             ->name('lineChartTest')
             ->type('line')
             ->size(['width' => 400, 'height' => 200])
-            ->labels([
-                '1', '2'
-                ])
-            ->datasets([
-                [
-                    "label" => "1 ano",
-                    'backgroundColor' => "rgba(38, 185, 154, 0.31)",
-                    'borderColor' => "rgba(38, 185, 154, 0.7)",
-                    "pointBorderColor" => "rgba(38, 185, 154, 0.7)",
-                    "pointBackgroundColor" => "rgba(38, 185, 154, 0.7)",
-                    "pointHoverBackgroundColor" => "#fff",
-                    "pointHoverBorderColor" => "rgba(220,220,220,1)",
-                    'data' => [$valores['1'],$valores['2']],
-                ],
-            ])
-            ->options([]);
-        }else if($qtdManutencao == 3){
-            $chartjs = app()->chartjs
-            ->name('lineChartTest')
-            ->type('line')
-            ->size(['width' => 400, 'height' => 200])
-            ->labels([
-                '1', '2', '3'
-                ])
-            ->datasets([
-                [
-                    "label" => "1 ano",
-                    'backgroundColor' => "rgba(38, 185, 154, 0.31)",
-                    'borderColor' => "rgba(38, 185, 154, 0.7)",
-                    "pointBorderColor" => "rgba(38, 185, 154, 0.7)",
-                    "pointBackgroundColor" => "rgba(38, 185, 154, 0.7)",
-                    "pointHoverBackgroundColor" => "#fff",
-                    "pointHoverBorderColor" => "rgba(220,220,220,1)",
-                    'data' => [ $valores['1'], $valores['2'], $valores['3'] ],
-                ],
-            ])
-            ->options([]);
-        }else if($qtdManutencao == 4){
-            $chartjs = app()->chartjs
-            ->name('lineChartTest')
-            ->type('line')
-            ->size(['width' => 400, 'height' => 200])
-            ->labels([
-                '1', '2', '3', '4'
-                ])
-            ->datasets([
-                [
-                    "label" => "Custo",
-                    'backgroundColor' => "rgba(38, 185, 154, 0.31)",
-                    'borderColor' => "rgba(38, 185, 154, 0.7)",
-                    "pointBorderColor" => "rgba(38, 185, 154, 0.7)",
-                    "pointBackgroundColor" => "rgba(38, 185, 154, 0.7)",
-                    "pointHoverBackgroundColor" => "#fff",
-                    "pointHoverBorderColor" => "rgba(220,220,220,1)",
-                    'data' => [ $valores['1'], $valores['2'], $valores['3'], $valores['4'] ],
-                ],
-            ])
-            ->options([]);
-        }else if($qtdManutencao == 5){
-            $chartjs = app()->chartjs
-            ->name('lineChartTest')
-            ->type('line')
-            ->size(['width' => 400, 'height' => 200])
-            ->labels([
-                '1', '2', '3', '4', '5'
-                ])
-            ->datasets([
-                [
-                    "label" => "1 ano",
-                    'backgroundColor' => "rgba(38, 185, 154, 0.31)",
-                    'borderColor' => "rgba(38, 185, 154, 0.7)",
-                    "pointBorderColor" => "rgba(38, 185, 154, 0.7)",
-                    "pointBackgroundColor" => "rgba(38, 185, 154, 0.7)",
-                    "pointHoverBackgroundColor" => "#fff",
-                    "pointHoverBorderColor" => "rgba(220,220,220,1)",
-                    'data' => [ $valores['1'], $valores['2'], $valores['3'], $valores['4'], $valores['5'] ],
-                ],
-            ])
-            ->options([]);
-        }else if($qtdManutencao == 6){
-            $chartjs = app()->chartjs
-            ->name('lineChartTest')
-            ->type('line')
-            ->size(['width' => 400, 'height' => 200])
-            ->labels([
-                '1', '2', '3', '4', '5', '6'
-                ])
-            ->datasets([
-                [
-                    "label" => "1 ano",
-                    'backgroundColor' => "rgba(38, 185, 154, 0.31)",
-                    'borderColor' => "rgba(38, 185, 154, 0.7)",
-                    "pointBorderColor" => "rgba(38, 185, 154, 0.7)",
-                    "pointBackgroundColor" => "rgba(38, 185, 154, 0.7)",
-                    "pointHoverBackgroundColor" => "#fff",
-                    "pointHoverBorderColor" => "rgba(220,220,220,1)",
-                    'data' => [ $valores['1'], $valores['2'], $valores['3'], $valores['4'], $valores['5'], $valores['6'] ],
-                ],
-            ])
-            ->options([]);
-        }else if($qtdManutencao == 7){
-            $chartjs = app()->chartjs
-            ->name('lineChartTest')
-            ->type('line')
-            ->size(['width' => 400, 'height' => 200])
-            ->labels([
-                '1', '2', '3', '4', '5', '6', '7'
-                ])
-            ->datasets([
-                [
-                    "label" => "Custo",
-                    'backgroundColor' => "rgba(38, 185, 154, 0.31)",
-                    'borderColor' => "rgba(38, 185, 154, 0.7)",
-                    "pointBorderColor" => "rgba(38, 185, 154, 0.7)",
-                    "pointBackgroundColor" => "rgba(38, 185, 154, 0.7)",
-                    "pointHoverBackgroundColor" => "#fff",
-                    "pointHoverBorderColor" => "rgba(220,220,220,1)",
-                    'data' => [ $valores['1'], $valores['2'], $valores['3'], $valores['4'], $valores['5'], $valores['6'], $valores['7'] ],
-                ],
-            ])
+            ->labels([])
+            ->datasets([[
+                "label" => "Não Houveram manutenções",
+                'backgroundColor' => "rgba(38, 185, 154, 0.31)",
+                'borderColor' => "rgba(38, 185, 154, 0.7)",
+                "pointBorderColor" => "rgba(38, 185, 154, 0.7)",
+                "pointBackgroundColor" => "rgba(38, 185, 154, 0.7)",
+                "pointHoverBackgroundColor" => "#fff",
+                "pointHoverBorderColor" => "rgba(220,220,220,1)",
+                'data' => [],
+            ]])
             ->options([]);
         }
 
+        
+        
     //obtendo manutenções no ultimo ano
     $dadosUltimoAno = DB::select("SELECT * FROM siscom_manutencao WHERE dt_manutencao BETWEEN CURDATE() - INTERVAL 1 Year AND CURDATE() AND fk_pk_equipamento = $id");
     if(!empty($dadosUltimoAno))
