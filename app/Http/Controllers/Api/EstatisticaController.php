@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Api\ApiControllerTrait;
 use Illuminate\Support\Facades\DB;
 use App\Models\Equipamento;
+use PDF;
 
 class EstatisticaController extends Controller
 {
@@ -137,5 +138,90 @@ class EstatisticaController extends Controller
         
         return view('site.estatistica-id', compact('recuperandoDados', 'valorTotalManutencao', 'valorTotalEquipamento', 'qtdManutencao', 'manutencaoConcluida', 'manutencaoEmAndamento', 'manutencaoPendente', 'dadosUltimoAno', 'dadosUltimosSeisMeses', 'dadosUltimosTresMeses') );
         
+    }
+    
+    /**
+     * <b>index</b> Método responsável em receber a requisição do tipo GET e encaminhar a mesma para o metodo index da ApiControllerTrait
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function geradorRelatorio($id){
+        $recuperandoDados =  $this->showTrait($id);
+        $recuperandoDados = $recuperandoDados->original['Resposta']['conteudo'] ;
+
+        //Quantidade de mautenções realizadas
+        $qtdManutencao = DB::table('siscom_manutencao')->where('fk_pk_equipamento', $id)->count();
+
+        //obtendo o valor das manutenções atreladas ao equipamento
+        $obterValorManutencao = DB::table('siscom_manutencao')->select('vl_valor_manutencao')->where('fk_pk_equipamento', $id)->get(); 
+        $valorTotalManutencao = 0 ;
+        foreach($obterValorManutencao as $item)
+        {
+            $valorTotalManutencao += doubleval($item->vl_valor_manutencao);
+        }
+        //Valor total do equipamento manutencoes + valor equipamento
+        $valorTotalEquipamento = ($recuperandoDados->nr_valor_equipamento + $valorTotalManutencao);
+
+        //obtendo Manutenções em andamento atreladas ao equipamento 1-Em Andamento 2-Pendente 3-Concluido
+        $verificaQtdManutencao = DB::table('siscom_manutencao')->where('fk_pk_situacao', 1)->where('fk_pk_equipamento', $id)->count();
+        $manutencaoEmAndamento = null ;
+        if($verificaQtdManutencao != 0)
+        {
+            $obterManutencaoEmAndamento = DB::table('siscom_manutencao')->where('fk_pk_situacao', 1)->where('fk_pk_equipamento', $id)->get();
+            foreach($obterManutencaoEmAndamento as $item)
+            {
+                $manutencaoEmAndamento [] = $item;
+            }
+        }
+
+        //obtendo Manutenções concluidas atreladas ao equipamento 1-Em Andamento 2-Pendente 3-Concluido
+        $verificaQtdManutencao = DB::table('siscom_manutencao')->where('fk_pk_situacao', 1)->where('fk_pk_equipamento', $id)->count();
+        $manutencaoConcluida = null ;
+        if($verificaQtdManutencao != 0)
+        {
+            $obterManutencaoConcluida = DB::table('siscom_manutencao')->where('fk_pk_situacao', 3)->where('fk_pk_equipamento', $id)->get(); 
+            foreach($obterManutencaoConcluida as $item)
+            {
+                $manutencaoConcluida [] = $item;
+            }
+        }
+
+        //obtendo Manutenções Pendentes atreladas ao equipamento 1-Em Andamento 2-Pendente 3-Concluido
+        $verificaQtdManutencao = DB::table('siscom_manutencao')->where('fk_pk_situacao', 1)->where('fk_pk_equipamento', $id)->count();
+        $manutencaoPendente = null ;
+        if($verificaQtdManutencao != 0)
+        {
+            $obterManutencaoPendente = DB::table('siscom_manutencao')->where('fk_pk_situacao', 2)->where('fk_pk_equipamento', $id)->get();
+            foreach($obterManutencaoPendente as $item)
+            {
+                $manutencaoPendente [] = $item;
+            }
+        }
+
+        //obtendo manutenções nos ultimos 6 meses
+        $dadosUltimosSeisMeses = DB::select("SELECT * FROM siscom_manutencao WHERE dt_manutencao BETWEEN CURDATE() - INTERVAL 6 MONTH AND CURDATE() AND fk_pk_equipamento = $id");
+        if(empty($dadosUltimosSeisMeses))
+        {
+            $dadosUltimosSeisMeses = null ;
+        }
+
+        //obtendo manutenções nos ultimos 3 meses
+        $dadosUltimosTresMeses = DB::select("SELECT * FROM siscom_manutencao WHERE dt_manutencao BETWEEN CURDATE() - INTERVAL 3 MONTH AND CURDATE() AND fk_pk_equipamento = $id");
+        if(empty($dadosUltimosTresMeses))
+        {
+            $dadosUltimosTresMeses = null ;
+        }
+
+        //obtendo manutenções no ultimo ano
+        $dadosUltimoAno = DB::select("SELECT * FROM siscom_manutencao WHERE dt_manutencao BETWEEN CURDATE() - INTERVAL 1 Year AND CURDATE() AND fk_pk_equipamento = $id");
+        if(empty($dadosUltimoAno))
+        {
+            $dadosUltimoAno = null ;
+        }
+        //return view('site.relatorio', compact('recuperandoDados', 'valorTotalManutencao', 'valorTotalEquipamento', 'qtdManutencao', 'manutencaoConcluida', 'manutencaoEmAndamento', 'manutencaoPendente', 'dadosUltimoAno', 'dadosUltimosSeisMeses', 'dadosUltimosTresMeses'));
+        $pdf =  PDF::loadView('site.relatorio', compact('recuperandoDados', 'valorTotalManutencao', 'valorTotalEquipamento', 'qtdManutencao', 'manutencaoConcluida', 'manutencaoEmAndamento', 'manutencaoPendente', 'dadosUltimoAno', 'dadosUltimosSeisMeses', 'dadosUltimosTresMeses'));
+                // Se quiser que fique no formato a4 retrato: ->setPaper('a4', 'landscape')
+        return $pdf->download('relatorio.pdf');
+        //return view('site.relatorio', compact('recuperandoDados'));
     }
 }

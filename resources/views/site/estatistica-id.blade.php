@@ -447,6 +447,9 @@
           <!-- nav-tabs-custom -->
         </div>
 
+    <a href="relatorio/{{ $recuperandoDados->pk_equipamento }}"><button class="btn btn"><i class="far fa-hand-pointer text-primary"></i> Imprimir</button></a>
+
+
    </div>
 </div>
 @stop
