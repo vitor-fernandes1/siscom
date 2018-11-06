@@ -64,9 +64,15 @@
 <div class="box box-primary">
    <div class="box-body">
         <div style="width:100%;">
+            <h3>Percentual de aumento no valor do equipamento</h3><cite>Baseado nos valores das manutenções realizadas</cite>
+            {!! $chartjsPercentual->render() !!}
+        </div>
+        <div style="width:100%;">
+            <h3>Custo aproximado das proximas manutenções</h3><cite>Baseado na média do custo e intervalo entre as manutenções</cite>
             {!! $chartjs->render() !!}
         </div>
         <div style="width:100%;">
+            <h3>Estimativa do valor total a ser gasto para o próximo ano</h3><cite>Baseado na média do custo e intervalo entre as manutenções</cite>
             {!! $chartjs2->render() !!}
         </div>
    </div>

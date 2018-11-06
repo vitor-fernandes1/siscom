@@ -69,6 +69,90 @@ class GraficoController extends Controller
 
         //obtendo o valor total das manutenções atreladas ao equipamento selecionado, os valores serao arredondados posteriormente
         $query = DB::select("SELECT SUM(vl_valor_manutencao) as valorTotalManutencao FROM siscom_manutencao WHERE fk_pk_equipamento = $id");
+
+        //Obtendo valores das manutenções
+        $custosDeCadaManutencao = DB::select("SELECT vl_valor_manutencao FROM siscom_manutencao WHERE fk_pk_equipamento = $id"); 
+        //dd($custosDeCadaManutencao);
+        if(!empty($custosDeCadaManutencao) && $qtdManutencao > 0 && !empty($query)){
+            $valorEquipamento = DB::select("SELECT nr_valor_equipamento FROM siscom_equipamento WHERE pk_equipamento = $id");
+            $valorEquipamento = $valorEquipamento['0']->nr_valor_equipamento;
+            $valorEquipamento = doubleval($valorEquipamento);
+            $percentualAumentoTotal = doubleval($query['0']->valorTotalManutencao) ;
+            $percentualAumentoTotal = $percentualAumentoTotal / $valorEquipamento ;
+            $percentualAumentoTotal = $percentualAumentoTotal * 100 ;
+            $percentualAumentoTotal = round($percentualAumentoTotal, 1);
+            $indice = 0 ;
+            foreach($custosDeCadaManutencao as $valor){
+                $valor = doubleval($valor->vl_valor_manutencao);
+                //Calculando percentual de aumento p/ cada manutencao
+                $calculoPercentual = $valor / $valorEquipamento ;
+                $calculoPercentual = $calculoPercentual * 100;
+                $calculoPercentual = round($calculoPercentual, 1);
+                $percentualAumentoPorManutencao [] = $calculoPercentual ;
+                //Calculando soma dos percentuais de aumento
+                if($indice === 0){
+                    $somandoPercentualAumento [] = $calculoPercentual ;
+                }else{
+                    $indice -- ;
+                    $somandoPercentualAumento [] = $somandoPercentualAumento["$indice"] + $calculoPercentual ;
+                    $indice ++ ;
+                }
+                $indice ++ ;
+            }
+
+            for( $cont = 0 ; $cont < ($qtdManutencao) ; $cont++ ){
+                $dataLabelPercentual ["$cont"] = $cont + 1;
+            }
+            
+            //Gerando Gráfico de percentual
+            $chartjsPercentual = app()->chartjs
+            ->name('percentual')
+            ->type('line')
+            ->size(['width' => 300, 'height' => 100])
+            ->labels($dataLabelPercentual)
+            ->datasets([
+                [
+                "label" => "Por manutenção",
+                'backgroundColor' => "rgba(38, 185, 154, 0.31)",
+                'borderColor' => "rgba(38, 185, 154, 0.7)",
+                "pointBorderColor" => "rgba(38, 185, 154, 0.7)",
+                "pointBackgroundColor" => "rgba(38, 185, 154, 0.7)",
+                "pointHoverBackgroundColor" => "#fff",
+                "pointHoverBorderColor" => "rgba(220,220,220,1)",
+                'data' => $percentualAumentoPorManutencao,
+                ],
+                [
+                    "label" => "Total",
+                    'backgroundColor' => "rgba(38, 185, 154, 0.31)",
+                    'borderColor' => "rgba(38, 185, 154, 0.7)",
+                    "pointBorderColor" => "rgba(38, 185, 154, 0.7)",
+                    "pointBackgroundColor" => "rgba(38, 185, 154, 0.7)",
+                    "pointHoverBackgroundColor" => "#fff",
+                    "pointHoverBorderColor" => "rgba(220,220,220,1)",
+                    'data' => $somandoPercentualAumento,
+                ]
+            ])
+            ->options([]);
+
+        }else{
+            $chartjsPercentual = app()->chartjs
+            ->name('percentual')
+            ->type('line')
+            ->size(['width' => 400, 'height' => 200])
+            ->labels([])
+            ->datasets([[
+                "label" => "Não Houveram manutenções suficientes para gerar o gráfico",
+                'backgroundColor' => "rgba(38, 185, 154, 0.31)",
+                'borderColor' => "rgba(38, 185, 154, 0.7)",
+                "pointBorderColor" => "rgba(38, 185, 154, 0.7)",
+                "pointBackgroundColor" => "rgba(38, 185, 154, 0.7)",
+                "pointHoverBackgroundColor" => "#fff",
+                "pointHoverBorderColor" => "rgba(220,220,220,1)",
+                'data' => [],
+            ]])
+            ->options([]);
+        }
+        
         //obtendo intervalo em dias entre as datas das manutenções nos ultimos 1 ano, os valores serao arredondados posteriormente(após obter a media de dias)
         $obterDataManutencao = DB::select("SELECT TIMESTAMPDIFF(DAY,dt_manutencao,NOW()) AS dias FROM siscom_manutencao WHERE fk_pk_equipamento = $id AND TIMESTAMPDIFF(DAY,dt_manutencao,NOW()) <= 365 ORDER BY dt_manutencao DESC");
         
@@ -108,13 +192,13 @@ class GraficoController extends Controller
             for( $cont = 0 ; $cont < ($qtdManutencao) ; $cont++ ){
                 $dataLabel ["$cont"] = $cont + 1;
             }
-    
             $chartjs = app()->chartjs
             ->name('lineChartTest')
             ->type('line')
             ->size(['width' => 400, 'height' => 200])
             ->labels($dataLabel)
-            ->datasets([[
+            ->datasets([
+                [
                 "label" => "1 ano",
                 'backgroundColor' => "rgba(38, 185, 154, 0.31)",
                 'borderColor' => "rgba(38, 185, 154, 0.7)",
@@ -123,7 +207,8 @@ class GraficoController extends Controller
                 "pointHoverBackgroundColor" => "#fff",
                 "pointHoverBorderColor" => "rgba(220,220,220,1)",
                 'data' => $valoresMedios,
-            ]])
+                ]
+            ])
             ->options([]);
         }else{
             $chartjs = app()->chartjs
@@ -132,7 +217,7 @@ class GraficoController extends Controller
             ->size(['width' => 400, 'height' => 200])
             ->labels([])
             ->datasets([[
-                "label" => "Não Houveram manutenções",
+                "label" => "Não Houveram manutenções suficientes para gerar o gráfico",
                 'backgroundColor' => "rgba(38, 185, 154, 0.31)",
                 'borderColor' => "rgba(38, 185, 154, 0.7)",
                 "pointBorderColor" => "rgba(38, 185, 154, 0.7)",
@@ -143,7 +228,6 @@ class GraficoController extends Controller
             ]])
             ->options([]);
         }
-
         
         
     //obtendo manutenções no ultimo ano
@@ -165,7 +249,7 @@ class GraficoController extends Controller
         ->name('pieChartTest')
         ->type('pie')
         ->size(['width' => 400, 'height' => 200])
-        ->labels(['Valor a ser gasto estimatimado em 1 ano: Favorável', 'Valor a ser gasto estimatimado em 1 ano: Normal', 'Valor a ser gasto estimatimado em 1 ano: Desfavorável'])
+        ->labels(['Favorável', 'Normal', 'Desfavorável'])
         ->datasets([
             [
                 'backgroundColor' => ['#FF6384', '#36A2EB'],
@@ -179,7 +263,7 @@ class GraficoController extends Controller
         ->name('pieChartTest')
         ->type('pie')
         ->size(['width' => 400, 'height' => 200])
-        ->labels(['Não houveram manutenções'])
+        ->labels(['Não Houveram manutenções suficientes para gerar o gráfico'])
         ->datasets([
             [
                 'backgroundColor' => ['#FF6384', '#36A2EB'],
@@ -196,7 +280,7 @@ class GraficoController extends Controller
 
     
 
-        return view('site.grafico-id', compact('chartjs', 'chartjs2','recuperandoDados', 'valorTotalManutencao', 'valorTotalEquipamento', 'qtdManutencao', 'manutencaoConcluida', 'manutencaoEmAndamento', 'manutencaoPendente', 'dadosUltimoAno', 'dadosUltimosSeisMeses', 'dadosUltimosTresMeses') );
+        return view('site.grafico-id', compact('chartjs', 'chartjs2','chartjsPercentual','recuperandoDados', 'valorTotalManutencao', 'valorTotalEquipamento', 'qtdManutencao', 'manutencaoConcluida', 'manutencaoEmAndamento', 'manutencaoPendente', 'dadosUltimoAno', 'dadosUltimosSeisMeses', 'dadosUltimosTresMeses') );
         
     }
 }
