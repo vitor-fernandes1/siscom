@@ -21,11 +21,11 @@
             <b><label>Descrição: </b>Eletrodoméstico</label><br>
         @endif
         <hr/>
-        <b><label>Valor Total:</b> {{ $qtdManutencao }}</label><br>
+        <b><label>Quantidade de Manutenções Realizadas:</b> {{ $qtdManutencao }}</label><br>
         <b><label>Valor Total:</b> {{ $valorTotalEquipamento }}</label><br>
         <b><label>Valor Total das Manutenções: </b>{{ $valorTotalManutencao }}</label><br>
         <hr/>
-        <h3></h3>
+        <h3>Balanço de Manutenções</h3>
         <label></label><br>
     </body>
 </html>
