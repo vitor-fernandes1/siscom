@@ -175,7 +175,7 @@ class EstatisticaController extends Controller
         }
 
         //obtendo Manutenções concluidas atreladas ao equipamento 1-Em Andamento 2-Pendente 3-Concluido
-        $qtdManutencaoConcluida = DB::table('siscom_manutencao')->where('fk_pk_situacao', 1)->where('fk_pk_equipamento', $id)->count();
+        $qtdManutencaoConcluida = DB::table('siscom_manutencao')->where('fk_pk_situacao', 3)->where('fk_pk_equipamento', $id)->count();
         $manutencaoConcluida = null ;
         if($qtdManutencaoConcluida != 0)
         {
@@ -187,9 +187,9 @@ class EstatisticaController extends Controller
         }
 
         //obtendo Manutenções Pendentes atreladas ao equipamento 1-Em Andamento 2-Pendente 3-Concluido
-        $qtdManutencaoPendente = DB::table('siscom_manutencao')->where('fk_pk_situacao', 1)->where('fk_pk_equipamento', $id)->count();
+        $qtdManutencaoPendente = DB::table('siscom_manutencao')->where('fk_pk_situacao', 2)->where('fk_pk_equipamento', $id)->count();
         $manutencaoPendente = null ;
-        if($verificaQtdManutencao != 0)
+        if($qtdManutencaoPendente != 0)
         {
             $obterManutencaoPendente = DB::table('siscom_manutencao')->where('fk_pk_situacao', 2)->where('fk_pk_equipamento', $id)->get();
             foreach($obterManutencaoPendente as $item)
@@ -211,17 +211,20 @@ class EstatisticaController extends Controller
         {
             $dadosUltimosTresMeses = null ;
         }
-
         //obtendo manutenções no ultimo ano
         $dadosUltimoAno = DB::select("SELECT * FROM siscom_manutencao WHERE dt_manutencao BETWEEN CURDATE() - INTERVAL 1 Year AND CURDATE() AND fk_pk_equipamento = $id");
         if(empty($dadosUltimoAno))
         {
             $dadosUltimoAno = null ;
         }
-        return view('site.relatorio', compact('recuperandoDados', 'valorTotalManutencao', 'valorTotalEquipamento', 'qtdManutencao', 'manutencaoConcluida', 'manutencaoEmAndamento', 'manutencaoPendente', 'dadosUltimoAno', 'dadosUltimosSeisMeses', 'dadosUltimosTresMeses'));
-        $pdf =  PDF::loadView('site.relatorio', compact('recuperandoDados', 'valorTotalManutencao', 'valorTotalEquipamento', 'qtdManutencao', 'manutencaoConcluida', 'manutencaoEmAndamento', 'manutencaoPendente', 'dadosUltimoAno', 'dadosUltimosSeisMeses', 'dadosUltimosTresMeses'));
+        $idEquipamento = $recuperandoDados->pk_equipamento ;
+        $dataAtual = date('d/m/y');
+        $nomePdf = "Relatorio_ $dataAtual _Equipamento_$idEquipamento.pdf";
+        
+        //return view('site.relatorio', compact('recuperandoDados', 'valorTotalManutencao', 'valorTotalEquipamento', 'qtdManutencao','qtdManutencaoEmAndamento','qtdManutencaoConcluida','qtdManutencaoPendente', 'manutencaoConcluida', 'manutencaoEmAndamento', 'manutencaoPendente', 'dadosUltimoAno', 'dadosUltimosSeisMeses', 'dadosUltimosTresMeses'));
+        $pdf =  PDF::loadView('site.relatorio', compact('recuperandoDados', 'valorTotalManutencao', 'valorTotalEquipamento', 'qtdManutencao','qtdManutencaoEmAndamento','qtdManutencaoConcluida','qtdManutencaoPendente', 'manutencaoConcluida', 'manutencaoEmAndamento', 'manutencaoPendente', 'dadosUltimoAno', 'dadosUltimosSeisMeses', 'dadosUltimosTresMeses'));
                 // Se quiser que fique no formato a4 retrato: ->setPaper('a4', 'landscape')
-        return $pdf->download('relatorio.pdf');
+        return $pdf->download($nomePdf);
         //return view('site.relatorio', compact('recuperandoDados'));
     }
 }

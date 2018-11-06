@@ -446,9 +446,10 @@
           </div>
           <!-- nav-tabs-custom -->
         </div>
-
-    <a href="relatorio/{{ $recuperandoDados->pk_equipamento }}"><button class="btn btn"><i class="far fa-hand-pointer text-primary"></i> Imprimir</button></a>
-
+    
+        <div align="right">
+            <a href="relatorio/{{ $recuperandoDados->pk_equipamento }}"><button class="btn btn-lg"><i class="fas fa-print text-primary"></i> Imprimir</button></a>
+        </div>
 
    </div>
 </div>
