@@ -7,7 +7,52 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
 <div class="box box-primary">
    <div class="box-body">
-      @include('includes.alerts')
+    @include('includes.alerts')
+    @if($codRecomendacao === 1)
+        <div class="callout callout-danger">
+            <div class="media">
+                <div class="media-left">
+                    <i class="fas fa-exclamation-triangle fa-3x"></i>
+                </div>
+                <div class="media-body">
+                    <h4>Possibilidade de aumento de custos !</h4>
+                    @if($flagVidaUtil === true)
+                    <p>Este equipamento já alcançou ou superou 80% de seu valor e sua vida útil estimada é inferior a 40%, recomenda-se investir em um novo equipamento.</p>
+                    @else
+                    <p>Este equipamento já alcançou ou superou 80% de seu valor, recomenda-se investir em um novo equipamento.</p>
+                    @endif
+                </div>
+            </div>
+        </div>
+    @elseif($codRecomendacao === 2)
+        <div class="callout callout-warning">
+            <div class="media">
+                <div class="media-left">
+                    <i class="fas fa-exclamation-circle fa-3x"></i>
+                </div>
+                <div class="media-body">
+                    <h4>Atenção !</h4>
+                    @if($flagVidaUtil === true)
+                    <p>Este equipamento já alcançou ou superou 50% de seu valor e sua vida útil estimada está entre 40% à 70%, caso houver novas manutenções sucessivas, recomenda-se investir um novo equipamento</p>
+                    @else
+                    <p>Este equipamento já alcançou ou superou 50% de seu valor, caso houver novas manutenções sucessivas, recomenda-se investir um novo equipamento</p>
+                    @endif
+                </div>
+            </div>
+        </div>
+    @else
+        <div class="callout callout-success">
+            <div class="media">
+                <div class="media-left">
+                    <i class="fas fa-check fa-3x"></i>
+                </div>
+                <div class="media-body">
+                    <h4>Tudo ok !</h4>
+                    <p>Este equipamento se encontra em boas condições de funcionamento, recomenda-se mante-lo!</p>
+                </div>
+            </div>
+        </div>
+    @endif
       <div class="form-group">
          <label for="example-text-input" class="col-2 col-form-label">Nome</label>
          <div class="col-10">

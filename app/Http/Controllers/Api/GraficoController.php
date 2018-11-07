@@ -71,8 +71,8 @@ class GraficoController extends Controller
         $query = DB::select("SELECT SUM(vl_valor_manutencao) as valorTotalManutencao FROM siscom_manutencao WHERE fk_pk_equipamento = $id");
 
         //Obtendo valores das manutenções
-        $custosDeCadaManutencao = DB::select("SELECT vl_valor_manutencao FROM siscom_manutencao WHERE fk_pk_equipamento = $id"); 
-        //dd($custosDeCadaManutencao);
+        $custosDeCadaManutencao = DB::select("SELECT vl_valor_manutencao FROM siscom_manutencao WHERE fk_pk_equipamento = $id");
+
         if(!empty($custosDeCadaManutencao) && $qtdManutencao > 0 && !empty($query)){
             $valorEquipamento = DB::select("SELECT nr_valor_equipamento FROM siscom_equipamento WHERE pk_equipamento = $id");
             $valorEquipamento = $valorEquipamento['0']->nr_valor_equipamento;
@@ -82,6 +82,7 @@ class GraficoController extends Controller
             $percentualAumentoTotal = $percentualAumentoTotal * 100 ;
             $percentualAumentoTotal = round($percentualAumentoTotal, 1);
             $indice = 0 ;
+            $totalAumento = 0;
             foreach($custosDeCadaManutencao as $valor){
                 $valor = doubleval($valor->vl_valor_manutencao);
                 //Calculando percentual de aumento p/ cada manutencao
@@ -89,6 +90,8 @@ class GraficoController extends Controller
                 $calculoPercentual = $calculoPercentual * 100;
                 $calculoPercentual = round($calculoPercentual, 1);
                 $percentualAumentoPorManutencao [] = $calculoPercentual ;
+                //Calculando percentual total
+                $totalAumento = $totalAumento + $calculoPercentual ;
                 //Calculando soma dos percentuais de aumento
                 if($indice === 0){
                     $somandoPercentualAumento [] = $calculoPercentual ;
@@ -155,7 +158,9 @@ class GraficoController extends Controller
         
         //obtendo intervalo em dias entre as datas das manutenções nos ultimos 1 ano, os valores serao arredondados posteriormente(após obter a media de dias)
         $obterDataManutencao = DB::select("SELECT TIMESTAMPDIFF(DAY,dt_manutencao,NOW()) AS dias FROM siscom_manutencao WHERE fk_pk_equipamento = $id AND TIMESTAMPDIFF(DAY,dt_manutencao,NOW()) <= 365 ORDER BY dt_manutencao DESC");
-        
+
+        //dd($obterDataManutencao);
+        //dd($obterDataManutencao);
         if(!empty($query) && !empty($obterDataManutencao) && $qtdManutencao > 1)
         {
             /**TRATANDO DATAS */
@@ -188,7 +193,7 @@ class GraficoController extends Controller
                 $cont++;
             }while($cont <= ($qtdManutencao - 1));
 
-            /**GERANDO O GRAFICO */
+            /**GERANDO O GRAFICO TIPO LINE*/
             for( $cont = 0 ; $cont < ($qtdManutencao) ; $cont++ ){
                 $dataLabel ["$cont"] = $cont + 1;
             }
@@ -210,7 +215,24 @@ class GraficoController extends Controller
                 ]
             ])
             ->options([]);
+            
+            /**GERANDO O GRAFICO TIPO PIE*/
+            $chartjs2 = app()->chartjs
+            ->name('pieChartTest')
+            ->type('pie')
+            ->size(['width' => 400, 'height' => 200])
+            ->labels(['Favorável', 'Normal', 'Desfavorável'])
+            ->datasets([
+                [
+                    'backgroundColor' => ['#FF6384', '#36A2EB'],
+                    'hoverBackgroundColor' => ['#FF6384', '#36A2EB'],
+                    'data' => [($valorTotalManutencao-$valorMedioManutencao), ($valorTotalManutencao), ($valorTotalManutencao+$valorMedioManutencao)]
+                ]
+            ])
+            ->options([]);
+
         }else{
+            //LINE
             $chartjs = app()->chartjs
             ->name('lineChartTest')
             ->type('line')
@@ -227,60 +249,82 @@ class GraficoController extends Controller
                 'data' => [],
             ]])
             ->options([]);
+            //PIE
+            $chartjs2 = app()->chartjs
+            ->name('pieChartTest')
+            ->type('pie')
+            ->size(['width' => 400, 'height' => 200])
+            ->labels(['Não Houveram manutenções suficientes para gerar o gráfico'])
+            ->datasets([
+                [
+                    'backgroundColor' => ['#FF6384', '#36A2EB'],
+                    'hoverBackgroundColor' => ['#FF6384', '#36A2EB'],
+                    'data' => [0]
+                ]
+            ])
+            ->options([]);
         }
         
-        
-    //obtendo manutenções no ultimo ano
-    $dadosUltimoAno = DB::select("SELECT * FROM siscom_manutencao WHERE dt_manutencao BETWEEN CURDATE() - INTERVAL 1 Year AND CURDATE() AND fk_pk_equipamento = $id");
-    if(!empty($dadosUltimoAno))
-    {
-        $valorManutencaoUltimoAno = 0 ;
-        foreach($dadosUltimoAno as $item){
-            $valorManutencaoUltimoAno = $valorManutencaoUltimoAno + $item->vl_valor_manutencao;
-        }
-        //Arredondando valores
-        $valorManutencaoUltimoAno = round($valorManutencaoUltimoAno);
-        //Obtendo o valor médio das manutenções dos ultimos 1 ano
-        $valorMedioManutencaoUltimoAno = $valorManutencaoUltimoAno / count($dadosUltimoAno);
-        //Arredondando valores
-        $valorMedioManutencaoUltimoAno = round($valorMedioManutencaoUltimoAno);
-        //Gerando gráfico
-        $chartjs2 = app()->chartjs
-        ->name('pieChartTest')
-        ->type('pie')
-        ->size(['width' => 400, 'height' => 200])
-        ->labels(['Favorável', 'Normal', 'Desfavorável'])
-        ->datasets([
-            [
-                'backgroundColor' => ['#FF6384', '#36A2EB'],
-                'hoverBackgroundColor' => ['#FF6384', '#36A2EB'],
-                'data' => [($valorManutencaoUltimoAno-$valorMedioManutencao), ($valorManutencaoUltimoAno), ($valorManutencaoUltimoAno+$valorMedioManutencaoUltimoAno)]
-            ]
-        ])
-        ->options([]);
-    }else{
-        $chartjs2 = app()->chartjs
-        ->name('pieChartTest')
-        ->type('pie')
-        ->size(['width' => 400, 'height' => 200])
-        ->labels(['Não Houveram manutenções suficientes para gerar o gráfico'])
-        ->datasets([
-            [
-                'backgroundColor' => ['#FF6384', '#36A2EB'],
-                'hoverBackgroundColor' => ['#FF6384', '#36A2EB'],
-                'data' => [0]
-            ]
-        ])
-        ->options([]);
-    }
     
     //** Recomendação do sistema **
-    //caso valor das manutenções chegue a 60% do valor do equipamento em 1 ano
-        
+    //caso valor das manutenções chegue a 50%(cod. amarelo) e 80%(cod.vermelho) do valor do equipamento, 
+    //caso a vida util seja inferior a 70%(cod. amarelo) e 40%(cod.vermelho)
 
+    /** Barra de progresso será setada de acordo com a quantidade de manutenções realizadas no equipamento, seguindo a regra:
+     * Cada manutenção reduzirá 5% de vida util do equipamento
+     * Se a manutenção ocorrer no intervalo de 1 ano da data de compra do equipamento será acreascido 20% de redução a cada manutenção deste periodo
+     * Se a manutenção ocorrer no intervalo de 6 meses da data de compra do equipamento será acreascido 40% de redução a cada manutenção deste periodo
+     */
+    $porcentagemBarra = 100;
+
+    //Quantidade de mautenções realizadas
+    $qtdManutencao = DB::table('siscom_manutencao')->where('fk_pk_equipamento', $id)->count();
+
+    //calculado a qtd de manutenções para reduzir do percentual da barra
+    $porcentagemBarra = $porcentagemBarra - ($qtdManutencao * 5);
+
+    //Quantidade de manutenções em 1 ano
+    $obterQtdManutencaoAno = DB::select("SELECT COUNT(p1.pk_equipamento) as registros FROM siscom_equipamento p1 INNER JOIN siscom_manutencao p2 ON p2.fk_pk_equipamento = p1.pk_equipamento WHERE p1.pk_equipamento = $id AND p2.fk_pk_equipamento = $id AND TIMESTAMPDIFF(DAY,p1.DT_COMPRA_EQUIPAMENTO, p2.DT_MANUTENCAO) > 180 AND TIMESTAMPDIFF(DAY,p1.DT_COMPRA_EQUIPAMENTO, p2.DT_MANUTENCAO) <= 365  ");
+    if(!empty($obterQtdManutencaoAno))
+    {
+        $qtdManutencaoAno = $obterQtdManutencaoAno['0']->registros ;
+    }else{
+        $qtdManutencaoAno = null ;
+    }
+    //calculado a qtd de manutenções no periodo de 1 ano para reduzir do percentual da barra
+    $porcentagemBarra = $porcentagemBarra - ($qtdManutencaoAno * 20);
+
+    //Quantidade de manutenções em 6 meses
+    $obterQtdManutencaoMes = DB::select("SELECT COUNT(p1.pk_equipamento) as registros FROM siscom_equipamento p1 INNER JOIN siscom_manutencao p2 ON p2.fk_pk_equipamento = p1.pk_equipamento WHERE p1.pk_equipamento = $id AND p2.fk_pk_equipamento = $id AND TIMESTAMPDIFF(DAY,p1.DT_COMPRA_EQUIPAMENTO, p2.DT_MANUTENCAO) <= 180 ");
+    if(!empty($obterQtdManutencaoMes))
+    {
+        $qtdManutencaoMes = $obterQtdManutencaoMes['0']->registros ;
+    }else{
+        $qtdManutencaoMes = null ;
+    }
+    //calculado a qtd de manutenções no periodo de 6 meses para reduzir do percentual da barra
+    $porcentagemBarra = $porcentagemBarra - ($qtdManutencaoMes * 40);
+
+    //conferindo se a barra está com numero negativo
+    if($porcentagemBarra < 0){
+        $porcentagemBarra = 0 ;
+    }
+
+    $codRecomendacao = 0 ;
+    $flagVidaUtil = false ;
+    if(isset($totalAumento) && $totalAumento >= 50 && $totalAumento < 80){
+        $codRecomendacao = 2 ;
+        if($porcentagemBarra <= 70){
+            $flagVidaUtil = true ;
+        }
+    }else if(isset($totalAumento) && $totalAumento >= 80){
+        $codRecomendacao = 1 ;
+        if($porcentagemBarra <= 40){
+            $flagVidaUtil = true ;
+        }
+    }
     
-
-        return view('site.grafico-id', compact('chartjs', 'chartjs2','chartjsPercentual','recuperandoDados', 'valorTotalManutencao', 'valorTotalEquipamento', 'qtdManutencao', 'manutencaoConcluida', 'manutencaoEmAndamento', 'manutencaoPendente', 'dadosUltimoAno', 'dadosUltimosSeisMeses', 'dadosUltimosTresMeses') );
+        return view('site.grafico-id', compact('chartjs', 'chartjs2','chartjsPercentual','recuperandoDados', 'codRecomendacao','porcentagemBarra', 'flagVidaUtil') );
         
     }
 }
