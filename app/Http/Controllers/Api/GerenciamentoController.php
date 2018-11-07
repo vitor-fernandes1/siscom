@@ -131,7 +131,6 @@ class GerenciamentoController extends Controller
         if($porcentagemBarra < 0){
             $porcentagemBarra = 0 ;
         }
-        dd($porcentagemBarra);
 
         return view('site.gerenciamento-id', compact('recuperandoDados','porcentagemBarra', 'qtdManutencao', 'qtdManutencaoAno', 'diasUsoEquipamento', 'mesesUsoEquipamento', 'anosUsoEquipamento') );
         
