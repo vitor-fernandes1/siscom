@@ -113,7 +113,7 @@
             {!! $chartjsPercentual->render() !!}
         </div>
         <div style="width:100%;">
-            <h3>Custo aproximado das proximas manutenções</h3><cite>Baseado na média do custo e intervalo entre as manutenções no ano anterior</cite>
+            <h3>Custo aproximado das próximas manutenções</h3><cite>Baseado na média do custo e intervalo entre as manutenções no ano anterior</cite>
             {!! $chartjs->render() !!}
         </div>
         <div style="width:100%;">
