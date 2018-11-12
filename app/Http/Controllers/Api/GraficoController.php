@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Api\ApiControllerTrait;
 use Illuminate\Support\Facades\DB;
 use App\Models\Equipamento;
+use DateTime;
+use DateInterval;
 
 class GraficoController extends Controller
 {
@@ -157,10 +159,8 @@ class GraficoController extends Controller
         }
         
         //obtendo intervalo em dias entre as datas das manutenções nos ultimos 1 ano, os valores serao arredondados posteriormente(após obter a media de dias)
-        $obterDataManutencao = DB::select("SELECT TIMESTAMPDIFF(DAY,dt_manutencao,NOW()) AS dias FROM siscom_manutencao WHERE fk_pk_equipamento = $id AND TIMESTAMPDIFF(DAY,dt_manutencao,NOW()) <= 365 ORDER BY dt_manutencao DESC");
+        $obterDataManutencao = DB::select("SELECT TIMESTAMPDIFF(DAY,dt_manutencao,NOW()) AS dias FROM siscom_manutencao WHERE fk_pk_equipamento = $id AND TIMESTAMPDIFF(DAY,dt_manutencao,NOW()) <= 365 ORDER BY dt_manutencao DESC");        
 
-        //dd($obterDataManutencao);
-        //dd($obterDataManutencao);
         if(!empty($query) && !empty($obterDataManutencao) && $qtdManutencao > 1)
         {
             /**TRATANDO DATAS */
@@ -180,6 +180,19 @@ class GraficoController extends Controller
             $mediaDiasManutencao = $mediaDiasManutencao / $qtdManutencao ;
             //arredondado número médio de dias
             $mediaDiasManutencao = round($mediaDiasManutencao) ;
+
+
+            $somaMediaDiasManutencao = $mediaDiasManutencao ;
+            //Variavel feita para concatenar a função DateInterval
+            $dData = 'D' ;
+            //Obtendo o intervalo entre as datas
+            for($contFor = 1 ; $contFor <= $qtdManutencao ; $contFor ++ ){
+                $data = date_create();
+                $data->add( new DateInterval("P$somaMediaDiasManutencao$dData") );
+                $data = $data->format('d-m-y');
+                $datas [] = $data ;
+                $somaMediaDiasManutencao = $somaMediaDiasManutencao + $mediaDiasManutencao ;
+            }
             
             /**TRATANDO VALORES */
             $valorTotalManutencao = doubleval($query['0']->valorTotalManutencao) ;
@@ -201,7 +214,7 @@ class GraficoController extends Controller
             ->name('lineChartTest')
             ->type('line')
             ->size(['width' => 400, 'height' => 200])
-            ->labels($dataLabel)
+            ->labels($datas)
             ->datasets([
                 [
                 "label" => "1 ano",

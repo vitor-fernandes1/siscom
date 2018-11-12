@@ -612,5 +612,29 @@ class initDefaultValuesSiscomSeed extends Seeder
             'fk_pk_empresa'            => '11',
             'fk_pk_equipamento'        => '15',
         ]);
+
+        //Seed de teste da recomendação de sistema nos graficos de projeção
+        $manutencao = Manutencao::create([
+            'ds_descricao_manutencao'  => 'Troca do motor refrigerador',
+            'dt_manutencao'            => '2017-10-18',
+            'vl_valor_manutencao'      => '200',
+            'fk_pk_tipo_manutencao'    => '2',
+            'fk_pk_prioridade'         => '3',
+            'fk_pk_situacao'           => '1',
+            'fk_pk_avaliacao'          => '2',
+            'fk_pk_empresa'            => '8',
+            'fk_pk_equipamento'        => '4',
+        ]);
+        $manutencao = Manutencao::create([
+            'ds_descricao_manutencao'  => 'Reparo no quadro eletrico',
+            'dt_manutencao'            => '2015-08-12',
+            'vl_valor_manutencao'      => '200',
+            'fk_pk_tipo_manutencao'    => '2',
+            'fk_pk_prioridade'         => '3',
+            'fk_pk_situacao'           => '1',
+            'fk_pk_avaliacao'          => '2',
+            'fk_pk_empresa'            => '8',
+            'fk_pk_equipamento'        => '4',
+        ]);
     }
 }

@@ -33,9 +33,9 @@
                 <div class="media-body">
                     <h4>Atenção !</h4>
                     @if($flagVidaUtil === true)
-                    <p>Este equipamento já alcançou ou superou 50% de seu valor e sua vida útil estimada está entre 40% à 70%, caso houver novas manutenções sucessivas, recomenda-se investir um novo equipamento</p>
+                    <p>Este equipamento já alcançou ou superou 50% de seu valor e sua vida útil estimada está entre 40% à 70%, caso houver novas manutenções sucessivas, recomenda-se investir um novo equipamento.</p>
                     @else
-                    <p>Este equipamento já alcançou ou superou 50% de seu valor, caso houver novas manutenções sucessivas, recomenda-se investir um novo equipamento</p>
+                    <p>Este equipamento já alcançou ou superou 50% de seu valor, caso houver novas manutenções sucessivas, recomenda-se investir um novo equipamento.</p>
                     @endif
                 </div>
             </div>
@@ -109,15 +109,15 @@
 <div class="box box-primary">
    <div class="box-body">
         <div style="width:100%;">
-            <h3>Percentual de aumento no valor do equipamento</h3><cite>Baseado nos valores das manutenções realizadas</cite>
+            <h3>Percentual de aumento sobre o valor do equipamento</h3><cite>Baseado nos valores das manutenções realizadas</cite>
             {!! $chartjsPercentual->render() !!}
         </div>
         <div style="width:100%;">
-            <h3>Custo aproximado das proximas manutenções</h3><cite>Baseado na média do custo e intervalo entre as manutenções</cite>
+            <h3>Custo aproximado das proximas manutenções</h3><cite>Baseado na média do custo e intervalo entre as manutenções no ano anterior</cite>
             {!! $chartjs->render() !!}
         </div>
         <div style="width:100%;">
-            <h3>Estimativa do valor total a ser gasto para o próximo ano</h3><cite>Baseado na média do custo e intervalo entre as manutenções</cite>
+            <h3>Estimativa do valor total a ser gasto para o próximo ano</h3><cite>Baseado na média do custo e intervalo entre as manutenções no ano anterior</cite>
             {!! $chartjs2->render() !!}
         </div>
    </div>
